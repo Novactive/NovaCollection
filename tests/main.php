@@ -4,20 +4,18 @@
  *
  * @author    Luke Visinoni <l.visinoni@novactive.us, luke.visinoni@gmail.com>
  * @author    Sébastien Morel <s.morel@novactive.us, morel.seb@gmail.com>
- *
  * @copyright 2017 Novactive
  * @license   MIT
  */
-
-include __DIR__."/../vendor/autoload.php";
+include __DIR__.'/../vendor/autoload.php';
 
 use Novactive\Collection\Collection as NovaCollection;
 
 $dump = function (NovaCollection $collection, $name) {
-    print "---{$name}---".PHP_EOL;
+    echo "---{$name}---".PHP_EOL;
     $collection->each(
         function ($value, $key, $i) {
-            print "{$i}: {$key} => {$value}".PHP_EOL;
+            echo "{$i}: {$key} => {$value}".PHP_EOL;
         }
     );
 };
@@ -39,7 +37,7 @@ $dump($c1, 'c1');
 
 $c2 = $c1->map(
     function ($value) {
-        return $value." mapped!";
+        return $value.' mapped!';
     }
 );
 
@@ -48,7 +46,7 @@ $dump($c2, 'c2');
 
 $c2->transform(
     function ($value) {
-        return $value." transformed!";
+        return $value.' transformed!';
     }
 );
 
@@ -64,35 +62,41 @@ $dump($c3, 'c3');
 
 $c2->prune(
     function ($value, $key) {
-        return $key === "key2";
+        return $key === 'key2';
     }
 );
 
 $dump($c2, 'c2');
 
-print "REDUCE".$c1->reduce(
-        function ($accumulator, $value, $key) {
-            return $accumulator.":({$key},{$value})";
-        }
-    ).PHP_EOL;
+echo 'REDUCE=';
+echo $c1->reduce(
+    function ($accumulator, $value, $key) {
+        return $accumulator.":({$key},{$value})";
+    }
+);
+echo PHP_EOL;
 
-print "ASSERT YES:".$c1->assert(
-        function ($value, $key) {
-            return !empty($value);
-        },
-        true
-    ).PHP_EOL;
+echo 'ASSERT YES:';
+echo $c1->assert(
+    function ($value, $key) {
+        return !empty($value);
+    },
+    true
+);
+echo PHP_EOL;
 
-print "ASSERT NO:".$c1->assert(
-        function ($value, $key) {
-            return !empty($value);
-        },
-        false
-    ).PHP_EOL;
+echo 'ASSERT NO:';
+echo $c1->assert(
+    function ($value, $key) {
+        return !empty($value);
+    },
+    false
+);
+echo PHP_EOL;
 
 $c1Clone->prune(
     function ($value, $key) {
-        return $key === "aNullKey";
+        return $key === 'aNullKey';
     }
 );
 
@@ -117,4 +121,4 @@ $dump($c1, 'c1');
 $c1->imerge($plus);
 $dump($c1, 'c1');
 
-print "------".PHP_EOL;
+echo '------'.PHP_EOL;

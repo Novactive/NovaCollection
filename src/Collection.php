@@ -4,20 +4,20 @@
  *
  * @author    Luke Visinoni <l.visinoni@novactive.us, luke.visinoni@gmail.com>
  * @author    Sébastien Morel <s.morel@novactive.us, morel.seb@gmail.com>
- *
  * @copyright 2017 Novactive
  * @license   MIT
  */
+
 namespace Novactive\Collection;
 
-use Countable;
-use Traversable;
-use InvalidArgumentException;
 use ArrayAccess;
+use Countable;
+use InvalidArgumentException;
 use Iterator;
+use Traversable;
 
 /**
- * Class Collection
+ * Class Collection.
  */
 class Collection implements ArrayAccess, Iterator, Countable
 {
@@ -261,7 +261,7 @@ class Collection implements ArrayAccess, Iterator, Countable
     }
 
     /**
-     * Need another name
+     * Need another name.
      *
      * @param $items
      */
@@ -287,7 +287,7 @@ class Collection implements ArrayAccess, Iterator, Countable
     }
 
     /**
-     * Need another name
+     * Need another name.
      *
      * @param $items
      */
@@ -295,7 +295,6 @@ class Collection implements ArrayAccess, Iterator, Countable
     {
         $this->merge($items, true);
     }
-
 
     /* --         ---          -- */
     /* -- INTERFACE COMPLIANCE -- */
@@ -343,7 +342,6 @@ class Collection implements ArrayAccess, Iterator, Countable
         return true;
     }
 
-
     /* --                     -- */
     /* --  Iterator Methods   -- */
     /* --                     -- */
@@ -383,7 +381,7 @@ class Collection implements ArrayAccess, Iterator, Countable
     /**
      * {@inheritDoc}
      */
-    function valid()
+    public function valid()
     {
         return $this->containsKey(key($this->items));
     }

@@ -4,14 +4,14 @@
  *
  * @author    Luke Visinoni <l.visinoni@novactive.us, luke.visinoni@gmail.com>
  * @author    Sébastien Morel <s.morel@novactive.us, morel.seb@gmail.com>
- *
  * @copyright 2017 Novactive
  * @license   MIT
  */
+
 namespace Novactive\Tests;
 
-use PHPUnit_Framework_TestCase;
 use Faker\Factory;
+use PHPUnit_Framework_TestCase;
 
 /**
  * Class UnitTestCase.
@@ -47,7 +47,7 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
                 'city'        => $faker->city,
                 'state'       => $faker->state,
                 'zipcode'     => $faker->postcode,
-                'phone'       => $faker->phoneNumber
+                'phone'       => $faker->phoneNumber,
             ];
         }
 
