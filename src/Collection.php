@@ -132,6 +132,22 @@ class Collection implements ArrayAccess, Iterator, Countable
     }
 
     /**
+     * @return mixed
+     */
+    public function first()
+    {
+        return reset($this->items);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function last()
+    {
+        return end($this->items);
+    }
+
+    /**
      * @param callable $callback
      *
      * @return static
@@ -361,7 +377,7 @@ class Collection implements ArrayAccess, Iterator, Countable
      */
     public function rewind()
     {
-        return reset($this->items);
+        reset($this->items);
     }
 
     /**
