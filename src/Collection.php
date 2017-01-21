@@ -10,12 +10,14 @@
  */
 namespace Novactive\Collection;
 
+use Countable;
+use Iterator;
 use Traversable;
 
 /**
  * Class Collection
  */
-class Collection
+class Collection implements Iterator, Countable
 {
     /**
      * @var array
@@ -25,6 +27,7 @@ class Collection
     public function __construct(array $items = [])
     {
         $this->items = $items;
+        $this->rewind();
     }
 
     /**
@@ -60,6 +63,7 @@ class Collection
     }
 
     /**
+     * @todo Technically next isn't supposed to return anything... -lv
      * @return mixed
      */
     public function next()
@@ -81,6 +85,25 @@ class Collection
     public function count()
     {
         return count($this->items);
+    }
+
+    /**
+     * @return bool
+     */
+    public function valid()
+    {
+        return ! (
+            $this->key() === null &&
+            $this->current() === false
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function rewind()
+    {
+        reset($this->items);
     }
 
     /**
