@@ -1,0 +1,35 @@
+{
+    "name": "novactive/collection",
+    "description": "++ Collection ++ Abstaction library for PHP. ",
+    "homepage": "https://github.com/Novactive/NovaCollection",
+    "license": [
+        "MIT"
+    ],
+    "authors": [
+        {
+            "name": "Sébastien Morel",
+            "homepage": "https://github.com/Plopix"
+        },
+        {
+            "name": "Luke Visonini",
+            "homepage": "https://github.com/nozavroni"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/Novactive/NovaCollection/issues"
+    },
+    "require": {
+        "php": "^5.6 || ^7.0"
+    },
+    "require-dev": {
+        "symfony/var-dumper": "^3.1",
+        "friendsofphp/php-cs-fixer": "^1.12",
+        "squizlabs/php_codesniffer": "^2.7",
+        "phpmd/phpmd": "^2.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Novactive\\Collection\\": "src/"
+        }
+    }
+}
