@@ -10,18 +10,29 @@
  */
 namespace Novactive\Collection;
 
+use InvalidArgumentException;
+use Traversable;
+
 /**
  * Class Factory
  */
 class Factory
 {
     /**
-     * @param array $items
+     * @param mixed $items
      *
      * @return Collection
      */
-    public static function create(array $items = [])
+    public static function create($items = [])
     {
-        return new Collection($items);
+        if (!is_array($items) && !($items instanceof Traversable)) {
+            throw new InvalidArgumentException('Invalid input type for '.__METHOD__.', cannot create factory.');
+        }
+        $collection = new Collection();
+        foreach ($items as $key => $val) {
+            $collection->set($key, $val);
+        }
+
+        return $collection;
     }
 }

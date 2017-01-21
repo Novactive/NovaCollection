@@ -24,13 +24,17 @@ $dump = function (NovaCollection $collection, $name) {
 
 $c1 = new NovaCollection(
     [
-        'key1' => 'value1',
-        'key2' => 'value2',
-        'key3' => 'value3',
+        'key1'     => 'value1',
+        'key2'     => 'value2',
+        'key3'     => 'value3',
         'orange',
-        'dark'
+        'dark',
+        'aNullKey' => null,
     ]
 );
+
+$c1Clone = clone $c1;
+
 $dump($c1, 'c1');
 
 $c2 = $c1->map(
@@ -72,18 +76,45 @@ print "REDUCE".$c1->reduce(
         }
     ).PHP_EOL;
 
-print "CHECK YES:".$c1->check(
+print "ASSERT YES:".$c1->assert(
         function ($value, $key) {
             return !empty($value);
         },
         true
     ).PHP_EOL;
 
-print "CHECK NO:".$c1->check(
+print "ASSERT NO:".$c1->assert(
         function ($value, $key) {
             return !empty($value);
         },
         false
     ).PHP_EOL;
+
+$c1Clone->prune(
+    function ($value, $key) {
+        return $key === "aNullKey";
+    }
+);
+
+$dump($c1Clone, 'c2');
+
+$plus = new NovaCollection(
+    [
+        'key3' => 'value3overrided',
+        'key4' => 'value4',
+        'key5' => 'value5',
+    ]
+);
+
+$dump($c1->union($plus), 'UNION');
+$dump($c1->merge($plus), 'UNION');
+
+$dump($c1, 'c1');
+
+$c1->iunion($plus);
+$dump($c1, 'c1');
+
+$c1->imerge($plus);
+$dump($c1, 'c1');
 
 print "------".PHP_EOL;
