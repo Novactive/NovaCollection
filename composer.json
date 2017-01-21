@@ -25,11 +25,13 @@
         "symfony/var-dumper": "^3.1",
         "friendsofphp/php-cs-fixer": "^1.12",
         "squizlabs/php_codesniffer": "^2.7",
-        "phpmd/phpmd": "^2.4"
+        "phpmd/phpmd": "^2.4",
+        "fzaninotto/Faker": "^1.6"
     },
     "autoload": {
         "psr-4": {
-            "Novactive\\Collection\\": "src/"
+            "Novactive\\Collection\\": "src/",
+            "NovactiveTest\\": "tests/"
         }
     }
 }
