@@ -11,17 +11,26 @@
 namespace Novactive\Collection;
 
 use Traversable;
+use InvalidArgumentException;
+use ArrayAccess;
+use Countable;
+use Iterator;
 
 /**
  * Class Collection
  */
-class Collection
+class Collection implements ArrayAccess, Iterator, Countable
 {
     /**
      * @var array
      */
     protected $items;
 
+    /**
+     * Collection constructor.
+     *
+     * @param array $items
+     */
     public function __construct(array $items = [])
     {
         $this->items = $items;
@@ -36,54 +45,6 @@ class Collection
     }
 
     /**
-     * @return mixed
-     */
-    public function first()
-    {
-        return reset($this->items);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function last()
-    {
-        return end($this->items);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function key()
-    {
-        return key($this->items);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function next()
-    {
-        return next($this->items);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function current()
-    {
-        return current($this->items);
-    }
-
-    /**
-     * @return int
-     */
-    public function count()
-    {
-        return count($this->items);
-    }
-
-    /**
      * @return \Generator
      */
     protected function looper()
@@ -91,25 +52,6 @@ class Collection
         foreach ($this->items as $key => $value) {
             yield $key => $value;
         }
-    }
-
-    /**
-     * @param $items
-     *
-     * @return $this
-     */
-    public function add($items)
-    {
-        if ($items instanceof Traversable) {
-            foreach ($items as $item) {
-                $this->add($item);
-            }
-
-            return $this;
-        }
-        $this->items[] = $items;
-
-        return $this;
     }
 
     /**
@@ -124,25 +66,53 @@ class Collection
     /**
      * @param $key
      *
+     * @return mixed|null
+     */
+    public function get($key)
+    {
+        if ($this->containsKey($key)) {
+            return $this->items[$key];
+        }
+
+        return null;
+    }
+
+    /**
+     * @param $key
+     *
+     * @return bool
+     */
+    public function containsKey($key)
+    {
+        return isset($this->items[$key]) || array_key_exists($key, $this->items);
+    }
+
+    /**
+     * @param $item
+     *
+     * @return $this
+     */
+    public function add($item)
+    {
+        $this->items[] = $item;
+
+        return $this;
+    }
+
+    /**
+     * @param $key
+     *
      * @return null
      */
     public function remove($key)
     {
-        if (!isset($this->items[$key]) && !array_key_exists($key, $this->items)) {
+        if (!$this->containsKey($key)) {
             return null;
         }
         $removed = $this->items[$key];
         unset($this->items[$key]);
 
         return $removed;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function offsetUnset($offset)
-    {
-        return $this->remove($offset);
     }
 
     /**
@@ -219,13 +189,14 @@ class Collection
     }
 
     /**
-     * @param callable $callbackl
+     * @param callable $callback
+     * @param null     $initial
      *
-     * @return mixed|null
+     * @return mixed
      */
-    public function reduce(callable $callback)
+    public function reduce(callable $callback, $initial = null)
     {
-        $accumulator = null;
+        $accumulator = $initial;
         foreach ($this->looper() as $key => $value) {
             $accumulator = $callback($accumulator, $value, $key);
         }
@@ -239,7 +210,7 @@ class Collection
      *
      * @return bool
      */
-    public function check(callable $callback, $expected)
+    public function assert(callable $callback, $expected)
     {
         foreach ($this->looper() as $key => $value) {
             if ($callback($value, $key) !== $expected) {
@@ -248,5 +219,162 @@ class Collection
         }
 
         return true;
+    }
+
+    /**
+     * @param $items
+     */
+    public function union($items, $inPlace = false)
+    {
+        if (!is_array($items) && !($items instanceof Traversable)) {
+            throw new InvalidArgumentException('Invalid input type for '.__METHOD__.', cannot union.');
+        }
+        $collection = $inPlace ? $this : clone $this;
+        foreach ($items as $key => $value) {
+            if (!$collection->containsKey($key)) {
+                $collection->set($key, $value);
+            }
+        }
+
+        return $collection;
+    }
+
+    /**
+     * Need another name
+     *
+     * @param $items
+     */
+    public function iunion($items)
+    {
+        $this->union($items, true);
+    }
+
+    /**
+     * Need another name
+     *
+     * @param $items
+     */
+    public function imerge($items)
+    {
+        $this->merge($items, true);
+    }
+
+    /**
+     * @param $items
+     */
+    public function merge($items, $inPlace = false)
+    {
+        if (!is_array($items) && !($items instanceof Traversable)) {
+            throw new InvalidArgumentException('Invalid input type for '.__METHOD__.', cannot merge.');
+        }
+        $collection = $inPlace ? $this : clone $this;
+        foreach ($items as $key => $value) {
+            $collection->set($key, $value);
+        }
+
+        return $collection;
+    }
+
+    /* --         ---          -- */
+    /* -- INTERFACE COMPLIANCE -- */
+    /* --         ---          -- */
+
+    /* --                      -- */
+    /* -- Array Access Methods -- */
+    /* --                      -- */
+
+    /**
+     * {@inheritDoc}
+     */
+    public function offsetExists($offset)
+    {
+        return $this->containsKey($offset);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function offsetGet($offset)
+    {
+        return $this->get($offset);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function offsetUnset($offset)
+    {
+        return $this->remove($offset);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function offsetSet($offset, $value)
+    {
+        if (!isset($offset)) {
+            return $this->add($value);
+        }
+
+        $this->set($offset, $value);
+
+        return true;
+    }
+
+
+    /* --                     -- */
+    /* --  Iterator Methods   -- */
+    /* --                     -- */
+
+    /**
+     * {@inheritDoc}
+     */
+    public function current()
+    {
+        return current($this->items);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function key()
+    {
+        return key($this->items);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function next()
+    {
+        return next($this->items);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function rewind()
+    {
+        return reset($this->items);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    function valid()
+    {
+        return $this->containsKey(key($this->items));
+    }
+
+    /* --                             -- */
+    /* --  Countable Method           -- */
+    /* --                             -- */
+
+    /**
+     * @return int
+     */
+    public function count()
+    {
+        return count($this->items);
     }
 }
