@@ -25,7 +25,7 @@
         "symfony/var-dumper": "^3.1",
         "squizlabs/php_codesniffer": "^2.7",
         "phpmd/phpmd": "^2.4",
-        "fzaninotto/Faker": "^1.6",
+        "fzaninotto/Faker": "dev-master",
         "friendsofphp/php-cs-fixer": "^2.0",
         "phpunit/phpunit": "^5.7"
     },

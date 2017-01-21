@@ -29,9 +29,6 @@ class CollectionTest extends UnitTestCase
     {
         $coll = new Collection($this->fixtures['names']);
         $this->assertInstanceOf(Collection::class, $coll);
-        dump(['Chelsea', 'Adella', 'Monte', 'Maye', 'Lottie', 'Don', 'Dayton', 'Kirk', 'Troy', 'Nakia']);
-        dump($coll->toArray());
-
         $this->assertEquals(
             ['Chelsea', 'Adella', 'Monte', 'Maye', 'Lottie', 'Don', 'Dayton', 'Kirk', 'Troy', 'Nakia'],
             $coll->toArray()
