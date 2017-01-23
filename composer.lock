@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "e7d66a5b26d9a16d95bdb31b41840d0b",
+    "content-hash": "8f6ff64db8ace775c534e5c3ef03a198",
     "packages": [],
     "packages-dev": [
         {
@@ -174,7 +174,47 @@
                 "faker",
                 "fixtures"
             ],
-            "time": "2017-01-05T16:44:55+00:00"
+            "time": "2017-01-05 16:44:55"
+        },
+        {
+            "name": "jpgraph/jpgraph",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ztec/JpGraph.git",
+                "reference": "ad26df5941e847cf1255aecd2011ce16207304cf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ztec/JpGraph/zipball/ad26df5941e847cf1255aecd2011ce16207304cf",
+                "reference": "ad26df5941e847cf1255aecd2011ce16207304cf",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "JpGraph": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "QPL 1.0"
+            ],
+            "authors": [
+                {
+                    "name": "JpGraph team"
+                }
+            ],
+            "description": "jpGraph, library to make graphs and charts",
+            "homepage": "http://jpgraph.net/",
+            "keywords": [
+                "chart",
+                "data",
+                "graph",
+                "jpgraph",
+                "pie"
+            ],
+            "time": "2013-05-23T14:04:00+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -2340,7 +2380,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "fzaninotto/faker": 20
+        "fzaninotto/faker": 20,
+        "jpgraph/jpgraph": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

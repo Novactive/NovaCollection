@@ -27,7 +27,8 @@
         "phpmd/phpmd": "^2.4",
         "fzaninotto/Faker": "dev-master",
         "friendsofphp/php-cs-fixer": "^2.0",
-        "phpunit/phpunit": "^5.7"
+        "phpunit/phpunit": "^5.7",
+        "jpgraph/jpgraph": "dev-master"
     },
     "autoload": {
         "psr-4": {

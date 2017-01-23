@@ -12,6 +12,5 @@
     <rule ref="Generic.ControlStructures.InlineControlStructure"/>
     <rule ref="Generic.Files.OneClassPerFile"/>
     <rule ref="Generic.Files.OneInterfacePerFile"/>
-    <rule ref="Generic.Formatting.SpaceAfterCast"/>
     <rule ref="Generic.PHP.ForbiddenFunctions"/>
 </ruleset>

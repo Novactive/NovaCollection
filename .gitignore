@@ -3,3 +3,5 @@ composer.phar
 phpunit.xml
 .idea
 .php_cs.cache
+php*.png
+tests/performances/resultsphp*.data
