@@ -8,7 +8,7 @@
  * @license   MIT
  */
 
-namespace Novactive\Tests\Performances;
+namespace Novactive\Tests\Perfs;
 
 use Novactive\Collection\Collection;
 

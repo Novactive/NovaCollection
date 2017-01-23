@@ -8,7 +8,7 @@
  * @license   MIT
  */
 use Novactive\Collection\Collection;
-use Novactive\Tests\Performances\NativeMethodCollection;
+use Novactive\Tests\Perfs\NativeMethodCollection;
 
 include __DIR__.'/../bootstrap.php';
 ini_set('memory_limit', '8500M');

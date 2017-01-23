@@ -38,8 +38,8 @@ do
         for ITERATION in ${ITERATIONS[*]}
         do
             echoAction "Doing $METHOD with $ITERATION iterations."
-            $PHP tests/performances/test.php $METHOD 0 $ITERATION $JSONMODE >> $FILE
-            $PHP tests/performances/test.php $METHOD 1 $ITERATION $JSONMODE >> $FILE
+            $PHP tests/Perfs/test.php $METHOD 0 $ITERATION $JSONMODE >> $FILE
+            $PHP tests/Perfs/test.php $METHOD 1 $ITERATION $JSONMODE >> $FILE
         done
     done
 
@@ -47,8 +47,8 @@ do
         cat $FILE
     else
         # use the php from php here to get GD
-        php tests/performances/graph.php "${VERSION}" 0 > ${VERSION}_10-50k.png
-        php tests/performances/graph.php "${VERSION}" 1 > ${VERSION}_30k-10M.png
+        php tests/Perfs/graph.php "${VERSION}" 0 > ${VERSION}_10-50k.png
+        php tests/Perfs/graph.php "${VERSION}" 1 > ${VERSION}_30k-10M.png
     fi
 done
 
