@@ -296,6 +296,91 @@ class Collection implements ArrayAccess, Iterator, Countable
         $this->merge($items, true);
     }
 
+    /**
+     * @return static
+     */
+    public function values()
+    {
+        return Factory::create(array_values($this->items));
+    }
+
+    /**
+     * @return static
+     */
+    public function keys()
+    {
+        return Factory::create(array_keys($this->items));
+    }
+
+    /**
+     * @todo: develop the in-place
+     *
+     * @return Collection
+     */
+    public function flip()
+    {
+        $collection = Factory::create();
+        foreach ($this->looper() as $key => $value) {
+            $collection->set($value, $key);
+        }
+
+        return $collection;
+    }
+
+    /**
+     * @todo: develop the in-place
+     *
+     * @param $values
+     */
+    public function combine($values)
+    {
+        if (!is_array($values) && !($values instanceof Traversable)) {
+            throw new InvalidArgumentException('Invalid input type for '.__METHOD__.', cannot combine.');
+        }
+
+        if (count($values) != count($this->items)) {
+            throw new InvalidArgumentException(
+                'Invalid input type for '.__METHOD__.', number of items does not match.'
+            );
+        }
+        $collection = Factory::create();
+        $this->rewind();
+        foreach ($values as $value) {
+            $collection->set($this->key(), $value);
+            $this->next();
+        }
+        $this->rewind();
+
+        return $collection;
+    }
+
+    /**
+     * @todo: develop the in-place
+     *
+     * @param $keys
+     */
+    public function keyCombine($keys)
+    {
+        if (!is_array($keys) && !($keys instanceof Traversable)) {
+            throw new InvalidArgumentException('Invalid input type for '.__METHOD__.', cannot keyCombine.');
+        }
+
+        if (count($keys) != count($this->items)) {
+            throw new InvalidArgumentException(
+                'Invalid input type for '.__METHOD__.', number of items does not match.'
+            );
+        }
+        $collection = Factory::create();
+        $this->rewind();
+        foreach ($keys as $key) {
+            $collection->set($key, $this->current());
+            $this->next();
+        }
+        $this->rewind();
+
+        return $collection;
+    }
+
     /* --         ---          -- */
     /* -- INTERFACE COMPLIANCE -- */
     /* --         ---          -- */
