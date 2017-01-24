@@ -8,22 +8,40 @@
  * @license   MIT
  */
 use Novactive\Collection\Collection;
-use Novactive\Tests\Perfs\NativeMethodCollection;
+use Novactive\Tests\Perfs\ArrayMethodCollection;
+use Novactive\Tests\Perfs\ForeachMethodCollection;
 
 include __DIR__.'/../bootstrap.php';
 ini_set('memory_limit', '8500M');
 
-$method          = (string)$_SERVER['argv'][1];
-$usingCollection = (bool)$_SERVER['argv'][2];
-$iterations      = (int)$_SERVER['argv'][3];
-$jsonMode        = (bool)$_SERVER['argv'][4];
+$method         = (string)$_SERVER['argv'][1];
+$collectionType = (int)$_SERVER['argv'][2];
+$iterations     = (int)$_SERVER['argv'][3];
+$jsonMode       = (bool)$_SERVER['argv'][4];
 
 $data  = range(0, $iterations);
 $data2 = range(0, $iterations);
 shuffle($data);
 shuffle($data2);
 
-$collection = $usingCollection ? new Collection($data) : new NativeMethodCollection($data);
+// if we want with text instead of integer but it does not change anything
+$textitize = function ($value) {
+    return md5($value);
+};
+//$data  = array_map($textitize,$data);
+//$data2 = array_map($textitize,$data2);
+
+switch ($collectionType) {
+    case 0:
+        $collection = new Collection($data);
+        break;
+    case 1:
+        $collection = new ArrayMethodCollection($data);
+        break;
+    case 2:
+        $collection = new ForeachMethodCollection($data);
+        break;
+}
 
 $start = microtime(true);
 if ($method == 'filter') {
@@ -47,16 +65,38 @@ if ($method == 'each') {
 if ($method == 'combine') {
     $collection->combine($data2);
 }
+
+if ($method == 'reduce') {
+    $fn = function ($item) {
+        $item .= 'nova';
+
+        return $item;
+    };
+    $collection->reduce($fn, 'plop');
+}
+
+if ($method == 'flip') {
+    $collection->flip();
+}
+
+if ($method == 'values') {
+    $collection->values();
+}
+
+if ($method == 'keys') {
+    $collection->keys();
+}
+
 $end  = microtime(true);
 $time = $end - $start;
 
 if (!$jsonMode) {
-    echo($usingCollection ? 'NovaC' : 'Array')." {$method} on {$iterations}: ".$time;
+    echo get_class($collection)." {$method} on {$iterations}: ".$time;
 } else {
     echo
     json_encode(
         [
-            'type'       => $usingCollection ? 'NovaC' : 'Array',
+            'type'       => get_class($collection),
             'iterations' => $iterations,
             'method'     => $method,
             'time'       => (string)$time,

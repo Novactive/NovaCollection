@@ -52,6 +52,4 @@
         <exclude name="TooManyPublicMethods"/>
         <exclude name="ExcessiveClassComplexity"/>
     </rule>
-    <rule ref="rulesets/unusedcode.xml">
-    </rule>
 </ruleset>

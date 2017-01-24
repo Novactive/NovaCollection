@@ -46,20 +46,10 @@ class Collection implements ArrayAccess, Iterator, Countable
     }
 
     /**
-     * @return \Generator
-     */
-    protected function looper()
-    {
-        foreach ($this->items as $key => $value) {
-            yield $key => $value;
-        }
-    }
-
-    /**
      * @param $key
      * @param $value
      *
-     * @return $this
+     * @return Collection
      */
     public function set($key, $value)
     {
@@ -95,7 +85,7 @@ class Collection implements ArrayAccess, Iterator, Countable
     /**
      * @param $item
      *
-     * @return $this
+     * @return Collection
      */
     public function add($item)
     {
@@ -121,17 +111,6 @@ class Collection implements ArrayAccess, Iterator, Countable
     }
 
     /**
-     * @param callable $callback
-     */
-    public function each(callable $callback)
-    {
-        $index = 0;
-        foreach ($this->looper() as $key => $value) {
-            $callback($value, $key, $index++);
-        }
-    }
-
-    /**
      * @return mixed
      */
     public function first()
@@ -150,12 +129,12 @@ class Collection implements ArrayAccess, Iterator, Countable
     /**
      * @param callable $callback
      *
-     * @return static
+     * @return Collection
      */
     public function map(callable $callback)
     {
         $collection = Factory::create();
-        foreach ($this->looper() as $key => $value) {
+        foreach ($this->items as $key => $value) {
             $collection->set($key, $callback($value, $key));
         }
 
@@ -165,48 +144,18 @@ class Collection implements ArrayAccess, Iterator, Countable
     /**
      * @param callable $callback
      *
-     * @return $this
-     */
-    public function transform(callable $callback)
-    {
-        foreach ($this->looper() as $key => $value) {
-            $this->set($key, $callback($value, $key));
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param callable $callback
-     *
-     * @return static
+     * @return Collection
      */
     public function filter(callable $callback)
     {
         $collection = Factory::create();
-        foreach ($this->looper() as $key => $value) {
+        foreach ($this->items as $key => $value) {
             if ($callback($value, $key)) {
                 $collection->set($key, $value);
             }
         }
 
         return $collection;
-    }
-
-    /**
-     * @param callable $callback
-     *
-     * @return $this
-     */
-    public function prune(callable $callback)
-    {
-        foreach ($this->looper() as $key => $value) {
-            if ($callback($value, $key)) {
-                $this->remove($key);
-            }
-        }
-
-        return $this;
     }
 
     /**
@@ -218,11 +167,83 @@ class Collection implements ArrayAccess, Iterator, Countable
     public function reduce(callable $callback, $initial = null)
     {
         $accumulator = $initial;
-        foreach ($this->looper() as $key => $value) {
+        foreach ($this->items as $key => $value) {
             $accumulator = $callback($accumulator, $value, $key);
         }
 
         return $accumulator;
+    }
+
+    /**
+     * @param $values
+     *
+     * @return mixed
+     */
+    public function combine($values)
+    {
+        if (!is_array($values) && !($values instanceof Traversable)) {
+            $this->doThrow('Invalid input type for '.__METHOD__.', cannot combine.', $values);
+        }
+
+        if (count($values) != count($this->items)) {
+            $this->doThrow('Invalid input for '.__METHOD__.', number of items does not match.', $values);
+        }
+
+        return array_combine($this->items, $values);
+    }
+
+    /**
+     * @param callable $callback
+     */
+    public function each(callable $callback)
+    {
+        $index = 0;
+        foreach ($this->items as $key => $value) {
+            $callback($value, $key, $index++);
+        }
+    }
+
+    /**
+     * @return Collection
+     */
+    public function flip()
+    {
+        $collection = Factory::create();
+        foreach ($this->items as $key => $value) {
+            $collection->set($value, $key);
+        }
+
+        return $collection;
+    }
+
+    /**
+     * @param callable $callback
+     *
+     * @return Collection
+     */
+    public function transform(callable $callback)
+    {
+        foreach ($this->items as $key => $value) {
+            $this->set($key, $callback($value, $key));
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param callable $callback
+     *
+     * @return Collection
+     */
+    public function prune(callable $callback)
+    {
+        foreach ($this->items as $key => $value) {
+            if ($callback($value, $key)) {
+                $this->remove($key);
+            }
+        }
+
+        return $this;
     }
 
     /**
@@ -233,7 +254,7 @@ class Collection implements ArrayAccess, Iterator, Countable
      */
     public function assert(callable $callback, $expected)
     {
-        foreach ($this->looper() as $key => $value) {
+        foreach ($this->items as $key => $value) {
             if ($callback($value, $key) !== $expected) {
                 return false;
             }
@@ -243,12 +264,15 @@ class Collection implements ArrayAccess, Iterator, Countable
     }
 
     /**
-     * @param $items
+     * @param      $items
+     * @param bool $inPlace
+     *
+     * @return Collection
      */
     public function union($items, $inPlace = false)
     {
         if (!is_array($items) && !($items instanceof Traversable)) {
-            throw new InvalidArgumentException('Invalid input type for '.__METHOD__.', cannot union.');
+            $this->doThrow('Invalid input type for '.__METHOD__.', cannot union.', $items);
         }
         $collection = $inPlace ? $this : clone $this;
         foreach ($items as $key => $value) {
@@ -271,12 +295,15 @@ class Collection implements ArrayAccess, Iterator, Countable
     }
 
     /**
-     * @param $items
+     * @param      $items
+     * @param bool $inPlace
+     *
+     * @return Collection
      */
     public function merge($items, $inPlace = false)
     {
         if (!is_array($items) && !($items instanceof Traversable)) {
-            throw new InvalidArgumentException('Invalid input type for '.__METHOD__.', cannot merge.');
+            $this->doThrow('Invalid input type for '.__METHOD__.', cannot merge.', $items);
         }
         $collection = $inPlace ? $this : clone $this;
         foreach ($items as $key => $value) {
@@ -297,78 +324,44 @@ class Collection implements ArrayAccess, Iterator, Countable
     }
 
     /**
-     * @return static
+     * @return Collection
      */
     public function values()
     {
-        return Factory::create(array_values($this->items));
+        $collection = Factory::create();
+        foreach ($this->items as $value) {
+            $collection->add($value);
+        }
+
+        return $collection;
     }
 
     /**
-     * @return static
+     * @return Collection
      */
     public function keys()
     {
-        return Factory::create(array_keys($this->items));
+        $collection = Factory::create();
+        foreach ($this->items as $key => $value) {
+            $collection->add($key);
+        }
+
+        return $collection;
     }
 
     /**
-     * @todo: develop the in-place
+     * @param $keys
      *
      * @return Collection
-     */
-    public function flip()
-    {
-        $collection = Factory::create();
-        foreach ($this->looper() as $key => $value) {
-            $collection->set($value, $key);
-        }
-
-        return $collection;
-    }
-
-    /**
-     * @todo: develop the in-place
-     *
-     * @param $values
-     */
-    public function combine($values)
-    {
-        if (!is_array($values) && !($values instanceof Traversable)) {
-            throw new InvalidArgumentException('Invalid input type for '.__METHOD__.', cannot combine.');
-        }
-
-        if (count($values) != count($this->items)) {
-            throw new InvalidArgumentException(
-                'Invalid input type for '.__METHOD__.', number of items does not match.'
-            );
-        }
-        $collection = Factory::create();
-        $this->rewind();
-        foreach ($values as $value) {
-            $collection->set($this->key(), $value);
-            $this->next();
-        }
-        $this->rewind();
-
-        return $collection;
-    }
-
-    /**
-     * @todo: develop the in-place
-     *
-     * @param $keys
      */
     public function keyCombine($keys)
     {
         if (!is_array($keys) && !($keys instanceof Traversable)) {
-            throw new InvalidArgumentException('Invalid input type for '.__METHOD__.', cannot keyCombine.');
+            $this->doThrow('Invalid input type for '.__METHOD__.', cannot keyCombine.', $keys);
         }
 
         if (count($keys) != count($this->items)) {
-            throw new InvalidArgumentException(
-                'Invalid input type for '.__METHOD__.', number of items does not match.'
-            );
+            $this->doThrow('Invalid input for '.__METHOD__.', number of items does not match.', $keys);
         }
         $collection = Factory::create();
         $this->rewind();
@@ -481,5 +474,29 @@ class Collection implements ArrayAccess, Iterator, Countable
     public function count()
     {
         return count($this->items);
+    }
+
+    /* --         ---          -- */
+    /* -- INTERFACE COMPLIANCE -- */
+    /* --         ---          -- */
+
+    /**
+     * @param $message
+     * @param $arguments
+     *
+     * @throws InvalidArgumentException
+     */
+    protected function doThrow($message, $arguments)
+    {
+        unset($arguments);
+        throw new InvalidArgumentException($message);
+    }
+
+    /**
+     * @return static
+     */
+    public function dump()
+    {
+        return $this;
     }
 }

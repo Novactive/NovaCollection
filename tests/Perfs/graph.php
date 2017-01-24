@@ -9,68 +9,92 @@
  */
 use JpGraph\JpGraph;
 use Novactive\Collection\Collection;
+use Novactive\Collection\Factory;
+use Novactive\Tests\Perfs\ArrayMethodCollection;
+use Novactive\Tests\Perfs\ForeachMethodCollection;
 
 include __DIR__.'/../bootstrap.php';
 
-$version  = (string)$_SERVER['argv'][1];
-$isBigger = (string)$_SERVER['argv'][2];
+$version = (string)$_SERVER['argv'][1];
 
 $php56Content = implode(',', file(__DIR__."/results{$version}.data"));
 $content      = "[{$php56Content}]";
 $data         = json_decode($content);
 
+$configs = file(__DIR__.'/config.conf');
+
+$graphWidth  = 800;
+$graphHeight = 400;
+
+$methods = $graphsLimit = [];
+foreach ($configs as $config) {
+    list($var, $value) = explode('=', $config);
+    $value             = trim($value, "()\n");
+    $value             = explode(' ', $value);
+    if ($var == 'ITERATIONS') {
+        $graphsLimit = [
+            array_slice($value, 0, 11),
+            array_slice($value, 9, 5),
+            array_slice($value, 14, 5),
+        ];
+    }
+    if ($var == 'METHODS') {
+        $methods = Factory::create($value);
+    }
+}
+
 JpGraph::load();
 JpGraph::module('line');
 JpGraph::module('mgraph');
 
-$stepPoints = new Collection(
-    $isBigger ? [30000, 50000, 100000, 500000, 1000000, 5000000, 10000000] : [
-        10, 100, 250, 500, 750, 1000, 2000, 5000, 10000, 20000, 30000, 40000, 50000,
-    ]
-);
-$types      = new Collection(['Array', 'NovaC']);
-$methods    = new Collection(['map', 'filter', 'each', 'combine']);
+$secondGraphSteps = Factory::create();
+$classes          = Factory::create([Collection::class, ArrayMethodCollection::class, ForeachMethodCollection::class]);
 
-$dataCollection = new Collection($data);
+$dataCollection = Factory::create($data);
 
-$mgraph = new MGraph();
-
-foreach ($methods as $index => $method) {
-    $graph = new Graph(800, 600);
+$createGraph = function ($title, $axis) use ($graphWidth, $graphHeight) {
+    $graph = new Graph($graphWidth, $graphHeight);
     $graph->SetScale('intlin');
-    $graph->title->Set($method.' - '.$version);
+    $graph->title->Set($title);
     $graph->SetMarginColor('white');
     $graph->SetFrame(false);
     $graph->SetMargin(30, 50, 30, 30);
     $graph->yaxis->HideZeroLabel();
     $graph->ygrid->SetFill(true, '#EFEFEF@0.5', '#BBCCFF@0.5');
     $graph->xgrid->Show();
-    $graph->xaxis->SetTickLabels($stepPoints->toArray());
+    $graph->xaxis->SetTickLabels($axis);
     $graph->legend->SetShadow('gray@0.4', 5);
     $graph->legend->SetPos(0.1, 0.1, 'left', 'top');
-    foreach ($types as $type) {
-        $plotsValues = $dataCollection->filter(
-            function ($value) use ($method, $type, $stepPoints) {
-                return $value->method == $method && $value->type == $type &&
-                       in_array($value->iterations, $stepPoints->toArray());
-            }
-        )->map(
-            function ($value) {
-                return (float)$value->time;
-            }
-        )->keyCombine(
-            $stepPoints->map(
-                function ($value) {
-                    return (string)$value;
+
+    return $graph;
+};
+
+$mgraph = new MGraph();
+
+foreach ($methods as $yindex => $method) {
+    foreach ($graphsLimit as $xindex => $axisList) {
+        if (count($axisList) == 0) {
+            continue;
+        }
+        $graph = $createGraph($method.' - '.$version, $axisList);
+        foreach ($classes as $class) {
+            /** @var Collection $plotsValues */
+            $plotsValues = $dataCollection->dump()->filter(
+                function ($value) use ($method, $class, $axisList) {
+                    return $value->method == $method && $value->type == $class &&
+                           in_array($value->iterations, $axisList);
                 }
-            )
-        );
+            )->dump()->map(
+                function ($value) {
+                    return (float)$value->time;
+                }
+            )->dump()->keyCombine($axisList);
 
-        $linePlot = new LinePlot($plotsValues->values()->toArray());
-
-        $linePlot->SetLegend($type);
-        $graph->Add($linePlot);
+            $linePlot = new LinePlot($plotsValues->values()->toArray());
+            $linePlot->SetLegend(end(explode('\\', $class)));
+            $graph->Add($linePlot);
+        }
+        $mgraph->Add($graph, $xindex * $graphWidth, $yindex * $graphHeight);
     }
-    $mgraph->Add($graph, 0, $index * 300);
 }
 $mgraph->Stroke();
