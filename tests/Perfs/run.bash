@@ -21,10 +21,11 @@ source ${BASEDIR}/config.conf
 
 for VERSION in ${PHPVERSIONS[*]}
 do
-    FILE="${BASEDIR}/results${VERSION}.data"
+    REALPHPVERSION=`$PHP -r 'print PHP_VERSION."\n";'`
+    FILE="${BASEDIR}/results${REALPHPVERSION}.data"
     echo -n "" > $FILE
     if [ "$JSONMODE" != "1" ]; then
-        echoTitle "${VERSION}"
+        echoTitle "${REALPHPVERSION}"
     fi
 
     if [ "$LOCAL_MODE" != "1" ]; then
@@ -46,7 +47,9 @@ do
         cat $FILE
     else
         # use the php from php here to get GD
-        php tests/Perfs/graph.php "${VERSION}" > ${VERSION}_graph.png
+        php tests/Perfs/graph.php "${REALPHPVERSION}" > ${REALPHPVERSION}_graph.png
+        php tests/Perfs/upload.php "${REALPHPVERSION}"
+        rm ${REALPHPVERSION}_graph.png
     fi
 done
 

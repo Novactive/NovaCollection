@@ -15,9 +15,14 @@ use Novactive\Tests\Perfs\ForeachMethodCollection;
 
 include __DIR__.'/../bootstrap.php';
 
-$version = (string)$_SERVER['argv'][1];
+$version  = (string)$_SERVER['argv'][1];
+$fileName = __DIR__."/results{$version}.data";
+if (!file_exists($fileName)) {
 
-$php56Content = implode(',', file(__DIR__."/results{$version}.data"));
+    echo "Data file does not exist.";
+    exit(1);
+}
+$php56Content = implode(',', file($fileName));
 $content      = "[{$php56Content}]";
 $data         = json_decode($content);
 
@@ -29,13 +34,13 @@ $graphHeight = 400;
 $methods = $graphsLimit = [];
 foreach ($configs as $config) {
     list($var, $value) = explode('=', $config);
-    $value             = trim($value, "()\n");
-    $value             = explode(' ', $value);
+    $value = trim($value, "()\n");
+    $value = explode(' ', $value);
     if ($var == 'ITERATIONS') {
         $graphsLimit = [
             array_slice($value, 0, 11),
-            array_slice($value, 9, 5),
-            array_slice($value, 14, 5),
+            array_slice($value, 10, 11),
+            array_slice($value, 20, 9),
         ];
     }
     if ($var == 'METHODS') {

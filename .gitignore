@@ -4,4 +4,5 @@ phpunit.xml
 .idea
 .php_cs.cache
 php*.png
-tests/Perfs/resultsphp*.data
+tests/Perfs/results*.data
+tests/Perfs/imgur.credentials.php
