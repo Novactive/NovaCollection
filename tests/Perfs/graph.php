@@ -36,8 +36,8 @@ foreach ($configs as $config) {
         continue;
     }
     list($var, $value) = explode('=', $config);
-    $value = trim($value, "()\n");
-    $value = explode(' ', $value);
+    $value             = trim($value, "()\n");
+    $value             = explode(' ', $value);
     if ($var == 'ITERATIONS') {
         $graphsLimit = [
             array_slice($value, 0, 11),
