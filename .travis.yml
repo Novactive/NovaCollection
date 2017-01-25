@@ -21,7 +21,7 @@ script:
 - php vendor/bin/phpcs --standard=.cs/cs_ruleset.xml --extensions=php tests
 - php vendor/bin/phpunit
 after_success:
-- bash tests/Perfs/run.bash 0 1
+- bash tests/Perfs/run.bash 1 1
 #- if [[ $EXECUTE_DEPLOYMENT == 'true' && $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then ./scripts/travis_deploy_doc.bash ; fi
 notifications:
   email: false
