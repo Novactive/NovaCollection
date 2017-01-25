@@ -18,8 +18,7 @@ include __DIR__.'/../bootstrap.php';
 $version  = (string)$_SERVER['argv'][1];
 $fileName = __DIR__."/results{$version}.data";
 if (!file_exists($fileName)) {
-
-    echo "Data file does not exist.";
+    echo 'Data file does not exist.';
     exit(1);
 }
 $php56Content = implode(',', file($fileName));
@@ -34,8 +33,8 @@ $graphHeight = 400;
 $methods = $graphsLimit = [];
 foreach ($configs as $config) {
     list($var, $value) = explode('=', $config);
-    $value = trim($value, "()\n");
-    $value = explode(' ', $value);
+    $value             = trim($value, "()\n");
+    $value             = explode(' ', $value);
     if ($var == 'ITERATIONS') {
         $graphsLimit = [
             array_slice($value, 0, 11),
