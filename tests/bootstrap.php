@@ -10,4 +10,6 @@
  * @license   MIT
  */
 require_once __DIR__.'/../vendor/autoload.php';
+error_reporting(E_ERROR | E_STRICT | E_NOTICE);
+ini_set('display_errors', 1);
 date_default_timezone_set('America/Los_Angeles');

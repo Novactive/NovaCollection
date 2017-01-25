@@ -32,14 +32,17 @@ $graphHeight = 400;
 
 $methods = $graphsLimit = [];
 foreach ($configs as $config) {
+    if (empty(trim($config))) {
+        continue;
+    }
     list($var, $value) = explode('=', $config);
-    $value             = trim($value, "()\n");
-    $value             = explode(' ', $value);
+    $value = trim($value, "()\n");
+    $value = explode(' ', $value);
     if ($var == 'ITERATIONS') {
         $graphsLimit = [
             array_slice($value, 0, 11),
             array_slice($value, 10, 11),
-            array_slice($value, 20, 9),
+            array_slice($value, 21, 9),
         ];
     }
     if ($var == 'METHODS') {
@@ -95,7 +98,8 @@ foreach ($methods as $yindex => $method) {
             )->dump()->keyCombine($axisList);
 
             $linePlot = new LinePlot($plotsValues->values()->toArray());
-            $linePlot->SetLegend(end(explode('\\', $class)));
+            $parts    = explode('\\', $class);
+            $linePlot->SetLegend(end($parts));
             $graph->Add($linePlot);
         }
         $mgraph->Add($graph, $xindex * $graphWidth, $yindex * $graphHeight);
