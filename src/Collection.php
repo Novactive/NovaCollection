@@ -285,11 +285,9 @@ class Collection implements ArrayAccess, Iterator, Countable
     }
 
     /**
-     * Need another name.
-     *
      * @param $items
      */
-    public function iunion($items)
+    public function absorb($items)
     {
         $this->union($items, true);
     }
@@ -314,11 +312,9 @@ class Collection implements ArrayAccess, Iterator, Countable
     }
 
     /**
-     * Need another name.
-     *
      * @param $items
      */
-    public function imerge($items)
+    public function coalesce($items)
     {
         $this->merge($items, true);
     }

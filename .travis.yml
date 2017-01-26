@@ -10,7 +10,7 @@ matrix:
   - php: 7
   - php: 7.1
 before_install:
-- if [[ $PHP_HHVM != 'true' ]]; then phpenv config-rm xdebug.ini; fi
+- phpenv config-rm xdebug.ini
 - composer self-update
 - openssl aes-256-cbc -K $encrypted_31ceb3c17ab3_key -iv $encrypted_31ceb3c17ab3_iv -in tests/Perfs/imgur.credentials.php.enc -out tests/Perfs/imgur.credentials.php -d
 install:
