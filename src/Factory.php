@@ -19,16 +19,36 @@ use Traversable;
 class Factory
 {
     /**
-     * @param mixed $items
+     * @param array $items
+     * @param       $mode
      *
      * @return Collection
      */
-    public static function create($items = [])
+    public static function create($items = [], $className = null)
     {
         if (!is_array($items) && !($items instanceof Traversable)) {
             throw new InvalidArgumentException('Invalid input type for '.__METHOD__.', cannot create factory.');
         }
-        $collection = new Collection();
+
+        if (defined('DEBUG_COLLECTION') && DEBUG_COLLECTION == true) {
+            return static::fill(new DebugCollection(), $items);
+        }
+
+        if ($className !== null) {
+            return static::fill(new $className(), $items);
+        }
+
+        return static::fill(new Collection(), $items);
+    }
+
+    /**
+     * @param Collection $collection
+     * @param            $items
+     *
+     * @return Collection
+     */
+    protected static function fill(Collection $collection, $items)
+    {
         foreach ($items as $key => $val) {
             $collection->set($key, $val);
         }

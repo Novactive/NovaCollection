@@ -7,7 +7,7 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
-include __DIR__.'/../vendor/autoload.php';
+include __DIR__.'/bootstrap.php';
 
 use Novactive\Collection\Collection as NovaCollection;
 

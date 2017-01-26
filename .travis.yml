@@ -3,20 +3,16 @@ language: php
 cache:
   directories:
   - $HOME/.composer/cache
-  - vendor
 matrix:
   fast_finish: true
   include:
   - php: 5.6
   - php: 7
-  - php: hhvm
-    env:
-    - PHP_HHVM=true
-  allow_failures:
-  - php: hhvm
+  - php: 7.1
 before_install:
 - if [[ $PHP_HHVM != 'true' ]]; then phpenv config-rm xdebug.ini; fi
 - composer self-update
+- openssl aes-256-cbc -K $encrypted_31ceb3c17ab3_key -iv $encrypted_31ceb3c17ab3_iv -in tests/Perfs/imgur.credentials.php.enc -out tests/Perfs/imgur.credentials.php -d
 install:
 - travis_retry composer install --no-interaction
 - composer info -i
@@ -24,7 +20,8 @@ script:
 - php vendor/bin/phpcs --standard=.cs/cs_ruleset.xml --extensions=php src/
 - php vendor/bin/phpcs --standard=.cs/cs_ruleset.xml --extensions=php tests
 - php vendor/bin/phpunit
-#after_success:
+after_success:
+- bash tests/Perfs/run.bash 1 1
 #- if [[ $EXECUTE_DEPLOYMENT == 'true' && $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then ./scripts/travis_deploy_doc.bash ; fi
 notifications:
   email: false
