@@ -12,6 +12,7 @@ namespace Novactive\Tests\Perfs;
 
 use Novactive\Collection\Collection;
 use Novactive\Collection\Factory;
+use Traversable;
 
 /**
  * Class ForeachMethodCollection.
@@ -129,6 +130,95 @@ class ForeachMethodCollection extends Collection
         $collection = Factory::create([], static::class);
         foreach ($this->items as $key => $value) {
             $collection->add($key);
+        }
+
+        return $collection;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function unique()
+    {
+        $collection = Factory::create([], static::class);
+        foreach ($this->items as $value) {
+            // testing with in_array to not be dependant as in_array is faster and this collection would use foreach
+            // we want to test unique here, not in_array
+            if (!in_array($value, $this->items, true)) {
+                $collection->add($value);
+            }
+        }
+
+        return $collection;
+    }
+
+    /**
+     * @param $value
+     *
+     * @return bool
+     */
+    public function contains($value)
+    {
+        foreach ($this->items as $val) {
+            if ($value === $val) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param      $items
+     * @param bool $inPlace
+     *
+     * @return Collection
+     */
+    public function merge($items, $inPlace = false)
+    {
+        if (!is_array($items) && !($items instanceof Traversable)) {
+            $this->doThrow('Invalid input type for '.__METHOD__.', cannot merge.', $items);
+        }
+        $collection = $inPlace ? $this : clone $this;
+        foreach ($items as $key => $value) {
+            $collection->set($key, $value);
+        }
+
+        return $collection;
+    }
+
+    /**
+     * @param      $items
+     * @param bool $inPlace
+     *
+     * @return Collection
+     */
+    public function union($items, $inPlace = false)
+    {
+        if (!is_array($items) && !($items instanceof Traversable)) {
+            $this->doThrow('Invalid input type for '.__METHOD__.', cannot union.', $items);
+        }
+        $collection = $inPlace ? $this : clone $this;
+        foreach ($items as $key => $value) {
+            if (!$collection->containsKey($key)) {
+                $collection->set($key, $value);
+            }
+        }
+
+        return $collection;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function reverse()
+    {
+        $collection = Factory::create([], static::class);
+        $count      = $this->count();
+        $keys       = $this->keys();
+        $values     = $this->values();
+        for ($i = $count; $i >= 0; $i--) {
+            $collection->set($keys[$i], $values[$i]);
         }
 
         return $collection;

@@ -10,10 +10,14 @@ cd ${PROJECTDIR}
 
 echoTitle "******** Run tests ********"
 
-echoAction "PHP MAC 5.6"
+echoAction "PHP MAC 5.6 - Collection"
 $PHP vendor/bin/phpunit
+echoAction "PHP MAC 5.6 - ArrayMethodCollection"
+DEBUG_COLLECTION_CLASS="Novactive\Tests\Perfs\ArrayMethodCollection" $PHP vendor/bin/phpunit
+echoAction "PHP MAC 5.6 - ForeachMethodCollection"
+DEBUG_COLLECTION_CLASS="Novactive\Tests\Perfs\ForeachMethodCollection" $PHP vendor/bin/phpunit
 
-echoAction "PHP 7 DOCKER"
+echoAction "PHP 7 DOCKER - Collection"
 $PHP7 vendor/bin/phpunit
 
 echoSuccess "Done."

@@ -27,7 +27,7 @@
     <rule ref="rulesets/codesize.xml/ExcessiveClassComplexity">
         <priority>1</priority>
         <properties>
-            <property name="maximum" value="75"/>
+            <property name="maximum" value="175"/>
         </properties>
     </rule>
     <rule ref="rulesets/codesize.xml/ExcessiveMethodLength">
@@ -50,6 +50,7 @@
     <rule ref="rulesets/codesize.xml">
         <exclude name="TooManyMethods"/>
         <exclude name="TooManyPublicMethods"/>
+        <exclude name="ExcessivePublicCount"/>
         <exclude name="ExcessiveClassComplexity"/>
     </rule>
 </ruleset>

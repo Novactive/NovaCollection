@@ -87,6 +87,26 @@ if ($method == 'keys') {
     $collection->keys();
 }
 
+if ($method == 'unique') {
+    $collection->unique();
+}
+
+if ($method == 'contains') {
+    $collection->contains('plop');
+}
+
+if ($method == 'merge') {
+    $collection->merge($data2);
+}
+
+if ($method == 'union') {
+    $collection->union($data2);
+}
+
+if ($method == 'reverse') {
+    $collection->reverse();
+}
+
 $end  = microtime(true);
 $time = $end - $start;
 

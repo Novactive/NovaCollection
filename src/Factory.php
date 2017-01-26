@@ -30,11 +30,17 @@ class Factory
             throw new InvalidArgumentException('Invalid input type for '.__METHOD__.', cannot create factory.');
         }
 
+        if ($className !== null) {
+            return static::fill(new $className(), $items);
+        }
+
         if (defined('DEBUG_COLLECTION') && DEBUG_COLLECTION == true) {
             return static::fill(new DebugCollection(), $items);
         }
 
-        if ($className !== null) {
+        if (getenv('DEBUG_COLLECTION_CLASS') && getenv('DEBUG_COLLECTION_CLASS') != '') {
+            $className = getenv('DEBUG_COLLECTION_CLASS');
+
             return static::fill(new $className(), $items);
         }
 
@@ -49,6 +55,9 @@ class Factory
      */
     protected static function fill(Collection $collection, $items)
     {
+        //@todo: should be removed, we need something like
+        // https://github.com/illuminate/support/blob/master/Collection.php#L1425
+        // => direclty in the constructor
         foreach ($items as $key => $val) {
             $collection->set($key, $val);
         }

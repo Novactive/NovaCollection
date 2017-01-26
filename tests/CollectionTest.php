@@ -11,23 +11,22 @@
 namespace Novactive\Tests;
 
 use Novactive\Collection\Collection;
+use Novactive\Collection\Factory;
 
 /**
  * Class CollectionTest.
- *
- * @package Novactive\Tests
  */
 class CollectionTest extends UnitTestCase
 {
     public function testInstantiateCollectionWithNoParams()
     {
-        $coll = new Collection();
+        $coll = Factory::create();
         $this->assertInstanceOf(Collection::class, $coll);
     }
 
     public function testCollectionToArrayConvertsItemsToArray()
     {
-        $coll = new Collection($this->fixtures['names']);
+        $coll = Factory::create($this->fixtures['names']);
         $this->assertInstanceOf(Collection::class, $coll);
         $this->assertEquals(
             ['Chelsea', 'Adella', 'Monte', 'Maye', 'Lottie', 'Don', 'Dayton', 'Kirk', 'Troy', 'Nakia'],
@@ -37,25 +36,25 @@ class CollectionTest extends UnitTestCase
 
     public function testFirstReturnsFirstItemInCollection()
     {
-        $coll = new Collection($this->fixtures['names']);
+        $coll = Factory::create($this->fixtures['names']);
         $this->assertEquals('Chelsea', $coll->first());
     }
 
     public function testLastReturnsLastItemInCollection()
     {
-        $coll = new Collection($this->fixtures['names']);
+        $coll = Factory::create($this->fixtures['names']);
         $this->assertEquals('Nakia', $coll->last());
     }
 
     public function testCurrentReturnsCurrentValue()
     {
-        $coll = new Collection($this->fixtures['names']);
+        $coll = Factory::create($this->fixtures['names']);
         $this->assertEquals('Chelsea', $coll->current());
     }
 
     public function testNextMovesCollectionInternalPointer()
     {
-        $coll = new Collection($this->fixtures['names']);
+        $coll = Factory::create($this->fixtures['names']);
         $this->assertEquals(
             'Chelsea',
             $coll->current(),
@@ -100,7 +99,7 @@ class CollectionTest extends UnitTestCase
 
     public function testKeyReturnsCurrentKeyInCollection()
     {
-        $coll = new Collection($this->fixtures['names']);
+        $coll = Factory::create($this->fixtures['names']);
         $this->assertSame(0, $coll->key(), 'Initial call to key() should return first item in collection.');
         $this->assertSame(0, $coll->key(), 'Subsequent calls to key() should continue to return the same value.');
         $coll->next();
@@ -139,7 +138,7 @@ class CollectionTest extends UnitTestCase
 
     public function testValidReturnsFalseWhenCollectionHasBeenIteratedBeyondItsLastItem()
     {
-        $coll = new Collection($this->fixtures['names']);
+        $coll = Factory::create($this->fixtures['names']);
         $this->assertTrue($coll->valid(), 'Initial call to valid() should always return true.');
         $coll->next();
         $this->assertTrue($coll->valid(), 'Subsequent calls to valid() should continue to return true.');
@@ -162,7 +161,7 @@ class CollectionTest extends UnitTestCase
 
     public function testRewindWillReturnInternalPointerToItsInitialPosition()
     {
-        $coll = new Collection($this->fixtures['names']);
+        $coll = Factory::create($this->fixtures['names']);
         $this->assertEquals('Chelsea', $coll->first());
         $this->assertTrue($coll->valid(), 'Initial call to valid() should always return true.');
         $coll->next();
@@ -206,13 +205,13 @@ class CollectionTest extends UnitTestCase
         $this->assertEquals('Chelsea', current($arr));
         next($arr);
         $this->assertEquals('Adella', current($arr));
-        $coll = new Collection($arr);
+        $coll = Factory::create($arr);
         $this->assertEquals('Chelsea', $coll->current());
     }
 
     public function testCountReturnsTotalCollectionCount()
     {
-        $coll = new Collection($this->fixtures['names']);
+        $coll = Factory::create($this->fixtures['names']);
         $this->assertCount(10, $coll);
         $this->assertEquals(10, $coll->count());
         $this->assertEquals(10, count($coll));

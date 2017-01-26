@@ -102,4 +102,56 @@ class ArrayMethodCollection extends Collection
     {
         return Factory::create(array_keys($this->items), static::class);
     }
+
+    /**
+     * @return Collection
+     */
+    public function unique()
+    {
+        return Factory::create(array_unique($this->items), static::class);
+    }
+
+    /**
+     * @param $value
+     *
+     * @return bool
+     */
+    public function contains($value)
+    {
+        return in_array($value, $this->items, true);
+    }
+
+    /**
+     * @param      $items
+     * @param bool $inPlace
+     *
+     * @return Collection
+     */
+    public function merge($items, $inPlace = false)
+    {
+        if (!is_array($items) && !($items instanceof Traversable)) {
+            $this->doThrow('Invalid input type for '.__METHOD__.', cannot merge.', $items);
+        }
+
+        return Factory::create(array_merge($this->items, $items), static::class);
+    }
+
+    /**
+     * @param      $items
+     * @param bool $inPlace
+     *
+     * @return Collection
+     */
+    public function union($items, $inPlace = false)
+    {
+        return Factory::create($this->items + $items, static::class);
+    }
+
+    /**
+     * @return Collection
+     */
+    public function reverse()
+    {
+        return Factory::create(array_reverse($this->items, true), static::class);
+    }
 }
