@@ -8,15 +8,17 @@
  * @license   MIT
  */
 
-namespace Novactive\Collection;
+namespace Novactive\Collection\Debug;
 
 /**
- * Class DebugCollection.
+ * Trait DebugTrait.
  */
-class DebugCollection extends Collection
+trait DebugTrait
 {
     /**
      * {@inheritdoc}
+     *
+     * @see \Novactive\Collection\Collection::doTrhow
      */
     protected function doThrow($message, $arguments)
     {
@@ -31,6 +33,8 @@ class DebugCollection extends Collection
 
     /**
      * {@inheritdoc}
+     *
+     * @see \Novactive\Collection\Collection::dump
      */
     public function dump()
     {

@@ -95,7 +95,7 @@ foreach ($methods as $yindex => $method) {
                 function ($value) {
                     return (float)$value->time;
                 }
-            )->dump()->keyCombine($axisList);
+            )->dump()->combineKeys($axisList);
 
             $linePlot = new LinePlot($plotsValues->values()->toArray());
             $parts    = explode('\\', $class);

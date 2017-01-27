@@ -9,9 +9,10 @@
  */
 include __DIR__.'/bootstrap.php';
 
-use Novactive\Collection\Collection as NovaCollection;
+use Novactive\Collection\Collection;
+use Novactive\Collection\Factory;
 
-$dump = function (NovaCollection $collection, $name) {
+$dump = function (Collection $collection, $name) {
     echo "---{$name}---".PHP_EOL;
     $collection->each(
         function ($value, $key, $i) {
@@ -20,7 +21,7 @@ $dump = function (NovaCollection $collection, $name) {
     );
 };
 
-$c1 = new NovaCollection(
+$c1 = Factory::create(
     [
         'key1'     => 'value1',
         'key2'     => 'value2',
@@ -28,7 +29,8 @@ $c1 = new NovaCollection(
         'orange',
         'dark',
         'aNullKey' => null,
-    ]
+    ],
+    'Novactive\Collection\Debug\Collection'
 );
 
 $c1Clone = clone $c1;
@@ -102,7 +104,7 @@ $c1Clone->prune(
 
 $dump($c1Clone, 'c2');
 
-$plus = new NovaCollection(
+$plus = new Collection(
     [
         'key3' => 'value3overrided',
         'key4' => 'value4',

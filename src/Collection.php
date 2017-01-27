@@ -46,8 +46,10 @@ class Collection implements ArrayAccess, Iterator, Countable
     }
 
     /**
-     * @param $key
-     * @param $value
+     * Set the value to the key no matter what.
+     *
+     * @param string $key
+     * @param mixed  $value
      *
      * @return $this
      */
@@ -59,7 +61,9 @@ class Collection implements ArrayAccess, Iterator, Countable
     }
 
     /**
-     * @param $key
+     * Get the value related to the key.
+     *
+     * @param string $key
      *
      * @return mixed|null
      */
@@ -73,7 +77,9 @@ class Collection implements ArrayAccess, Iterator, Countable
     }
 
     /**
-     * @param $key
+     * Test is the key exists.
+     *
+     * @param string $key
      *
      * @return bool
      */
@@ -83,7 +89,9 @@ class Collection implements ArrayAccess, Iterator, Countable
     }
 
     /**
-     * @param $value
+     * Test if this values exists.
+     *
+     * @param mixed $value
      *
      * @performanceCompared true
      *
@@ -95,7 +103,9 @@ class Collection implements ArrayAccess, Iterator, Countable
     }
 
     /**
-     * @param $item
+     * Add a new value to the collection, next numeric index will be used.
+     *
+     * @param mixed $item
      *
      * @return $this
      */
@@ -107,7 +117,9 @@ class Collection implements ArrayAccess, Iterator, Countable
     }
 
     /**
-     * @param $key
+     * Remove the $key/value in the collection.
+     *
+     * @param string $key
      *
      * @return $this
      */
@@ -122,7 +134,9 @@ class Collection implements ArrayAccess, Iterator, Countable
     }
 
     /**
-     * @param $key
+     *  Remove the $key/value in the collection and return the removed value.
+     *
+     * @param string $key
      *
      * @return mixed
      */
@@ -138,6 +152,8 @@ class Collection implements ArrayAccess, Iterator, Countable
     }
 
     /**
+     * Get the first time and reset and rewind.
+     *
      * @return mixed
      */
     public function first()
@@ -146,6 +162,8 @@ class Collection implements ArrayAccess, Iterator, Countable
     }
 
     /**
+     * Get the last item.
+     *
      * @return mixed
      */
     public function last()
@@ -154,6 +172,8 @@ class Collection implements ArrayAccess, Iterator, Countable
     }
 
     /**
+     * Map and return a new Collection.
+     *
      * @param callable $callback
      *
      * @performanceCompared true
@@ -171,6 +191,8 @@ class Collection implements ArrayAccess, Iterator, Countable
     }
 
     /**
+     * Map (in-place).
+     *
      * @param callable $callback
      *
      * @return $this
@@ -185,6 +207,8 @@ class Collection implements ArrayAccess, Iterator, Countable
     }
 
     /**
+     * Filter and return a new Collection.
+     *
      * @param callable $callback
      *
      * @performanceCompared true
@@ -204,62 +228,80 @@ class Collection implements ArrayAccess, Iterator, Countable
     }
 
     /**
+     * Filter (in-place).
+     *
      * @param callable $callback
      *
      * @return $this
      */
-    //@todo: find a better name
-    public function ifilter(callable $callback)
+    public function prune(callable $callback)
     {
-        //@todo: filter in-place
+        foreach ($this->items as $key => $value) {
+            if (!$callback($value, $key)) {
+                $this->remove($key);
+            }
+        }
+
         return $this;
     }
 
     /**
-     * @param $values
+     * Combine and return a new Collection.
+     * It takes the keys of the current Collection and assign the values.
+     *
+     * @param Traversable $values
+     * @param bool        $inPlace
      *
      * @performanceCompared true
      *
      * @return mixed
      */
-    public function combine($values)
+    public function combine($values, $inPlace = false)
     {
         if (!is_array($values) && !($values instanceof Traversable)) {
-            $this->doThrow('Invalid input type for '.__METHOD__.', cannot combine.', $values);
+            $this->doThrow('Invalid input type for '.($inPlace ? 'replace' : 'combine').'.', $values);
         }
 
         if (count($values) != count($this->items)) {
-            $this->doThrow('Invalid input for '.__METHOD__.', number of items does not match.', $values);
+            $this->doThrow(
+                'Invalid input for '.($inPlace ? 'replace' : 'combine').', number of items does not match.',
+                $values
+            );
         }
 
         return array_combine($this->items, $values);
     }
 
     /**
-     * @param $values
+     * Combine (in-place).
+     *
+     * @param Traversable $values
      *
      * @return $this
      */
     public function replace($values)
     {
-        //@todo: combine in-pace
+        $this->items = $this->combine($values, true);
+
         return $this;
     }
 
     /**
-     * @param $keys
+     * Opposite of Combine
+     * It keeps the values of the current Collection and assign new keys.
+     *
+     * @param Traversable $keys
      *
      * @return Collection
      */
-    //@todo: find a better name
-    public function keyCombine($keys)
+    public function combineKeys($keys)
     {
         if (!is_array($keys) && !($keys instanceof Traversable)) {
-            $this->doThrow('Invalid input type for '.__METHOD__.', cannot keyCombine.', $keys);
+            $this->doThrow('Invalid input type for keyCombine.', $keys);
         }
 
         if (count($keys) != count($this->items)) {
-            $this->doThrow('Invalid input for '.__METHOD__.', number of items does not match.', $keys);
+            $this->doThrow('Invalid input for keyCombine, number of items does not match.', $keys);
         }
         $collection = Factory::create();
         $this->rewind();
@@ -273,17 +315,22 @@ class Collection implements ArrayAccess, Iterator, Countable
     }
 
     /**
-     * @param $keys
+     * CombineKeys (in-place).
+     *
+     * @param Traversable $keys
      *
      * @return $this
      */
     public function reindex($keys)
     {
-        //@todo: keyCombine in-place
+        $this->items = $this->combineKeys($keys)->toArray();
+
         return $this;
     }
 
     /**
+     * Reduce.
+     *
      * @param callable $callback
      * @param null     $initial
      *
@@ -302,6 +349,8 @@ class Collection implements ArrayAccess, Iterator, Countable
     }
 
     /**
+     * Run the callback on each element (passive).
+     *
      * @param callable $callback
      *
      * @performanceCompared true
@@ -315,6 +364,8 @@ class Collection implements ArrayAccess, Iterator, Countable
     }
 
     /**
+     * Flip the keys and the values and return a new Collection.
+     *
      * @performanceCompared true
      *
      * @return Collection
@@ -330,17 +381,30 @@ class Collection implements ArrayAccess, Iterator, Countable
     }
 
     /**
+     * Flip (in-place).
+     *
      * @return $this
      */
     public function invert()
     {
-        //@todo: flip in-place
-        return $this;
+        $valuesThatAreKey = Factory::create();
+        foreach ($this->items as $key => $value) {
+            if (!$this->containsKey($value)) {
+                $this->set($value, $key);
+                $this->remove($key);
+                continue;
+            }
+            $valuesThatAreKey->set($value, $key);
+        }
+
+        return $this->coalesce($valuesThatAreKey);
     }
 
     /**
-     * @param      $items
-     * @param bool $inPlace
+     * Merge the items and the collections and return a new Collection.
+     *
+     * @param Traversable $items
+     * @param bool        $inPlace
      *
      * @performanceCompared true
      *
@@ -349,7 +413,7 @@ class Collection implements ArrayAccess, Iterator, Countable
     public function merge($items, $inPlace = false)
     {
         if (!is_array($items) && !($items instanceof Traversable)) {
-            $this->doThrow('Invalid input type for '.__METHOD__.', cannot merge.', $items);
+            $this->doThrow('Invalid input type for '.($inPlace ? 'coalesce' : 'merge').'.', $items);
         }
         $collection = $inPlace ? $this : clone $this;
         foreach ($items as $key => $value) {
@@ -360,7 +424,9 @@ class Collection implements ArrayAccess, Iterator, Countable
     }
 
     /**
-     * @param $items
+     * Merge (in-place).
+     *
+     * @param Traversable $items
      */
     public function coalesce($items)
     {
@@ -368,8 +434,10 @@ class Collection implements ArrayAccess, Iterator, Countable
     }
 
     /**
-     * @param      $items
-     * @param bool $inPlace
+     * Union the collection with Items.
+     *
+     * @param Traversable $items
+     * @param bool        $inPlace
      *
      * @performanceCompared true
      *
@@ -378,7 +446,7 @@ class Collection implements ArrayAccess, Iterator, Countable
     public function union($items, $inPlace = false)
     {
         if (!is_array($items) && !($items instanceof Traversable)) {
-            $this->doThrow('Invalid input type for '.__METHOD__.', cannot union.', $items);
+            $this->doThrow('Invalid input type for '.($inPlace ? 'absorb' : 'union'), $items);
         }
         $collection = $inPlace ? $this : clone $this;
         foreach ($items as $key => $value) {
@@ -391,14 +459,22 @@ class Collection implements ArrayAccess, Iterator, Countable
     }
 
     /**
-     * @param $items
+     * Union (in-place).
+     *
+     * @param Traversable $items
+     *
+     * @return $this
      */
     public function absorb($items)
     {
         $this->union($items, true);
+
+        return $this;
     }
 
     /**
+     * Assert that the callback result is $expected for all.
+     *
      * @param callable $callback
      * @param bool     $expected
      *
@@ -416,6 +492,8 @@ class Collection implements ArrayAccess, Iterator, Countable
     }
 
     /**
+     * Return all the values.
+     *
      * @performanceCompared true
      *
      * @return Collection
@@ -431,6 +509,8 @@ class Collection implements ArrayAccess, Iterator, Countable
     }
 
     /**
+     * Return all the keys.
+     *
      * @performanceCompared true
      *
      * @return Collection
@@ -446,35 +526,20 @@ class Collection implements ArrayAccess, Iterator, Countable
     }
 
     /**
+     * Pass the collection to the given callback and return the result.
+     *
      * @param callable $callback
      *
-     * @return Collection
+     * @return mixed
      */
-    public function prune(callable $callback)
+    public function pipe(callable $callback)
     {
-        foreach ($this->items as $key => $value) {
-            if ($callback($value, $key)) {
-                $this->remove($key);
-            }
-        }
-
-        return $this;
+        return $callback($this);
     }
 
     /**
-     * @param callable $callback
+     * Shuffle. (random in-place).
      *
-     * @return $this
-     */
-    //@todo: find better name
-    public function iprune(callable $callback)
-    {
-        //@todo: prune in-place
-
-        return $this;
-    }
-
-    /**
      * @return $this
      */
     public function shuffle()
@@ -485,6 +550,8 @@ class Collection implements ArrayAccess, Iterator, Countable
     }
 
     /**
+     * Shuffle and return a new Collection.
+     *
      * @return Collection
      */
     public function random()
@@ -496,6 +563,8 @@ class Collection implements ArrayAccess, Iterator, Countable
     }
 
     /**
+     * Deduplicate the collection and return a new Collection.
+     *
      * @performanceCompared true
      *
      * @return Collection
@@ -505,14 +574,21 @@ class Collection implements ArrayAccess, Iterator, Countable
         return Factory::create(array_unique($this->items));
     }
 
-    //@todo: find better name
-    public function iunique()
+    /**
+     * Unique (in-place).
+     *
+     * @return $this
+     */
+    public function distinct()
     {
-        //@todo: unique inplace
+        $this->items = array_unique($this->items);
+
         return $this;
     }
 
     /**
+     * Reverse the collection and return a new Collection.
+     *
      * @performanceCompared true
      *
      * @return Collection
@@ -523,11 +599,14 @@ class Collection implements ArrayAccess, Iterator, Countable
     }
 
     /**
+     * Reverse (in-place).
+     *
      * @return $this
      */
     public function inverse()
     {
-        //@todo: unique reverse
+        $this->items = array_reverse($this->items);
+
         return $this;
     }
 
@@ -634,12 +713,12 @@ class Collection implements ArrayAccess, Iterator, Countable
     }
 
     /* --         ---          -- */
-    /* -- INTERFACE COMPLIANCE -- */
+    /* --        OTHERS        -- */
     /* --         ---          -- */
 
     /**
-     * @param $message
-     * @param $arguments
+     * @param string $message
+     * @param mixed  $arguments
      *
      * @throws InvalidArgumentException
      */
@@ -650,7 +729,7 @@ class Collection implements ArrayAccess, Iterator, Countable
     }
 
     /**
-     * @return static
+     * @return $this
      */
     public function dump()
     {

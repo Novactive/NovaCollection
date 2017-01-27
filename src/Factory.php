@@ -10,7 +10,6 @@
 
 namespace Novactive\Collection;
 
-use InvalidArgumentException;
 use Traversable;
 
 /**
@@ -24,44 +23,31 @@ class Factory
      *
      * @return Collection
      */
-    public static function create($items = [], $className = null)
+    public static function create($items = [], $className = 'Novactive\Collection\Collection')
     {
-        if (!is_array($items) && !($items instanceof Traversable)) {
-            throw new InvalidArgumentException('Invalid input type for '.__METHOD__.', cannot create factory.');
-        }
-
-        if ($className !== null) {
-            return static::fill(new $className(), $items);
-        }
-
-        if (defined('DEBUG_COLLECTION') && DEBUG_COLLECTION == true) {
-            return static::fill(new DebugCollection(), $items);
-        }
-
+        $options = null;
         if (getenv('DEBUG_COLLECTION_CLASS') && getenv('DEBUG_COLLECTION_CLASS') != '') {
             $className = getenv('DEBUG_COLLECTION_CLASS');
-
-            return static::fill(new $className(), $items);
         }
 
-        return static::fill(new Collection(), $items);
+        return new $className(static::getArrayForItems($items), $options);
     }
 
     /**
-     * @param Collection $collection
-     * @param            $items
+     * @param $items
      *
-     * @return Collection
+     * @return array
      */
-    protected static function fill(Collection $collection, $items)
+    protected static function getArrayForItems($items)
     {
-        //@todo: should be removed, we need something like
-        // https://github.com/illuminate/support/blob/master/Collection.php#L1425
-        // => direclty in the constructor
-        foreach ($items as $key => $val) {
-            $collection->set($key, $val);
+        if (is_array($items)) {
+            return $items;
+        } elseif ($items instanceof Collection) {
+            return $items->toArray();
+        } elseif ($items instanceof Traversable) {
+            return iterator_to_array($items);
         }
 
-        return $collection;
+        return (array)$items;
     }
 }

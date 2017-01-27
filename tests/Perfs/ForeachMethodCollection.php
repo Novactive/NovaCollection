@@ -20,9 +20,7 @@ use Traversable;
 class ForeachMethodCollection extends Collection
 {
     /**
-     * @param callable $callback
-     *
-     * @return Collection
+     * {@inheritdoc}
      */
     public function map(callable $callback)
     {
@@ -35,9 +33,7 @@ class ForeachMethodCollection extends Collection
     }
 
     /**
-     * @param callable $callback
-     *
-     * @return Collection
+     * {@inheritdoc}
      */
     public function filter(callable $callback)
     {
@@ -52,10 +48,7 @@ class ForeachMethodCollection extends Collection
     }
 
     /**
-     * @param callable $callback
-     * @param null     $initial
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
     public function reduce(callable $callback, $initial = null)
     {
@@ -68,11 +61,9 @@ class ForeachMethodCollection extends Collection
     }
 
     /**
-     * @param $values
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
-    public function combine($values)
+    public function combine($values, $inPlace = false)
     {
         $collection = Factory::create([], static::class);
         $this->rewind();
@@ -86,7 +77,7 @@ class ForeachMethodCollection extends Collection
     }
 
     /**
-     * @param callable $callback
+     * {@inheritdoc}
      */
     public function each(callable $callback)
     {
@@ -97,7 +88,7 @@ class ForeachMethodCollection extends Collection
     }
 
     /**
-     * @return Collection
+     * {@inheritdoc}
      */
     public function flip()
     {
@@ -110,7 +101,7 @@ class ForeachMethodCollection extends Collection
     }
 
     /**
-     * @return Collection
+     * {@inheritdoc}
      */
     public function values()
     {
@@ -123,7 +114,7 @@ class ForeachMethodCollection extends Collection
     }
 
     /**
-     * @return Collection
+     * {@inheritdoc}
      */
     public function keys()
     {
@@ -136,7 +127,7 @@ class ForeachMethodCollection extends Collection
     }
 
     /**
-     * @return Collection
+     * {@inheritdoc}
      */
     public function unique()
     {
@@ -153,9 +144,7 @@ class ForeachMethodCollection extends Collection
     }
 
     /**
-     * @param $value
-     *
-     * @return bool
+     * {@inheritdoc}
      */
     public function contains($value)
     {
@@ -169,10 +158,7 @@ class ForeachMethodCollection extends Collection
     }
 
     /**
-     * @param      $items
-     * @param bool $inPlace
-     *
-     * @return Collection
+     * {@inheritdoc}
      */
     public function merge($items, $inPlace = false)
     {
@@ -188,10 +174,7 @@ class ForeachMethodCollection extends Collection
     }
 
     /**
-     * @param      $items
-     * @param bool $inPlace
-     *
-     * @return Collection
+     * {@inheritdoc}
      */
     public function union($items, $inPlace = false)
     {
@@ -209,7 +192,7 @@ class ForeachMethodCollection extends Collection
     }
 
     /**
-     * @return Collection
+     * {@inheritdoc}
      */
     public function reverse()
     {

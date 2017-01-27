@@ -20,9 +20,7 @@ use Traversable;
 class ArrayMethodCollection extends Collection
 {
     /**
-     * @param callable $callback
-     *
-     * @return Collection
+     * {@inheritdoc}
      */
     public function map(callable $callback)
     {
@@ -33,9 +31,7 @@ class ArrayMethodCollection extends Collection
     }
 
     /**
-     * @param callable $callback
-     *
-     * @return Collection
+     * {@inheritdoc}
      */
     public function filter(callable $callback)
     {
@@ -43,10 +39,7 @@ class ArrayMethodCollection extends Collection
     }
 
     /**
-     * @param callable $callback
-     * @param null     $initial
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
     public function reduce(callable $callback, $initial = null)
     {
@@ -54,7 +47,7 @@ class ArrayMethodCollection extends Collection
     }
 
     /**
-     * @param callable $callback
+     * {@inheritdoc}
      */
     public function each(callable $callback)
     {
@@ -62,11 +55,9 @@ class ArrayMethodCollection extends Collection
     }
 
     /**
-     * @param $values
-     *
-     * @return array
+     * {@inheritdoc}
      */
-    public function combine($values)
+    public function combine($values, $inPlace = false)
     {
         if (!is_array($values) && !($values instanceof Traversable)) {
             $this->doThrow('Invalid input type for '.__METHOD__.', cannot combine.', $values);
@@ -80,7 +71,7 @@ class ArrayMethodCollection extends Collection
     }
 
     /**
-     * @return Collection
+     * {@inheritdoc}
      */
     public function flip()
     {
@@ -88,7 +79,7 @@ class ArrayMethodCollection extends Collection
     }
 
     /**
-     * @return Collection
+     * {@inheritdoc}
      */
     public function values()
     {
@@ -96,7 +87,7 @@ class ArrayMethodCollection extends Collection
     }
 
     /**
-     * @return Collection
+     * {@inheritdoc}
      */
     public function keys()
     {
@@ -104,7 +95,7 @@ class ArrayMethodCollection extends Collection
     }
 
     /**
-     * @return Collection
+     * {@inheritdoc}
      */
     public function unique()
     {
@@ -112,9 +103,7 @@ class ArrayMethodCollection extends Collection
     }
 
     /**
-     * @param $value
-     *
-     * @return bool
+     * {@inheritdoc}
      */
     public function contains($value)
     {
@@ -122,10 +111,7 @@ class ArrayMethodCollection extends Collection
     }
 
     /**
-     * @param      $items
-     * @param bool $inPlace
-     *
-     * @return Collection
+     * {@inheritdoc}
      */
     public function merge($items, $inPlace = false)
     {
@@ -137,10 +123,7 @@ class ArrayMethodCollection extends Collection
     }
 
     /**
-     * @param      $items
-     * @param bool $inPlace
-     *
-     * @return Collection
+     * {@inheritdoc}
      */
     public function union($items, $inPlace = false)
     {
@@ -148,7 +131,7 @@ class ArrayMethodCollection extends Collection
     }
 
     /**
-     * @return Collection
+     * {@inheritdoc}
      */
     public function reverse()
     {
