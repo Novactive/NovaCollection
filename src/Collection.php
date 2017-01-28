@@ -638,7 +638,7 @@ class Collection implements ArrayAccess, Iterator, Countable
     public function offsetGet($offset)
     {
         if (!$this->containsKey($offset)) {
-            throw new RuntimeException("Unknown offset: " . $offset);
+            throw new RuntimeException("Unknown offset: {$offset}");
         }
         return $this->get($offset);
     }

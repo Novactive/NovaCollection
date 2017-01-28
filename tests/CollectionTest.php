@@ -217,10 +217,9 @@ class CollectionTest extends UnitTestCase
         $this->assertEquals(10, count($coll));
     }
 
-
     public function testAddAppendsItemToCollectionWithNextNumericIndex()
     {
-        $array = new Collection($this->fixtures['array']);
+        $array = Factory::create($this->fixtures['array']);
         $this->assertEquals([
             0 => 'first',
             1 => 'second',
@@ -242,7 +241,7 @@ class CollectionTest extends UnitTestCase
             4 => 'fifth'
         ], $array->toArray());
 
-        $assoc = new Collection($this->fixtures['assoc']);
+        $assoc = Factory::create($this->fixtures['assoc']);
         $this->assertEquals([
             '1st' => 'first',
             '2nd' => 'second',
@@ -270,7 +269,7 @@ class CollectionTest extends UnitTestCase
 //    {
 //        $names = $this->fixtures['names'];
 //        $array = $this->fixtures['array'];
-//        $coll = new Collection($names);
+//        $coll = Factory::create($names);
 //        $this->assertEquals($names, $coll->toArray());
 //        $coll->add($array);
 //        $this->assertEquals(, $coll->toArray());
@@ -279,7 +278,7 @@ class CollectionTest extends UnitTestCase
     public function testSetWillSetValueOnCollectionInPlace()
     {
         $exp = $this->fixtures['assoc'];
-        $coll = new Collection($exp);
+        $coll = Factory::create($exp);
         $this->assertEquals($exp, $coll->toArray());
         $this->assertSame($coll, $coll->set('1st', 'worst'), "Collection::set() should return the collection itself.");
         $exp['1st'] = 'worst';
@@ -292,7 +291,7 @@ class CollectionTest extends UnitTestCase
 //    public function testRemoveRemovesItemByKey()
 //    {
 //        $exp = $this->fixtures['assoc'];
-//        $coll = new Collection($exp);
+//        $coll = Factory::create($exp);
 //        $this->assertTrue($coll->containsKey('2nd'));
 //        $removed = $coll->remove('2nd');
 //        $this->assertFalse($coll->containsKey('2nd'));
@@ -303,7 +302,7 @@ class CollectionTest extends UnitTestCase
     public function testGetReturnsItemIfItExists()
     {
         $exp = $this->fixtures['assoc'];
-        $coll = new Collection($exp);
+        $coll = Factory::create($exp);
         $this->assertEquals('second', $coll->get('2nd'));
         $coll->remove('2nd');
         $this->assertNull($coll->get('2nd'));
@@ -313,7 +312,7 @@ class CollectionTest extends UnitTestCase
     public function testHasReturnsTrueIfItemExistsByKey()
     {
         $exp = $this->fixtures['assoc'];
-        $coll = new Collection($exp);
+        $coll = Factory::create($exp);
         $this->assertTrue($coll->containsKey('2nd'));
         $coll->remove('2nd');
         $this->assertFalse($coll->containsKey('2nd'));
@@ -322,7 +321,7 @@ class CollectionTest extends UnitTestCase
     public function testArrayAccessUnsetRemovesItemByKeyAndReturnsNull()
     {
         $exp = $this->fixtures['assoc'];
-        $coll = new Collection($exp);
+        $coll = Factory::create($exp);
         $this->assertTrue($coll->containsKey('2nd'));
         $removed = $coll->offsetUnset('2nd');
         $this->assertFalse($coll->containsKey('2nd'));
@@ -336,7 +335,7 @@ class CollectionTest extends UnitTestCase
     {
         // associative
         $exp = $this->fixtures['assoc'];
-        $coll = new Collection($exp);
+        $coll = Factory::create($exp);
         $this->assertTrue($coll->containsKey('2nd'));
         $this->assertTrue($coll->offsetExists('2nd'), "Collection::offsetExists should return true if index exists.");
         $this->assertTrue(isset($coll['2nd']), "Collection::offsetExists should allow for the use of isset() on a collection using square brackets.");
@@ -346,7 +345,7 @@ class CollectionTest extends UnitTestCase
 
         // numeric
         $exp = $this->fixtures['array'];
-        $coll = new Collection($exp);
+        $coll = Factory::create($exp);
         $this->assertTrue($coll->containsKey(1));
         $this->assertTrue($coll->offsetExists(1), "Collection::offsetExists should return true if numeric offset exists.");
         $this->assertTrue(isset($coll[1]), "Collection::offsetExists should allow for the use of isset() on a collection using square brackets and numeric offset.");
@@ -359,7 +358,7 @@ class CollectionTest extends UnitTestCase
     {
         // associative
         $exp = $this->fixtures['assoc'];
-        $coll = new Collection($exp);
+        $coll = Factory::create($exp);
         $this->assertFalse($coll->containsKey('foo'));
         $coll['foo'] = 'bar';
         $this->assertTrue($coll->containsKey('foo'));
@@ -372,7 +371,7 @@ class CollectionTest extends UnitTestCase
 
         // numeric
         $exp = $this->fixtures['array'];
-        $coll = new Collection($exp);
+        $coll = Factory::create($exp);
         $this->assertFalse($coll->containsKey(5));
         $coll[5] = 'bar';
         $this->assertTrue($coll->containsKey(5));
@@ -392,7 +391,7 @@ class CollectionTest extends UnitTestCase
     public function testArrayAccessOffsetGetAllowsUseOfSquareBracketsForGetting()
     {
         $exp = $this->fixtures['assoc'];
-        $coll = new Collection($exp);
+        $coll = Factory::create($exp);
         $this->assertEquals('first', $coll->offsetGet('1st'));
         $this->assertEquals('first', $coll['1st']);
     }
@@ -404,13 +403,13 @@ class CollectionTest extends UnitTestCase
     public function testArrayAccessOffsetGetThrowsExceptionIfIndexDoesNotExist()
     {
         $exp = $this->fixtures['assoc'];
-        $coll = new Collection($exp);
+        $coll = Factory::create($exp);
         $foo = $coll['foo'];
     }
 
     public function testEachLoopsOverEveryItemInCollectionCallingCallback()
     {
-        $coll = new Collection($this->fixtures['names']);
+        $coll = Factory::create($this->fixtures['names']);
         $namesCount = count($this->fixtures['names']);
         $recorder = $this->getMethodCallRecorderForCount($namesCount);
 
@@ -426,7 +425,7 @@ class CollectionTest extends UnitTestCase
 
     public function testMapReturnsNewCollectionWithTransformedConstituents()
     {
-        $coll = new Collection($this->fixtures['names']);
+        $coll = Factory::create($this->fixtures['names']);
         $transformed = $coll->map(function($val, $key) {
             return $val . $key;
         });
@@ -448,7 +447,7 @@ class CollectionTest extends UnitTestCase
 
     public function testTransformTransformsCollectionInPlace()
     {
-        $coll = new Collection($this->fixtures['names']);
+        $coll = Factory::create($this->fixtures['names']);
         $transformed = $coll->transform(function($val, $key) {
             return $val . $key;
         });
@@ -473,7 +472,7 @@ class CollectionTest extends UnitTestCase
         $predicate = function($val, $key) {
             return strlen($val) > 4;
         };
-        $coll = new Collection($this->fixtures['names']);
+        $coll = Factory::create($this->fixtures['names']);
         $this->assertCount(10, $coll);
         $filtered = $coll->filter($predicate);
         $this->assertInstanceOf(Collection::class, $filtered);
@@ -489,4 +488,5 @@ class CollectionTest extends UnitTestCase
             9 => 'Nakia'
         ], $filtered->toArray());
     }
+
 }
