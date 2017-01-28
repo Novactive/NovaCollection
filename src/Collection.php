@@ -110,6 +110,8 @@ class Collection implements ArrayAccess, Iterator, Countable
      * @param mixed $item
      *
      * @return $this
+     *
+     * @todo I think we should add an $offset or $index argument to this as the second argument. If it is present, this method sill check if $this->containsKey($offset) and if it does, nothing happens. If it does not, then $this->set($key, $value)
      */
     public function add($item)
     {
@@ -154,6 +156,10 @@ class Collection implements ArrayAccess, Iterator, Countable
      * Get the first time and reset and rewind.
      *
      * @return mixed
+     *
+     * @todo This should accept a callable and it should return the first item in the collection that returns true for that callable
+     *
+     * @todo This should accept a second argument that is the default value. If the first argument (a callable) produces nothing, the second argument should be returned.
      */
     public function first()
     {
@@ -162,6 +168,10 @@ class Collection implements ArrayAccess, Iterator, Countable
 
     /**
      * Get the last item.
+     *
+     * @todo This should accept a callable and it should return the last item in the collection that returns true for that callable
+     *
+     * @todo This should accept a second argument that is the default value. If the first argument (a callable) produces nothing, the second argument should be returned.
      *
      * @return mixed
      */

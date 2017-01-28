@@ -505,5 +505,49 @@ class CollectionTest extends UnitTestCase
         ], $filtered->toArray());
     }
 
-    //public function testContainsKey
+    public function testPruneFiltersCollectionInPlace()
+    {
+        $coll = Factory::create($this->fixtures['names']);
+        $this->assertCount(10, $coll);
+        $this->assertSame($coll, $coll->prune(function($value, $key) {
+            return $key % 2 == 0;
+        }));
+        $this->assertCount(5, $coll);
+        $this->assertSame($coll, $coll->prune(function($value, $key) {
+            return strlen($value) >= 6;
+        }));
+        $this->assertCount(3, $coll);
+    }
+
+    public function testContainsReturnsTrueIfValueFoundInCollection()
+    {
+        $coll = Factory::create($this->fixtures['assoc']);
+        $this->assertTrue($coll->contains('first'));
+        $this->assertTrue($coll->contains('second'));
+        $this->assertTrue($coll->contains('third'));
+        $this->assertFalse($coll->contains('fourth'));
+        $this->assertFalse($coll->contains('foo'));
+        $coll->add('foo');
+        $this->assertTrue($coll->contains('foo'));
+
+        $this->assertFalse($coll->contains(100));
+        $coll->add(100);
+        $this->assertFalse($coll->contains('100'), 'Collection::contains method uses strict type comparison so that 100 !== "100"');
+        // @todo I think we should add a second argument to contains() that does an additional check against the index so taht you can check whether the collection contains a certain value at a certain index.
+        // @todo I think we should also allow for $value argument to be a callable. When it is a callable, it should be used instead of in_array to determine whether the collection contains whatever...
+        $this->assertTrue($coll->contains(100));
+    }
+
+    public function testPullRemovesItemFromCollectionAndReturnsIt()
+    {
+        $coll = Factory::create($this->fixtures['assoc']);
+        $this->assertCount(3, $coll);
+        $this->assertTrue($coll->containsKey('2nd'));
+        $this->assertSame('second', $pulled = $coll->pull('2nd'), "Collection::pull() should return an item by key and return it.");
+        $this->assertFalse($coll->containsKey('2nd'));
+        $this->assertCount(2, $coll);
+        $this->assertNull($coll->pull('2nd'), "Collection::pull() should return null if key does not exist.");
+    }
+
+
 }
