@@ -258,8 +258,8 @@ class Collection implements ArrayAccess, Iterator, Countable
      * Combine and return a new Collection.
      * It takes the keys of the current Collection and assign the values.
      *
-     * @param Traversable $values
-     * @param bool        $inPlace
+     * @param Traversable|array $values
+     * @param bool              $inPlace
      *
      * @performanceCompared true
      *
@@ -271,6 +271,8 @@ class Collection implements ArrayAccess, Iterator, Countable
             $this->doThrow('Invalid input type for '.($inPlace ? 'replace' : 'combine').'.', $values);
         }
 
+        // @todo This may change things performance-wise. I had to add this for Traversable $values to work - LV
+        $values = Factory::getArrayForItems($values);
         if (count($values) != count($this->items)) {
             $this->doThrow(
                 'Invalid input for '.($inPlace ? 'replace' : 'combine').', number of items does not match.',
@@ -278,19 +280,19 @@ class Collection implements ArrayAccess, Iterator, Countable
             );
         }
 
-        return array_combine($this->items, $values);
+        return Factory::create(array_combine($this->items, $values));
     }
 
     /**
      * Combine (in-place).
      *
-     * @param Traversable $values
+     * @param Traversable|array $values
      *
      * @return $this
      */
     public function replace($values)
     {
-        $this->items = $this->combine($values, true);
+        $this->items = $this->combine($values, true)->toArray();
 
         return $this;
     }
@@ -299,18 +301,18 @@ class Collection implements ArrayAccess, Iterator, Countable
      * Opposite of Combine
      * It keeps the values of the current Collection and assign new keys.
      *
-     * @param Traversable $keys
+     * @param Traversable|array $keys
      *
      * @return Collection
      */
     public function combineKeys($keys)
     {
         if (!is_array($keys) && !($keys instanceof Traversable)) {
-            $this->doThrow('Invalid input type for keyCombine.', $keys);
+            $this->doThrow('Invalid input type for combineKeys.', $keys);
         }
 
         if (count($keys) != count($this->items)) {
-            $this->doThrow('Invalid input for keyCombine, number of items does not match.', $keys);
+            $this->doThrow('Invalid input for combineKeys, number of items does not match.', $keys);
         }
         $collection = Factory::create();
         $this->rewind();
@@ -326,7 +328,7 @@ class Collection implements ArrayAccess, Iterator, Countable
     /**
      * CombineKeys (in-place).
      *
-     * @param Traversable $keys
+     * @param Traversable|array $keys
      *
      * @return $this
      */

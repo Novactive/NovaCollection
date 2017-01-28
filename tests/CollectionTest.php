@@ -10,6 +10,7 @@
 
 namespace Novactive\Tests;
 
+use InvalidArgumentException;
 use Novactive\Collection\Collection;
 use Novactive\Collection\Factory;
 
@@ -549,5 +550,232 @@ class CollectionTest extends UnitTestCase
         $this->assertNull($coll->pull('2nd'), "Collection::pull() should return null if key does not exist.");
     }
 
+    public function testCombineReturnsCollectionWithExistingKeysAndIncomingValues()
+    {
+        $coll = Factory::create($this->fixtures['names']);
+        $this->assertSame([
+            'Chelsea',
+            'Adella',
+            'Monte',
+            'Maye',
+            'Lottie',
+            'Don',
+            'Dayton',
+            'Kirk',
+            'Troy',
+            'Nakia'
+        ], $orig = $coll->toArray());
+        $newcoll = $coll->combine($this->fixtures['emails']);
+        $this->assertNotSame($coll, $newcoll);
+        $this->assertSame([
+            'Chelsea' => 'colleen.mills@example.org',
+            'Adella' => 'hilda01@example.net',
+            'Monte' => 'leffler.ron@example.org',
+            'Maye' => 'jboyle@example.net',
+            'Lottie' => 'esta10@example.com',
+            'Don' => 'fcormier@example.com',
+            'Dayton' => 'verda25@example.com',
+            'Kirk' => 'mparker@example.org',
+            'Troy' => 'apollich@example.net',
+            'Nakia' => 'hrussel@example.net'
+        ], $newcoll->toArray());
+        $this->assertSame($orig, $coll->toArray(), 'Ensure that Collection::combine() has not changed the original collection.');
+    }
 
+    public function testCombineAcceptsTraversable()
+    {
+        $stub = $this->getIteratorForArray($this->fixtures['emails']);
+        $coll = Factory::create($this->fixtures['names']);
+        $this->assertSame([
+            'Chelsea',
+            'Adella',
+            'Monte',
+            'Maye',
+            'Lottie',
+            'Don',
+            'Dayton',
+            'Kirk',
+            'Troy',
+            'Nakia'
+        ], $coll->toArray());
+        $this->assertSame([
+            'colleen.mills@example.org',
+            'hilda01@example.net',
+            'leffler.ron@example.org',
+            'jboyle@example.net',
+            'esta10@example.com',
+            'fcormier@example.com',
+            'verda25@example.com',
+            'mparker@example.org',
+            'apollich@example.net',
+            'hrussel@example.net'
+        ], Factory::getArrayForItems($stub));
+        $orig = $coll->toArray();
+        $return = $coll->combine($stub);
+        $this->assertEquals([
+            'Chelsea' => 'colleen.mills@example.org',
+            'Adella' => 'hilda01@example.net',
+            'Monte' => 'leffler.ron@example.org',
+            'Maye' => 'jboyle@example.net',
+            'Lottie' => 'esta10@example.com',
+            'Don' => 'fcormier@example.com',
+            'Dayton' => 'verda25@example.com',
+            'Kirk' => 'mparker@example.org',
+            'Troy' => 'apollich@example.net',
+            'Nakia' => 'hrussel@example.net'
+        ], $return->toArray());
+        $this->assertSame($orig, $coll->toArray(), 'Ensure that Collection::combine() has not changed the original collection.');
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Invalid input type for combine.
+     */
+    public function testCombineThrowsExceptionIfInvalidInput()
+    {
+        $coll = Factory::create($this->fixtures['names']);
+        $coll->combine('not an array');
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Invalid input for combine, number of items does not match.
+     */
+    public function testCombineThrowsExceptionIfIncomingTraversableCountIsNotSameAsCollection()
+    {
+        $coll = Factory::create($this->fixtures['names']);
+        $coll->combine([1,2,3]);
+    }
+
+    public function testReplaceCombinesInPlace()
+    {
+        $coll = Factory::create($this->fixtures['names']);
+        $return = $coll->replace($this->fixtures['emails']);
+        $this->assertSame($coll, $return);
+        $this->assertEquals([
+            'Chelsea' => 'colleen.mills@example.org',
+            'Adella' => 'hilda01@example.net',
+            'Monte' => 'leffler.ron@example.org',
+            'Maye' => 'jboyle@example.net',
+            'Lottie' => 'esta10@example.com',
+            'Don' => 'fcormier@example.com',
+            'Dayton' => 'verda25@example.com',
+            'Kirk' => 'mparker@example.org',
+            'Troy' => 'apollich@example.net',
+            'Nakia' => 'hrussel@example.net'
+        ], $coll->toArray());
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Invalid input type for replace.
+     */
+    public function testReplaceThrowsExceptionIfInvalidInput()
+    {
+        $coll = Factory::create($this->fixtures['names']);
+        $coll->replace('not an array');
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Invalid input for replace, number of items does not match.
+     */
+    public function testReplaceThrowsExceptionIfIncomingTraversableCountIsNotSameAsCollection()
+    {
+        $coll = Factory::create($this->fixtures['names']);
+        $coll->replace([1,2,3]);
+    }
+
+    public function testCombineKeysUsesIncomingTraversableAsKeysForCollectionsValues()
+    {
+        $coll = Factory::create($this->fixtures['names']);
+        $orig = $coll->toArray();
+        $newkeys = $coll->combineKeys($this->fixtures['emails']);
+        $this->assertEquals([
+            "colleen.mills@example.org" => "Chelsea",
+            "hilda01@example.net" => "Adella",
+            "leffler.ron@example.org" => "Monte",
+            "jboyle@example.net" => "Maye",
+            "esta10@example.com" => "Lottie",
+            "fcormier@example.com" => "Don",
+            "verda25@example.com" => "Dayton",
+            "mparker@example.org" => "Kirk",
+            "apollich@example.net" => "Troy",
+            "hrussel@example.net" => "Nakia"
+        ], $newkeys->toArray());
+        $this->assertNotSame($newkeys->toArray(), $orig);
+        $this->assertSame($coll->toArray(), $orig, "The original collection should not be affected by Collection::combineKeys().");
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Invalid input type for combineKeys.
+     */
+    public function testCombineKeysThrowsExceptionIfPassedNonTraversableNonArray()
+    {
+        $coll = Factory::create($this->fixtures['emails']);
+        $coll->combineKeys('this is not traversable');
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Invalid input for combineKeys, number of items does not match.
+     */
+    public function testCombineKeysThrowsExceptionIfPassedTraversableWithBadCount()
+    {
+        $coll = Factory::create($this->fixtures['emails']);
+        $coll->combineKeys([1,2,3]);
+    }
+
+    public function testCombineKeysAcceptsTraversable()
+    {
+        $coll = Factory::create($this->fixtures['names']);
+        $orig = $coll->toArray();
+        $iter = $this->getIteratorForArray($this->fixtures['emails']);
+        $keycombined = $coll->combineKeys($iter);
+        $this->assertSame([
+            "colleen.mills@example.org" => "Chelsea",
+            "hilda01@example.net" => "Adella",
+            "leffler.ron@example.org" => "Monte",
+            "jboyle@example.net" => "Maye",
+            "esta10@example.com" => "Lottie",
+            "fcormier@example.com" => "Don",
+            "verda25@example.com" => "Dayton",
+            "mparker@example.org" => "Kirk",
+            "apollich@example.net" => "Troy",
+            "hrussel@example.net" => "Nakia"
+        ], $keycombined->toArray());
+        $this->assertSame($orig, $coll->toArray(), "Ensure that Collection::combineKeys does not change the original collection.");
+    }
+
+    public function testReIndexPerformsCombineKeysInPlace()
+    {
+        $coll = Factory::create($this->fixtures['names']);
+        $this->assertEquals([
+            'Chelsea',
+            'Adella',
+            'Monte',
+            'Maye',
+            'Lottie',
+            'Don',
+            'Dayton',
+            'Kirk',
+            'Troy',
+            'Nakia'
+        ], $orig = $coll->toArray());
+        $return = $coll->reindex($this->fixtures['emails']);
+        $this->assertSame($coll, $return);
+        $this->assertSame([
+            "colleen.mills@example.org" => "Chelsea",
+            "hilda01@example.net" => "Adella",
+            "leffler.ron@example.org" => "Monte",
+            "jboyle@example.net" => "Maye",
+            "esta10@example.com" => "Lottie",
+            "fcormier@example.com" => "Don",
+            "verda25@example.com" => "Dayton",
+            "mparker@example.org" => "Kirk",
+            "apollich@example.net" => "Troy",
+            "hrussel@example.net" => "Nakia"
+        ], $return->toArray());
+    }
 }

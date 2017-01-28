@@ -38,7 +38,7 @@ class Factory
      *
      * @return array
      */
-    protected static function getArrayForItems($items)
+    public static function getArrayForItems($items)
     {
         if (is_array($items)) {
             return $items;

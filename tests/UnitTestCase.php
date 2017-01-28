@@ -10,7 +10,9 @@
 
 namespace Novactive\Tests;
 
+use ArrayIterator;
 use Faker\Factory;
+use Novactive\Collection\Factory as NovaCollectionFactory;
 use PHPUnit_Framework_TestCase;
 
 /**
@@ -83,5 +85,10 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
             ->method($method);
 
         return $recorder;
+    }
+
+    protected function getIteratorForArray(array $arr = [])
+    {
+        return new ArrayIterator($arr);
     }
 }
