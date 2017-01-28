@@ -127,9 +127,6 @@ class Collection implements ArrayAccess, Iterator, Countable
      */
     public function remove($key)
     {
-        if (!$this->containsKey($key)) {
-            return null;
-        }
         unset($this->items[$key]);
 
         return $this;

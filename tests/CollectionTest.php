@@ -288,16 +288,17 @@ class CollectionTest extends UnitTestCase
         $this->assertEquals($exp, $coll->toArray());
     }
 
-//    public function testRemoveRemovesItemByKey()
-//    {
-//        $exp = $this->fixtures['assoc'];
-//        $coll = Factory::create($exp);
-//        $this->assertTrue($coll->containsKey('2nd'));
-//        $removed = $coll->remove('2nd');
-//        $this->assertFalse($coll->containsKey('2nd'));
-//        $this->assertEquals('second', $removed, 'Removed should return the removed item.');
-//        $this->assertNull($coll->remove('2nd'), 'Attempting to remove an item that does not exist should return null.');
-//    }
+    public function testRemoveRemovesItemByKey()
+    {
+        $exp = $this->fixtures['assoc'];
+        $coll = Factory::create($exp);
+        $this->assertTrue($coll->containsKey('2nd'));
+        $removed = $coll->remove('2nd');
+        $this->assertFalse($coll->containsKey('2nd'));
+        $this->assertSame($coll, $removed, 'Remove method should return the collection itself.');
+        $return = $coll->remove('2nd');
+        $this->assertSame($coll, $return, 'Attempting to remove an item that does not exist should still return the collection itself.');
+    }
 
     public function testGetReturnsItemIfItExists()
     {
@@ -385,7 +386,22 @@ class CollectionTest extends UnitTestCase
 
     public function testArrayAccessOffsetSetAllowsUseOfSquareBracketsForSettingWithoutIndex()
     {
+        // associative
+        $assoc = $this->fixtures['assoc'];
+        $aColl = Factory::create($assoc);
+        $this->assertFalse($aColl->containsKey(0));
+        $aColl[] = 'test';
+        $this->assertTrue($aColl->containsKey(0));
 
+        // numeric
+        $arr = $this->fixtures['array'];
+        $arrColl = Factory::create($arr);
+        $this->assertTrue($arrColl->containsKey(0));
+        $this->assertTrue($arrColl->containsKey(1));
+        $this->assertTrue($arrColl->containsKey(2));
+        $this->assertFalse($arrColl->containsKey(3));
+        $arrColl[] = 'test';
+        $this->assertTrue($arrColl->containsKey(3));
     }
 
     public function testArrayAccessOffsetGetAllowsUseOfSquareBracketsForGetting()
