@@ -645,7 +645,7 @@ class Collection implements ArrayAccess, Iterator, Countable
      */
     public function offsetUnset($offset)
     {
-        return $this->remove($offset);
+        $this->remove($offset);
     }
 
     /**
@@ -654,12 +654,10 @@ class Collection implements ArrayAccess, Iterator, Countable
     public function offsetSet($offset, $value)
     {
         if (!isset($offset)) {
-            return $this->add($value);
+            $this->add($value);
         }
 
         $this->set($offset, $value);
-
-        return true;
     }
 
     /* --                     -- */

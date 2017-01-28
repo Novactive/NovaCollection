@@ -310,7 +310,7 @@ class CollectionTest extends UnitTestCase
         $this->assertEquals('default', $coll->get('2nd','default'), 'If a default is provided, Collection::get() should return it if no item is found.');
     }
 
-    public function testHasReturnsTrueIfItemExistsByKey()
+    public function testContainsKeyReturnsTrueIfItemExistsByKey()
     {
         $exp = $this->fixtures['assoc'];
         $coll = Factory::create($exp);
@@ -326,7 +326,7 @@ class CollectionTest extends UnitTestCase
         $this->assertTrue($coll->containsKey('2nd'));
         $removed = $coll->offsetUnset('2nd');
         $this->assertFalse($coll->containsKey('2nd'));
-        //$this->assertNull($removed, 'The ArrayAccess interface expects offsetUnset to have no return value.');
+        $this->assertNull($removed, 'The ArrayAccess interface expects offsetUnset to have no return value.');
         $this->assertTrue($coll->containsKey('3rd'));
         unset($coll['3rd']);
         $this->assertFalse($coll->containsKey('3rd'));
@@ -366,7 +366,7 @@ class CollectionTest extends UnitTestCase
         $this->assertEquals('bar', $coll->get('foo'));
 
         $this->assertFalse($coll->containsKey('boo'));
-        $this->assertTrue($coll->offsetSet('boo', 'far'), "ArrayAccess offsetSet MUST NOT have a return value.");
+        $this->assertNull($coll->offsetSet('boo', 'far'), "ArrayAccess offsetSet MUST NOT have a return value.");
         $this->assertTrue($coll->containsKey('boo'));
         $this->assertEquals('far', $coll->get('boo'));
 
@@ -379,7 +379,7 @@ class CollectionTest extends UnitTestCase
         $this->assertEquals('bar', $coll->get(5));
 
         $this->assertFalse($coll->containsKey('boo'));
-        $this->assertTrue($coll->offsetSet(6, 'far'), "ArrayAccess offsetSet MUST NOT have a return value.");
+        $this->assertNull($coll->offsetSet(6, 'far'), "ArrayAccess offsetSet MUST NOT have a return value.");
         $this->assertTrue($coll->containsKey(6));
         $this->assertEquals('far', $coll->get(6));
     }
@@ -505,4 +505,5 @@ class CollectionTest extends UnitTestCase
         ], $filtered->toArray());
     }
 
+    //public function testContainsKey
 }
