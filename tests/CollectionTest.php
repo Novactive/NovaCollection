@@ -778,4 +778,15 @@ class CollectionTest extends UnitTestCase
             "hrussel@example.net" => "Nakia"
         ], $return->toArray());
     }
+
+    public function testReduceIterativelyReducesCollectionToASingleValue()
+    {
+        $coll = Factory::create($this->fixtures['names']);
+        $count = function($carry, $val, $key) { return ++$carry; };
+        $concat = function($carry, $val, $key) { return $carry . $val; };
+        $concateven = function($carry, $val, $key) { if ($key %2 == 0) { $carry .= $val; } return $carry; };
+        $this->assertEquals(10, $coll->reduce($count));
+        $this->assertEquals('ChelseaAdellaMonteMayeLottieDonDaytonKirkTroyNakia', $coll->reduce($concat));
+        $this->assertEquals('ChelseaMonteLottieDaytonTroy', $coll->reduce($concateven));
+    }
 }
