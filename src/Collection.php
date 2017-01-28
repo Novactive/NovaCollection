@@ -14,6 +14,7 @@ use ArrayAccess;
 use Countable;
 use InvalidArgumentException;
 use Iterator;
+use RuntimeException;
 use Traversable;
 
 /**
@@ -64,16 +65,17 @@ class Collection implements ArrayAccess, Iterator, Countable
      * Get the value related to the key.
      *
      * @param string $key
+     * @param mixed  $default
      *
      * @return mixed|null
      */
-    public function get($key)
+    public function get($key, $default = null)
     {
         if ($this->containsKey($key)) {
             return $this->items[$key];
         }
 
-        return null;
+        return $default;
     }
 
     /**
@@ -354,6 +356,8 @@ class Collection implements ArrayAccess, Iterator, Countable
      * @param callable $callback
      *
      * @performanceCompared true
+     *
+     * @return $this
      */
     public function each(callable $callback)
     {
@@ -361,6 +365,8 @@ class Collection implements ArrayAccess, Iterator, Countable
         foreach ($this->items as $key => $value) {
             $callback($value, $key, $index++);
         }
+
+        return $this;
     }
 
     /**
@@ -631,6 +637,9 @@ class Collection implements ArrayAccess, Iterator, Countable
      */
     public function offsetGet($offset)
     {
+        if (!$this->containsKey($offset)) {
+            throw new RuntimeException("Unknown offset: " . $offset);
+        }
         return $this->get($offset);
     }
 

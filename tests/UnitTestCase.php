@@ -30,6 +30,8 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
         $faker = Factory::create();
         $faker->seed(4231986);
 
+        $this->fixtures['array'] = ['first','second','third'];
+        $this->fixtures['assoc'] = ['1st' => 'first','2nd' => 'second','3rd' => 'third'];
         $this->fixtures['digits'] = [];
         $this->fixtures['users']  = [];
 
@@ -59,5 +61,27 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
     public function tearDown()
     {
         // nothing to do here...
+    }
+
+    /**
+     * Returns a recorder that expectes to be "touched" $count times.
+     *
+     * This allows us to test that a certain thing happened $count number of times.
+     *
+     * @param int    $count
+     * @param string $method
+     *
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function getMethodCallRecorderForCount($count, $method = 'touch')
+    {
+        $recorder = $this->getMockBuilder(stdClass::class)
+            ->setMethods([$method])
+            ->getMock();
+
+        $recorder->expects($this->exactly($count))
+            ->method($method);
+
+        return $recorder;
     }
 }
