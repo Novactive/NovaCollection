@@ -17,25 +17,26 @@ $docBlock  = \phpDocumentor\Reflection\DocBlockFactory::createInstance();
 
 foreach ($methods as $method) {
     $doc = $docBlock->create($method->getDocComment());
-    if ($doc->getSummary() == "{@inheritDoc}" || $doc->getSummary() == "") {
+    if ($doc->getSummary() == '{@inheritDoc}' || $doc->getSummary() == '') {
         continue;
     }
     $paramsColl = new Collection($method->getParameters());
     $params     = $paramsColl->map(
         function (ReflectionParameter $parameter) {
-            return $parameter->getType()." $".$parameter->getName();
+            return $parameter->getType().' $'.$parameter->getName();
         }
-    )->implode(", ");
-    $signature  = $method->getName()."(".trim($params).")";
+    )->implode(', ');
+
+    $signature = $method->getName().'('.trim($params).')';
 
     $returnType = 'void';
-    /** @var phpDocumentor\Reflection\DocBlock\Tags\Return_ $returnType */
+    /* @var phpDocumentor\Reflection\DocBlock\Tags\Return_ $returnType */
     if (isset($doc->getTagsByName('return')[0])) {
         $type           = $doc->getTagsByName('return')[0]->getType();
-        $classNameParts = explode("\\", get_class($type));
-        $returnType     = trim(strtolower(array_pop($classNameParts)), "_");
+        $classNameParts = explode('\\', get_class($type));
+        $returnType     = trim(strtolower(array_pop($classNameParts)), '_');
     }
     $inPlace = $returnType == 'this';
-    print "|".$signature."|".$doc->getSummary()."|".($inPlace ? ':white_check_mark:' : ':negative_squared_cross_mark:')."|\n";
-
+    echo '|'.$signature.'|'.$doc->getSummary().'|'.($inPlace ? ':white_check_mark:' : ':negative_squared_cross_mark:').
+         "|\n";
 }
