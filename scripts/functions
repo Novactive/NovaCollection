@@ -60,3 +60,8 @@ echoHelp ()
 {
     echo "${BOLD}$1${RESTORE}: ${GREEN}$2${RESTORE}"
 }
+
+echoFail ()
+{
+    echo "${RED}${BOLD}FAIL!${RESTORE}: ${RED}$1${RESTORE}"
+}

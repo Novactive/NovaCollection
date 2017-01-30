@@ -21,15 +21,19 @@ source ${BASEDIR}/config.conf
 
 for VERSION in ${PHPVERSIONS[*]}
 do
-    REALPHPVERSION=`$PHP -r 'print PHP_VERSION."\n";'`
+    if [ "$LOCAL_MODE" != "1" ]; then
+        PHP="./${VERSION}"
+    fi
+
+    # trick to make it work with docker as well
+    echo "<?php print PHP_VERSION; ?>" > PHP_VERSION.php
+    REALPHPVERSION=`$PHP PHP_VERSION.php`
+    rm PHP_VERSION.php
+
     FILE="${BASEDIR}/results${REALPHPVERSION}.data"
     echo -n "" > $FILE
     if [ "$JSONMODE" != "1" ]; then
         echoTitle "${REALPHPVERSION}"
-    fi
-
-    if [ "$LOCAL_MODE" != "1" ]; then
-        PHP="./${VERSION}"
     fi
 
     for METHOD in ${METHODS[*]}
