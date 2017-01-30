@@ -12,7 +12,6 @@ namespace Novactive\Tests;
 
 use ArrayIterator;
 use Faker\Factory;
-use Novactive\Collection\Factory as NovaCollectionFactory;
 use PHPUnit_Framework_TestCase;
 
 /**
@@ -32,8 +31,8 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
         $faker = Factory::create();
         $faker->seed(4231986);
 
-        $this->fixtures['array'] = ['first','second','third'];
-        $this->fixtures['assoc'] = ['1st' => 'first','2nd' => 'second','3rd' => 'third'];
+        $this->fixtures['array']  = ['first', 'second', 'third'];
+        $this->fixtures['assoc']  = ['1st' => 'first', '2nd' => 'second', '3rd' => 'third'];
         $this->fixtures['digits'] = [];
         $this->fixtures['users']  = [];
 
