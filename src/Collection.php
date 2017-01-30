@@ -427,10 +427,12 @@ class Collection implements ArrayAccess, Iterator, Countable
      * Merge (in-place).
      *
      * @param Traversable $items
+     *
+     * @return $this
      */
     public function coalesce($items)
     {
-        $this->merge($items, true);
+        return $this->merge($items, true);
     }
 
     /**
@@ -572,6 +574,16 @@ class Collection implements ArrayAccess, Iterator, Countable
     public function unique()
     {
         return Factory::create(array_unique($this->items));
+    }
+
+    /**
+     * @param string $separator
+     *
+     * @return string
+     */
+    public function implode($separator)
+    {
+        return implode($this->items, $separator);
     }
 
     /**
