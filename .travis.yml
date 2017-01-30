@@ -5,10 +5,10 @@ cache:
   - $HOME/.composer/cache
 matrix:
   fast_finish: true
-  include:
-  - php: 5.6
-  - php: 7
-  - php: 7.1
+  php:
+  - 5.6
+  - 7
+  - 7.1
   env:
   - DEBUG_COLLECTION_CLASS="Novactive\Collection\Collection"
   - DEBUG_COLLECTION_CLASS="Novactive\Collection\Debug\Collection"
