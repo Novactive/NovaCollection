@@ -1,19 +1,22 @@
 sudo: false
-language: php
 cache:
   directories:
   - $HOME/.composer/cache
-matrix:
-  fast_finish: true
-  php:
+
+language: php
+php:
   - 5.6
   - 7
   - 7.1
-  env:
+
+env:
   - DEBUG_COLLECTION_CLASS="Novactive\Collection\Collection"
   - DEBUG_COLLECTION_CLASS="Novactive\Collection\Debug\Collection"
   - DEBUG_COLLECTION_CLASS="Novactive\Tests\Perfs\ArrayMethodCollection"
   - DEBUG_COLLECTION_CLASS="Novactive\Tests\Perfs\ForeachMethodCollection"
+
+matrix:
+  fast_finish: true
   allow_failures:
   - env: DEBUG_COLLECTION_CLASS="Novactive\Tests\Perfs\ArrayMethodCollection"
   - env: DEBUG_COLLECTION_CLASS="Novactive\Tests\Perfs\ForeachMethodCollection"
