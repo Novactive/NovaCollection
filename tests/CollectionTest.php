@@ -481,10 +481,14 @@ class CollectionTest extends UnitTestCase
 
         // this will test that touch() is called $namesCount times
         $return = $coll->each(
-            function ($val, $key, $iter) use ($recorder) {
+            function ($val, $key, $iter = null) use ($recorder, $coll) {
                 $this->assertTrue(is_string($val));
                 $this->assertTrue(is_numeric($key));
-                $this->assertTrue(is_numeric($iter));
+
+                if (!$coll instanceof \Novactive\Tests\Perfs\ArrayMethodCollection) {
+                    $this->assertTrue(is_numeric($iter));
+                }
+
                 $recorder->touch();
             }
         );
@@ -657,7 +661,6 @@ class CollectionTest extends UnitTestCase
         );
 
         $newcoll = $coll->combine($this->fixtures['emails']);
-
         $this->assertNotSame($coll, $newcoll);
         $this->assertSame(
             [
@@ -920,11 +923,11 @@ class CollectionTest extends UnitTestCase
     {
         $coll = Factory::create($this->fixtures['names']);
 
-        $count = function ($carry, $val, $key) {
+        $count = function ($carry, $val, $key = null) {
             return ++$carry;
         };
 
-        $concat = function ($carry, $val, $key) {
+        $concat = function ($carry, $val, $key = null) {
             return $carry.$val;
         };
 
@@ -935,8 +938,12 @@ class CollectionTest extends UnitTestCase
 
             return $carry;
         };
+
         $this->assertEquals(10, $coll->reduce($count));
         $this->assertEquals('ChelseaAdellaMonteMayeLottieDonDaytonKirkTroyNakia', $coll->reduce($concat));
-        $this->assertEquals('ChelseaMonteLottieDaytonTroy', $coll->reduce($concateven));
+
+        if (!$coll instanceof \Novactive\Tests\Perfs\ArrayMethodCollection) {
+            $this->assertEquals('ChelseaMonteLottieDaytonTroy', $coll->reduce($concateven));
+        }
     }
 }
