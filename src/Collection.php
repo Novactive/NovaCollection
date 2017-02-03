@@ -158,33 +158,33 @@ class Collection implements ArrayAccess, Iterator, Countable
     /**
      * Get the first time and reset and rewind.
      *
-     * @return mixed
+     * @param callable|null $callback
      *
-     * @todo
-     *      This should accept a callable and it should return the first item
-     *      in the collection that returns true for that callable
-     *      This should accept a second argument that is the default value.
-     *      If the first argument (a callable) produces nothing, the second argument should be returned.
+     * @return mixed
      */
-    public function first()
+    public function first(callable $callback = null)
     {
-        return reset($this->items);
+        if ($callback == null) {
+            return reset($this->items);
+        }
+
+        return $this->filter($callback)->first();
     }
 
     /**
      * Get the last item.
      *
-     * @todo
-     *      This should accept a callable and it should return the last item in the
-     *      collection that returns true for that callable
-     *      This should accept a second argument that is the default value. If the first
-     *      argument (a callable) produces nothing, the second argument should be returned.
+     * @param callable|null $callback
      *
      * @return mixed
      */
-    public function last()
+    public function last(callable $callback = null)
     {
-        return end($this->items);
+        if ($callback == null) {
+            return end($this->items);
+        }
+
+        return $this->filter($callback)->last();
     }
 
     /**
