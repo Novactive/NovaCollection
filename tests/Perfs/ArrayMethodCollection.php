@@ -35,7 +35,7 @@ class ArrayMethodCollection extends Collection
      */
     public function filter(callable $callback)
     {
-        return Factory::create(array_filter($this->items, $callback), static::class);
+        return Factory::create(array_filter($this->items, $callback, ARRAY_FILTER_USE_BOTH), static::class);
     }
 
     /**
