@@ -54,9 +54,8 @@ Fully unit tested it is reliable.
 | add($item)                             | Add a new value to the collection, next numeric index will be used.                    | :white_check_mark:            |
 | remove($key)                           | Remove the $key/value in the collection.                                               | :white_check_mark:            |
 | pull($key)                             | Remove the $key/value in the collection and return the removed value.                  | :negative_squared_cross_mark: |
-| first()                                | Get the first time and reset and rewind.                                               | :negative_squared_cross_mark: |
-| last()                                 | Get the last item.                                                                     | :negative_squared_cross_mark: |
-
+| first(callable $callback)              | Get the first time and reset and rewind.                                               |:negative_squared_cross_mark:  |
+| last(callable $callback)               | Get the last item.                                                                     |:negative_squared_cross_mark:  |
 
 ## Changelog
 

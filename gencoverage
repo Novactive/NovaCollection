@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+docker run -t --rm -w /app -v $(pwd):/app phpunit/phpunit --coverage-html /app/coverage
