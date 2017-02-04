@@ -47,7 +47,8 @@
     "autoload": {
         "psr-4": {
             "Novactive\\Collection\\": "src/",
-            "Novactive\\Tests\\": "tests/"
+            "Novactive\\Tests\\": "tests/Tests",
+            "Novactive\\Tests\\Perfs\\": "tests/Perfs"
         }
     },
     "autoload-dev": {

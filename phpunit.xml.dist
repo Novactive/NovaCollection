@@ -18,7 +18,7 @@
     bootstrap="tests/bootstrap.php">
     <testsuites>
         <testsuite name="Base NovaCollection Test Suite">
-            <directory suffix="Test.php" phpVersion="5.6">./tests/</directory>
+            <directory suffix="Test.php" phpVersion="5.6">./tests/Tests</directory>
         </testsuite>
     </testsuites>
     <filter>
