@@ -14,13 +14,14 @@ use ArrayAccess;
 use Countable;
 use InvalidArgumentException;
 use Iterator;
+use JsonSerializable;
 use RuntimeException;
 use Traversable;
 
 /**
  * Class Collection.
  */
-class Collection implements ArrayAccess, Iterator, Countable
+class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
 {
     /**
      * @var array
@@ -188,6 +189,30 @@ class Collection implements ArrayAccess, Iterator, Countable
         }
 
         return $this->filter($callback)->first();
+    }
+
+    /**
+     * Shift an element off the beginning of the collection(in-place).
+     *
+     * @performanceCompared false
+     */
+    public function shift()
+    {
+        reset($this->items);
+
+        return $this->pull($this->key());
+    }
+
+    /**
+     * Shift an element off the beginning of the collection(in-place).
+     *
+     * @performanceCompared false
+     */
+    public function pop()
+    {
+        end($this->items);
+
+        return $this->pull($this->key());
     }
 
     /**
@@ -646,9 +671,11 @@ class Collection implements ArrayAccess, Iterator, Countable
     }
 
     /**
-     * @todo: explain
+     * Merge the values items by items.
      *
      * @param Traversable|array $items
+     *
+     * @return Collection
      */
     public function zip($items)
     {
@@ -693,9 +720,202 @@ class Collection implements ArrayAccess, Iterator, Countable
         return $this->count() == 0;
     }
 
+    /**
+     * Split in the collection in $count parts.
+     *
+     * @param int $count
+     */
+    public function split($count = 1)
+    {
+        return $this->chunck(ceil($this->count() / $count));
+    }
+
+    /**
+     * Chunk of $size sub collection.
+     *
+     * @param $size
+     *
+     * @performanceCompared false
+     *
+     * @return Collection
+     */
+    public function chunck($size)
+    {
+        $collection = Factory::create();
+        $chunk      = Factory::create();
+        foreach ($this->items as $key => $value) {
+            $chunk->set($key, $value);
+            if ($chunk->count() == $size) {
+                $collection->add($chunk);
+                $chunk = Factory::create();
+            }
+        }
+        if (!$chunk->isEmpty()) {
+            $collection->add($chunk);
+        }
+
+        return $collection;
+    }
+
+    /**
+     * Get a slice of the collection and inject it in a new one.
+     *
+     * @param $size
+     *
+     * @performanceCompared false
+     *
+     * @return Collection
+     */
+    public function slice($offset, $length = PHP_INT_MAX)
+    {
+        if ($offset < 0) {
+            $offset = $this->count() + $offset;
+        }
+
+        return $this->filter(
+            function ($value, $key, $index) use ($offset, $length) {
+                return ($index >= $offset) && ($index < $offset + $length);
+            }
+        );
+    }
+
+    /**
+     * Keep a slice of the collection (in-place).
+     *
+     * @param int $offset
+     * @param int $length
+     *
+     * @return $this
+     */
+    public function keep($offset, $length = PHP_INT_MAX)
+    {
+        if ($offset < 0) {
+            $offset = $this->count() + $offset;
+        }
+
+        return $this->prune(
+            function ($value, $key, $index) use ($offset, $length) {
+                return ($index >= $offset) && ($index < $offset + $length);
+            }
+        );
+    }
+
+    /**
+     * Cut a slice of the collection (in-place).
+     *
+     * @param int $offset
+     * @param int $length
+     *
+     * @return $this
+     */
+    public function cut($offset, $length = PHP_INT_MAX)
+    {
+        if ($offset < 0) {
+            $offset = $this->count() + $offset;
+        }
+
+        return $this->prune(
+            function ($value, $key, $index) use ($offset, $length) {
+                return !(($index >= $offset) && ($index < $offset + $length));
+            }
+        );
+    }
+
+    /**
+     * Compares the collection against $items and returns the values that are not present in the collection.
+     *
+     * @param $values
+     *
+     * @performanceCompared false
+     *
+     * @return Collection
+     */
+    public function diff($items)
+    {
+        $itemsCollection = Factory::create($items);
+
+        return $this->filter(
+            function ($value, $key, $index) use ($itemsCollection) {
+                return !$itemsCollection->contains($value);
+            }
+        );
+    }
+
+    /**
+     * Compares the collection against $items and returns the keys that are not present in the collection.
+     *
+     * @param $items
+     *
+     * @performanceCompared false
+     *
+     * @return Collection
+     */
+    public function diffKeys($items)
+    {
+        $itemsCollection = Factory::create($items);
+
+        return $this->filter(
+            function ($value, $key, $index) use ($itemsCollection) {
+                return !$itemsCollection->containsKey($key);
+            }
+        );
+    }
+
+    /**
+     * Compares the collection against $items and returns the values that exist in the collection.
+     *
+     * @param $items
+     *
+     * @performanceCompared false
+     *
+     * @return Collection
+     */
+    public function intersect($items)
+    {
+        $itemsCollection = Factory::create($items);
+
+        return $this->filter(
+            function ($value, $key, $index) use ($itemsCollection) {
+                return $itemsCollection->contains($value);
+            }
+        );
+    }
+
+    /**
+     * Compares the collection against $items and returns the keys that exist in the collection.
+     *
+     * @param $items
+     *
+     * @performanceCompared false
+     *
+     * @return Collection
+     */
+    public function intersectKeys($items)
+    {
+        $itemsCollection = Factory::create($items);
+
+        return $this->filter(
+            function ($value, $key, $index) use ($itemsCollection) {
+                return $itemsCollection->containsKey($key);
+            }
+        );
+    }
+
     /* --         ---          -- */
     /* -- INTERFACE COMPLIANCE -- */
     /* --         ---          -- */
+
+    /* --                      -- */
+    /* --    JsonSerializable  -- */
+    /* --                      -- */
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        return $this->toArray();
+    }
 
     /* --                      -- */
     /* -- Array Access Methods -- */

@@ -17,7 +17,6 @@ use Novactive\Collection\Factory;
  */
 class CombineKeysCollectionTest extends UnitTestCase
 {
-
     public function testCombineKeysUsesIncomingTraversableAsKeysForCollectionsValues()
     {
         $coll    = Factory::create($this->fixtures['names']);

@@ -52,5 +52,6 @@
         <exclude name="TooManyPublicMethods"/>
         <exclude name="ExcessivePublicCount"/>
         <exclude name="ExcessiveClassComplexity"/>
+        <exclude name="ExcessiveClassLength"/>
     </rule>
 </ruleset>

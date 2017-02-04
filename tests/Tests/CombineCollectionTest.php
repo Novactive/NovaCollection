@@ -17,7 +17,6 @@ use Novactive\Collection\Factory;
  */
 class CombineCollectionTest extends UnitTestCase
 {
-
     public function testCombineReturnsCollectionWithExistingKeysAndIncomingValues()
     {
         $coll = Factory::create($this->fixtures['names']);
