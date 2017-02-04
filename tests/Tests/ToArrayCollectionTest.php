@@ -14,13 +14,18 @@ use Novactive\Collection\Collection;
 use Novactive\Collection\Factory;
 
 /**
- * Class CollectionTest.
+ * Class ToArrayCollectionTest.
  */
-class CollectionTest extends UnitTestCase
+class ToArrayCollectionTest extends UnitTestCase
 {
-    public function testInstantiateCollectionWithNoParams()
+
+    public function testCollectionToArrayConvertsItemsToArray()
     {
-        $coll = Factory::create();
+        $coll = Factory::create($this->fixtures['names']);
         $this->assertInstanceOf(Collection::class, $coll);
+        $this->assertEquals(
+            ['Chelsea', 'Adella', 'Monte', 'Maye', 'Lottie', 'Don', 'Dayton', 'Kirk', 'Troy', 'Nakia'],
+            $coll->toArray()
+        );
     }
 }
