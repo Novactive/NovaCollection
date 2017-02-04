@@ -14,6 +14,7 @@ use ArrayAccess;
 use Countable;
 use InvalidArgumentException;
 use Iterator;
+use RuntimeException;
 use Traversable;
 
 /**
@@ -64,16 +65,17 @@ class Collection implements ArrayAccess, Iterator, Countable
      * Get the value related to the key.
      *
      * @param string $key
+     * @param mixed  $default
      *
      * @return mixed|null
      */
-    public function get($key)
+    public function get($key, $default = null)
     {
         if ($this->containsKey($key)) {
             return $this->items[$key];
         }
 
-        return null;
+        return $default;
     }
 
     /**
@@ -108,6 +110,11 @@ class Collection implements ArrayAccess, Iterator, Countable
      * @param mixed $item
      *
      * @return $this
+     *
+     * @todo
+     *      I think we should add an $offset or $index argument to this as the second argument.
+     *      If it is present, this method sill check if $this->containsKey($offset) and if it does, nothing happens.
+     *      If it does not, then $this->set($key, $value)
      */
     public function add($item)
     {
@@ -125,9 +132,6 @@ class Collection implements ArrayAccess, Iterator, Countable
      */
     public function remove($key)
     {
-        if (!$this->containsKey($key)) {
-            return null;
-        }
         unset($this->items[$key]);
 
         return $this;
@@ -154,21 +158,33 @@ class Collection implements ArrayAccess, Iterator, Countable
     /**
      * Get the first time and reset and rewind.
      *
+     * @param callable|null $callback
+     *
      * @return mixed
      */
-    public function first()
+    public function first(callable $callback = null)
     {
-        return reset($this->items);
+        if ($callback == null) {
+            return reset($this->items);
+        }
+
+        return $this->filter($callback)->first();
     }
 
     /**
      * Get the last item.
      *
+     * @param callable|null $callback
+     *
      * @return mixed
      */
-    public function last()
+    public function last(callable $callback = null)
     {
-        return end($this->items);
+        if ($callback == null) {
+            return end($this->items);
+        }
+
+        return $this->filter($callback)->last();
     }
 
     /**
@@ -249,8 +265,8 @@ class Collection implements ArrayAccess, Iterator, Countable
      * Combine and return a new Collection.
      * It takes the keys of the current Collection and assign the values.
      *
-     * @param Traversable $values
-     * @param bool        $inPlace
+     * @param Traversable|array $values
+     * @param bool              $inPlace
      *
      * @performanceCompared true
      *
@@ -262,6 +278,8 @@ class Collection implements ArrayAccess, Iterator, Countable
             $this->doThrow('Invalid input type for '.($inPlace ? 'replace' : 'combine').'.', $values);
         }
 
+        // @todo This may change things performance-wise. I had to add this for Traversable $values to work - LV
+        $values = Factory::getArrayForItems($values);
         if (count($values) != count($this->items)) {
             $this->doThrow(
                 'Invalid input for '.($inPlace ? 'replace' : 'combine').', number of items does not match.',
@@ -269,19 +287,19 @@ class Collection implements ArrayAccess, Iterator, Countable
             );
         }
 
-        return array_combine($this->items, $values);
+        return Factory::create(array_combine($this->items, $values));
     }
 
     /**
      * Combine (in-place).
      *
-     * @param Traversable $values
+     * @param Traversable|array $values
      *
      * @return $this
      */
     public function replace($values)
     {
-        $this->items = $this->combine($values, true);
+        $this->items = $this->combine($values, true)->toArray();
 
         return $this;
     }
@@ -290,18 +308,18 @@ class Collection implements ArrayAccess, Iterator, Countable
      * Opposite of Combine
      * It keeps the values of the current Collection and assign new keys.
      *
-     * @param Traversable $keys
+     * @param Traversable|array $keys
      *
      * @return Collection
      */
     public function combineKeys($keys)
     {
         if (!is_array($keys) && !($keys instanceof Traversable)) {
-            $this->doThrow('Invalid input type for keyCombine.', $keys);
+            $this->doThrow('Invalid input type for combineKeys.', $keys);
         }
 
         if (count($keys) != count($this->items)) {
-            $this->doThrow('Invalid input for keyCombine, number of items does not match.', $keys);
+            $this->doThrow('Invalid input for combineKeys, number of items does not match.', $keys);
         }
         $collection = Factory::create();
         $this->rewind();
@@ -317,7 +335,7 @@ class Collection implements ArrayAccess, Iterator, Countable
     /**
      * CombineKeys (in-place).
      *
-     * @param Traversable $keys
+     * @param Traversable|array $keys
      *
      * @return $this
      */
@@ -354,6 +372,8 @@ class Collection implements ArrayAccess, Iterator, Countable
      * @param callable $callback
      *
      * @performanceCompared true
+     *
+     * @return $this
      */
     public function each(callable $callback)
     {
@@ -361,6 +381,8 @@ class Collection implements ArrayAccess, Iterator, Countable
         foreach ($this->items as $key => $value) {
             $callback($value, $key, $index++);
         }
+
+        return $this;
     }
 
     /**
@@ -643,6 +665,10 @@ class Collection implements ArrayAccess, Iterator, Countable
      */
     public function offsetGet($offset)
     {
+        if (!$this->containsKey($offset)) {
+            throw new RuntimeException("Unknown offset: {$offset}");
+        }
+
         return $this->get($offset);
     }
 
@@ -651,7 +677,7 @@ class Collection implements ArrayAccess, Iterator, Countable
      */
     public function offsetUnset($offset)
     {
-        return $this->remove($offset);
+        $this->remove($offset);
     }
 
     /**
@@ -660,12 +686,10 @@ class Collection implements ArrayAccess, Iterator, Countable
     public function offsetSet($offset, $value)
     {
         if (!isset($offset)) {
-            return $this->add($value);
+            $this->add($value);
         }
 
         $this->set($offset, $value);
-
-        return true;
     }
 
     /* --                     -- */

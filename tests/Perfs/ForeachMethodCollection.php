@@ -65,10 +65,23 @@ class ForeachMethodCollection extends Collection
      */
     public function combine($values, $inPlace = false)
     {
+        if (!is_array($values) && !($values instanceof Traversable)) {
+            $this->doThrow('Invalid input type for '.($inPlace ? 'replace' : 'combine').'.', $values);
+        }
+
+        // @todo This may change things performance-wise. I had to add this for Traversable $values to work - LV
+        $values = Factory::getArrayForItems($values);
+        if (count($values) != count($this->items)) {
+            $this->doThrow(
+                'Invalid input for '.($inPlace ? 'replace' : 'combine').', number of items does not match.',
+                $values
+            );
+        }
+
         $collection = Factory::create([], static::class);
         $this->rewind();
         foreach ($values as $value) {
-            $collection->set($this->key(), $value);
+            $collection->set($this->current(), $value);
             $this->next();
         }
         $this->rewind();
@@ -85,6 +98,8 @@ class ForeachMethodCollection extends Collection
         foreach ($this->items as $key => $value) {
             $callback($value, $key, $index++);
         }
+
+        return $this;
     }
 
     /**

@@ -18,16 +18,18 @@ trait DebugTrait
     /**
      * {@inheritdoc}
      *
-     * @see \Novactive\Collection\Collection::doTrhow
+     * @see \Novactive\Collection\Collection::doThrow
      */
     protected function doThrow($message, $arguments)
     {
-        ob_start();
-        dump($this->items);
-        dump($arguments);
-        $output = ob_get_contents();
-        ob_flush();
-        $message .= PHP_EOL.$output;
+        if (!getenv('UNIT_TESTS')) {
+            ob_start();
+            dump($this->items);
+            dump($arguments);
+            $output = ob_get_contents();
+            ob_flush();
+            $message .= PHP_EOL.$output;
+        }
         parent::doThrow($message, $arguments);
     }
 
@@ -38,7 +40,9 @@ trait DebugTrait
      */
     public function dump()
     {
-        dump($this->items);
+        if (!getenv('UNIT_TESTS')) {
+            dump($this->items);
+        }
 
         return parent::dump();
     }

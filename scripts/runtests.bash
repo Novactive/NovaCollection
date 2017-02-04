@@ -10,10 +10,8 @@ cd ${PROJECTDIR}
 
 echoTitle "******** Run tests ********"
 
-
 PHP_VERSIONS=($PHP $PHP7)
 CLASSES_TO_TESTS=("Novactive\Collection\Collection" "Novactive\Collection\Debug\Collection" "Novactive\Tests\Perfs\ArrayMethodCollection" "Novactive\Tests\Perfs\ForeachMethodCollection")
-
 
 for PHPVERSION in ${PHP_VERSIONS[*]}
 do
