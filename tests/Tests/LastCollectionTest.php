@@ -10,17 +10,18 @@
 
 namespace Novactive\Tests;
 
-use Novactive\Collection\Collection;
 use Novactive\Collection\Factory;
 
 /**
- * Class CollectionTest.
+ * Class LastCollectionTest.
  */
-class CollectionTest extends UnitTestCase
+class LastCollectionTest extends UnitTestCase
 {
-    public function testInstantiateCollectionWithNoParams()
+
+    public function testLastReturnsLastItemInCollection()
     {
-        $coll = Factory::create();
-        $this->assertInstanceOf(Collection::class, $coll);
+        $coll = Factory::create($this->fixtures['names']);
+        $this->assertEquals('Nakia', $coll->last());
     }
+
 }
