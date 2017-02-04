@@ -711,6 +711,8 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
      * Split in the collection in $count parts.
      *
      * @param int $count
+     *
+     * @return Collection
      */
     public function split($count = 1)
     {
