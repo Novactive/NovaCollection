@@ -198,7 +198,9 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
      */
     public function shift()
     {
-        return array_shift($this->items);
+        reset($this->items);
+
+        return $this->pull($this->key());
     }
 
     /**
@@ -569,12 +571,7 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
      */
     public function values()
     {
-        $collection = Factory::create();
-        foreach ($this->items as $value) {
-            $collection->add($value);
-        }
-
-        return $collection;
+        return Factory::create(array_values($this->items));
     }
 
     /**
@@ -586,12 +583,7 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
      */
     public function keys()
     {
-        $collection = Factory::create();
-        foreach ($this->items as $key => $value) {
-            $collection->add($key);
-        }
-
-        return $collection;
+        return Factory::create(array_values($this->items));
     }
 
     /**
