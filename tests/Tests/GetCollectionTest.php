@@ -17,7 +17,6 @@ use Novactive\Collection\Factory;
  */
 class GetCollectionTest extends UnitTestCase
 {
-
     public function testGetReturnsItemIfItExists()
     {
         $exp  = $this->fixtures['assoc'];
@@ -31,5 +30,4 @@ class GetCollectionTest extends UnitTestCase
             'If a default is provided, Collection::get() should return it if no item is found.'
         );
     }
-
 }

@@ -18,7 +18,6 @@ use Novactive\Collection\Factory;
  */
 class FilterCollectionTest extends UnitTestCase
 {
-
     public function testFilterReturnsNewCollectionFilteredByPredicateCallback()
     {
         $predicate = function ($val, $key) {
@@ -45,5 +44,4 @@ class FilterCollectionTest extends UnitTestCase
             $filtered->toArray()
         );
     }
-
 }

@@ -42,6 +42,7 @@
     </rule>
     <rule ref="rulesets/design.xml">
         <exclude name="ExitExpression"/>
+        <exclude name="NumberOfChildren"/>
     </rule>
     <rule ref="rulesets/naming.xml">
         <exclude name="ShortVariable"/>

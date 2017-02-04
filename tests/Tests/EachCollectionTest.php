@@ -17,7 +17,6 @@ use Novactive\Collection\Factory;
  */
 class EachCollectionTest extends UnitTestCase
 {
-
     public function testEachLoopsOverEveryItemInCollectionCallingCallback()
     {
         $coll       = Factory::create($this->fixtures['names']);
@@ -39,5 +38,4 @@ class EachCollectionTest extends UnitTestCase
         );
         $this->assertSame($coll, $return, 'Collection::each() should return the collection itself.');
     }
-
 }

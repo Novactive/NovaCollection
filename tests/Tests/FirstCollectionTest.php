@@ -17,11 +17,9 @@ use Novactive\Collection\Factory;
  */
 class FirstCollectionTest extends UnitTestCase
 {
-
     public function testFirstReturnsFirstItemInCollection()
     {
         $coll = Factory::create($this->fixtures['names']);
         $this->assertEquals('Chelsea', $coll->first());
     }
-
 }

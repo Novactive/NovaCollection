@@ -17,7 +17,6 @@ use Novactive\Collection\Factory;
  */
 class IteratorCollectionTest extends UnitTestCase
 {
-
     public function testCurrentReturnsCurrentValue()
     {
         $coll = Factory::create($this->fixtures['names']);
@@ -180,5 +179,4 @@ class IteratorCollectionTest extends UnitTestCase
         $coll = Factory::create($arr);
         $this->assertEquals('Chelsea', $coll->current());
     }
-
 }

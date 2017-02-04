@@ -18,7 +18,6 @@ use Novactive\Collection\Factory;
  */
 class MapCollectionTest extends UnitTestCase
 {
-
     public function testMapReturnsNewCollectionWithTransformedConstituents()
     {
         $coll        = Factory::create($this->fixtures['names']);
@@ -45,5 +44,4 @@ class MapCollectionTest extends UnitTestCase
             $transformed->toArray()
         );
     }
-
 }

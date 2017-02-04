@@ -18,7 +18,6 @@ use Novactive\Collection\Factory;
  */
 class ToArrayCollectionTest extends UnitTestCase
 {
-
     public function testCollectionToArrayConvertsItemsToArray()
     {
         $coll = Factory::create($this->fixtures['names']);

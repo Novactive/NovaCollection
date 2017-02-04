@@ -17,7 +17,6 @@ use Novactive\Collection\Factory;
  */
 class CountCollectionTest extends UnitTestCase
 {
-
     public function testCountReturnsTotalCollectionCount()
     {
         $coll = Factory::create($this->fixtures['names']);
@@ -25,5 +24,4 @@ class CountCollectionTest extends UnitTestCase
         $this->assertEquals(10, $coll->count());
         $this->assertEquals(10, count($coll));
     }
-
 }

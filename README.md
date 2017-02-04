@@ -43,7 +43,7 @@ Fully unit tested it is reliable.
 | reverse()                              | Reverse the collection and return a new Collection.                                                   | :negative_squared_cross_mark: |
 | inverse()                              | Reverse (in-place).                                                                                   | :white_check_mark:            |
 | split($count)                          | Split in the collection in $count parts.                                                              | :negative_squared_cross_mark: |
-| chunck($size)                          | Chunk of $size sub collection.                                                                        | :negative_squared_cross_mark: |
+| chunk($size)                           | Chunk of $size sub collection.                                                                        | :negative_squared_cross_mark: |
 | slice($offset,  $length)               | Get a slice of the collection and inject it in a new one.                                             | :negative_squared_cross_mark: |
 | keep($offset,  $length)                | Keep a slice of the collection (in-place).                                                            | :white_check_mark:            |
 | cut($offset,  $length)                 | Cut a slice of the collection (in-place).                                                             | :white_check_mark:            |

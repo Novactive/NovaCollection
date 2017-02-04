@@ -17,11 +17,9 @@ use Novactive\Collection\Factory;
  */
 class LastCollectionTest extends UnitTestCase
 {
-
     public function testLastReturnsLastItemInCollection()
     {
         $coll = Factory::create($this->fixtures['names']);
         $this->assertEquals('Nakia', $coll->last());
     }
-
 }

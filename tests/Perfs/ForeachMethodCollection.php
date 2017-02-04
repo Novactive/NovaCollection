@@ -24,9 +24,10 @@ class ForeachMethodCollection extends Collection
      */
     public function map(callable $callback)
     {
-        $collection = Factory::create([], static::class);
+        $collection = Factory::create();
+        $index      = 0;
         foreach ($this->items as $key => $value) {
-            $collection->set($key, $callback($value, $key));
+            $collection->set($key, $callback($value, $key, $index++));
         }
 
         return $collection;
@@ -37,9 +38,10 @@ class ForeachMethodCollection extends Collection
      */
     public function filter(callable $callback)
     {
-        $collection = Factory::create([], static::class);
+        $collection = Factory::create();
+        $index      = 0;
         foreach ($this->items as $key => $value) {
-            if ($callback($value, $key)) {
+            if ($callback($value, $key, $index++)) {
                 $collection->set($key, $value);
             }
         }
@@ -53,8 +55,9 @@ class ForeachMethodCollection extends Collection
     public function reduce(callable $callback, $initial = null)
     {
         $accumulator = $initial;
+        $index       = 0;
         foreach ($this->items as $key => $value) {
-            $accumulator = $callback($accumulator, $value, $key);
+            $accumulator = $callback($accumulator, $value, $key, $index++);
         }
 
         return $accumulator;
@@ -69,15 +72,13 @@ class ForeachMethodCollection extends Collection
             $this->doThrow('Invalid input type for '.($inPlace ? 'replace' : 'combine').'.', $values);
         }
 
-        // @todo This may change things performance-wise. I had to add this for Traversable $values to work - LV
-        $values = Factory::getArrayForItems($values);
         if (count($values) != count($this->items)) {
             $this->doThrow(
                 'Invalid input for '.($inPlace ? 'replace' : 'combine').', number of items does not match.',
                 $values
             );
         }
-
+        $values     = Factory::getArrayForItems($values);
         $collection = Factory::create([], static::class);
         $this->rewind();
         foreach ($values as $value) {
@@ -215,10 +216,124 @@ class ForeachMethodCollection extends Collection
         $count      = $this->count();
         $keys       = $this->keys();
         $values     = $this->values();
-        for ($i = $count; $i >= 0; $i--) {
+
+        for ($i = $count - 1; $i >= 0; $i--) {
             $collection->set($keys[$i], $values[$i]);
         }
 
         return $collection;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function shift()
+    {
+        reset($this->items);
+
+        return $this->pull($this->key());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function pop()
+    {
+        end($this->items);
+
+        return $this->pull($this->key());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function chunk($size)
+    {
+        $collection = Factory::create();
+        $chunk      = Factory::create();
+        foreach ($this->items as $key => $value) {
+            $chunk->set($key, $value);
+            if ($chunk->count() == $size) {
+                $collection->add($chunk);
+                $chunk = Factory::create();
+            }
+        }
+        if (!$chunk->isEmpty()) {
+            $collection->add($chunk);
+        }
+
+        return $collection;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function slice($offset, $length = PHP_INT_MAX)
+    {
+        if ($offset < 0) {
+            $offset = $this->count() + $offset;
+        }
+
+        return $this->filter(
+            function ($value, $key, $index) use ($offset, $length) {
+                return ($index >= $offset) && ($index < $offset + $length);
+            }
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function diff($items)
+    {
+        $itemsCollection = Factory::create($items);
+
+        return $this->filter(
+            function ($value, $key, $index) use ($itemsCollection) {
+                return !$itemsCollection->contains($value);
+            }
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function diffKeys($items)
+    {
+        $itemsCollection = Factory::create($items);
+
+        return $this->filter(
+            function ($value, $key, $index) use ($itemsCollection) {
+                return !$itemsCollection->containsKey($key);
+            }
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function intersect($items)
+    {
+        $itemsCollection = Factory::create($items);
+
+        return $this->filter(
+            function ($value, $key, $index) use ($itemsCollection) {
+                return $itemsCollection->contains($value);
+            }
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function intersectKeys($items)
+    {
+        $itemsCollection = Factory::create($items);
+
+        return $this->filter(
+            function ($value, $key, $index) use ($itemsCollection) {
+                return $itemsCollection->containsKey($key);
+            }
+        );
     }
 }

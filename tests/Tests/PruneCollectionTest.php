@@ -17,7 +17,6 @@ use Novactive\Collection\Factory;
  */
 class PruneCollectionTest extends UnitTestCase
 {
-
     public function testPruneFiltersCollectionInPlace()
     {
         $coll = Factory::create($this->fixtures['names']);
@@ -41,5 +40,4 @@ class PruneCollectionTest extends UnitTestCase
         );
         $this->assertCount(3, $coll);
     }
-
 }

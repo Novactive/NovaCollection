@@ -144,4 +144,68 @@ class ArrayMethodCollection extends Collection
     {
         return Factory::create(array_reverse($this->items, true), static::class);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function shift()
+    {
+        return array_shift($this->items);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function pop()
+    {
+        return array_pop($this->items);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function chunk($size)
+    {
+        return Factory::create(array_chunk($this->items, $size, true), static::class);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function slice($offset, $length = PHP_INT_MAX)
+    {
+        return Factory::create(array_slice($this->items, $offset, $length, true), static::class);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function diff($items)
+    {
+        return Factory::create(array_diff($this->items, $items), static::class);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function diffKeys($items)
+    {
+        return Factory::create(array_diff_key($this->items, $items), static::class);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function intersect($items)
+    {
+        return Factory::create(array_intersect($this->items, $items), static::class);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function intersectKeys($items)
+    {
+        return Factory::create(array_intersect_key($this->items, $items), static::class);
+    }
 }

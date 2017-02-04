@@ -17,7 +17,6 @@ use Novactive\Collection\Factory;
  */
 class ArrayAccessCollectionTest extends UnitTestCase
 {
-
     public function testArrayAccessUnsetRemovesItemByKeyAndReturnsNull()
     {
         $exp  = $this->fixtures['assoc'];
@@ -145,5 +144,4 @@ class ArrayAccessCollectionTest extends UnitTestCase
         $coll = Factory::create($exp);
         $foo  = $coll['foo'];
     }
-
 }

@@ -17,7 +17,6 @@ use Novactive\Collection\Factory;
  */
 class ContainsCollectionTest extends UnitTestCase
 {
-
     public function testContainsReturnsTrueIfValueFoundInCollection()
     {
         $coll = Factory::create($this->fixtures['assoc']);
@@ -42,5 +41,4 @@ class ContainsCollectionTest extends UnitTestCase
         //      it should be used instead of in_array to determine whether the collection contains whatever...
         $this->assertTrue($coll->contains(100));
     }
-
 }

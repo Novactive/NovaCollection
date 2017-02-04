@@ -17,7 +17,6 @@ use Novactive\Collection\Factory;
  */
 class PullCollectionTest extends UnitTestCase
 {
-
     public function testPullRemovesItemFromCollectionAndReturnsIt()
     {
         $coll = Factory::create($this->fixtures['assoc']);
@@ -32,5 +31,4 @@ class PullCollectionTest extends UnitTestCase
         $this->assertCount(2, $coll);
         $this->assertNull($coll->pull('2nd'), 'Collection::pull() should return null if key does not exist.');
     }
-
 }

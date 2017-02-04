@@ -194,25 +194,21 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     /**
      * Shift an element off the beginning of the collection(in-place).
      *
-     * @performanceCompared false
+     * @performanceCompared true
      */
     public function shift()
     {
-        reset($this->items);
-
-        return $this->pull($this->key());
+        return array_shift($this->items);
     }
 
     /**
      * Shift an element off the beginning of the collection(in-place).
      *
-     * @performanceCompared false
+     * @performanceCompared true
      */
     public function pop()
     {
-        end($this->items);
-
-        return $this->pull($this->key());
+        return array_pop($this->items);
     }
 
     /**
@@ -326,14 +322,13 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
             $this->doThrow('Invalid input type for '.($inPlace ? 'replace' : 'combine').'.', $values);
         }
 
-        // @todo This may change things performance-wise. I had to add this for Traversable $values to work - LV
-        $values = Factory::getArrayForItems($values);
         if (count($values) != count($this->items)) {
             $this->doThrow(
                 'Invalid input for '.($inPlace ? 'replace' : 'combine').', number of items does not match.',
                 $values
             );
         }
+        $values = Factory::getArrayForItems($values);
 
         return Factory::create(array_combine($this->items, $values));
     }
@@ -727,89 +722,66 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
      */
     public function split($count = 1)
     {
-        return $this->chunck(ceil($this->count() / $count));
+        return $this->chunk(ceil($this->count() / $count));
     }
 
     /**
      * Chunk of $size sub collection.
      *
-     * @param $size
+     * @param int $size
      *
-     * @performanceCompared false
+     * @performanceCompared true
      *
      * @return Collection
      */
-    public function chunck($size)
+    public function chunk($size)
     {
-        $collection = Factory::create();
-        $chunk      = Factory::create();
-        foreach ($this->items as $key => $value) {
-            $chunk->set($key, $value);
-            if ($chunk->count() == $size) {
-                $collection->add($chunk);
-                $chunk = Factory::create();
-            }
-        }
-        if (!$chunk->isEmpty()) {
-            $collection->add($chunk);
-        }
-
-        return $collection;
+        return Factory::create(array_chunk($this->items, $size, true));
     }
 
     /**
      * Get a slice of the collection and inject it in a new one.
      *
-     * @param $size
+     * @param int      $offset
+     * @param int|null $length
      *
-     * @performanceCompared false
+     * @performanceCompared true
      *
      * @return Collection
      */
-    public function slice($offset, $length = PHP_INT_MAX)
+    public function slice($offset, $length = null)
     {
-        if ($offset < 0) {
-            $offset = $this->count() + $offset;
-        }
-
-        return $this->filter(
-            function ($value, $key, $index) use ($offset, $length) {
-                return ($index >= $offset) && ($index < $offset + $length);
-            }
-        );
+        return Factory::create(array_slice($this->items, $offset, $length, true));
     }
 
     /**
      * Keep a slice of the collection (in-place).
      *
-     * @param int $offset
-     * @param int $length
+     * @param int      $offset
+     * @param int|null $length
      *
      * @return $this
      */
-    public function keep($offset, $length = PHP_INT_MAX)
+    public function keep($offset, $length = null)
     {
-        if ($offset < 0) {
-            $offset = $this->count() + $offset;
-        }
+        $this->items = $this->slice($offset, $length);
 
-        return $this->prune(
-            function ($value, $key, $index) use ($offset, $length) {
-                return ($index >= $offset) && ($index < $offset + $length);
-            }
-        );
+        return $this;
     }
 
     /**
      * Cut a slice of the collection (in-place).
      *
-     * @param int $offset
-     * @param int $length
+     * @param int      $offset
+     * @param int|null $length
      *
      * @return $this
      */
-    public function cut($offset, $length = PHP_INT_MAX)
+    public function cut($offset, $length = null)
     {
+        if ($length == null) {
+            $length = PHP_INT_MAX;
+        }
         if ($offset < 0) {
             $offset = $this->count() + $offset;
         }
@@ -824,81 +796,65 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     /**
      * Compares the collection against $items and returns the values that are not present in the collection.
      *
-     * @param $values
+     * @param Traversable|array $values
      *
-     * @performanceCompared false
+     * @performanceCompared true
      *
      * @return Collection
      */
     public function diff($items)
     {
-        $itemsCollection = Factory::create($items);
+        $items = Factory::getArrayForItems($items);
 
-        return $this->filter(
-            function ($value, $key, $index) use ($itemsCollection) {
-                return !$itemsCollection->contains($value);
-            }
-        );
+        return Factory::create(array_diff($this->items, $items));
     }
 
     /**
      * Compares the collection against $items and returns the keys that are not present in the collection.
      *
-     * @param $items
+     * @param Traversable|array $items
      *
-     * @performanceCompared false
+     * @performanceCompared true
      *
      * @return Collection
      */
     public function diffKeys($items)
     {
-        $itemsCollection = Factory::create($items);
+        $items = Factory::getArrayForItems($items);
 
-        return $this->filter(
-            function ($value, $key, $index) use ($itemsCollection) {
-                return !$itemsCollection->containsKey($key);
-            }
-        );
+        return Factory::create(array_diff_key($this->items, $items));
     }
 
     /**
      * Compares the collection against $items and returns the values that exist in the collection.
      *
-     * @param $items
+     * @param Traversable|array $items
      *
-     * @performanceCompared false
+     * @performanceCompared true
      *
      * @return Collection
      */
     public function intersect($items)
     {
-        $itemsCollection = Factory::create($items);
+        $items = Factory::getArrayForItems($items);
 
-        return $this->filter(
-            function ($value, $key, $index) use ($itemsCollection) {
-                return $itemsCollection->contains($value);
-            }
-        );
+        return Factory::create(array_intersect($this->items, $items));
     }
 
     /**
      * Compares the collection against $items and returns the keys that exist in the collection.
      *
-     * @param $items
+     * @param Traversable|array $items
      *
-     * @performanceCompared false
+     * @performanceCompared true
      *
      * @return Collection
      */
     public function intersectKeys($items)
     {
-        $itemsCollection = Factory::create($items);
+        $items = Factory::getArrayForItems($items);
 
-        return $this->filter(
-            function ($value, $key, $index) use ($itemsCollection) {
-                return $itemsCollection->containsKey($key);
-            }
-        );
+        return Factory::create(array_intersect_key($this->items, $items));
     }
 
     /* --         ---          -- */

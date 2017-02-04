@@ -19,8 +19,8 @@ $collectionType = (int)$_SERVER['argv'][2];
 $iterations     = (int)$_SERVER['argv'][3];
 $jsonMode       = (bool)$_SERVER['argv'][4];
 
-$data  = range(0, $iterations);
-$data2 = range(0, $iterations);
+$data  = range(0, $iterations - 1);
+$data2 = range(0, $iterations - 1);
 shuffle($data);
 shuffle($data2);
 
@@ -33,17 +33,21 @@ $textitize = function ($value) {
 
 switch ($collectionType) {
     case 0:
-        $collection = new Collection($data);
+        $collection  = new Collection($data);
+        $collection2 = new Collection($data2);
         break;
     case 1:
-        $collection = new ArrayMethodCollection($data);
+        $collection  = new ArrayMethodCollection($data);
+        $collection2 = new ArrayMethodCollection($data2);
         break;
     case 2:
-        $collection = new ForeachMethodCollection($data);
+        $collection  = new ForeachMethodCollection($data);
+        $collection2 = new ForeachMethodCollection($data2);
         break;
 }
 
 $start = microtime(true);
+
 if ($method == 'filter') {
     $fn = function ($item) {
         return $item % 2;
@@ -75,26 +79,9 @@ if ($method == 'reduce') {
     $collection->reduce($fn, 'plop');
 }
 
-if ($method == 'flip') {
-    $collection->flip();
-}
-
-if ($method == 'values') {
-    $collection->values();
-}
-
-if ($method == 'keys') {
-    $collection->keys();
-}
-
-if ($method == 'unique') {
-    $collection->unique();
-}
-
 if ($method == 'contains') {
     $collection->contains('plop');
 }
-
 if ($method == 'merge') {
     $collection->merge($data2);
 }
@@ -103,8 +90,33 @@ if ($method == 'union') {
     $collection->union($data2);
 }
 
-if ($method == 'reverse') {
-    $collection->reverse();
+if (in_array($method, ['flip', 'values', 'keys', 'unique', 'reverse', 'shift', 'pop'])) {
+    $collection->$method();
+}
+
+if ($method == 'chunk') {
+    $collection->chunk(ceil($iterations / 5) + 1);
+}
+
+if ($method == 'slice') {
+    $collection->slice(ceil($iterations / 2), ceil($iterations / 4));
+    $collection->slice(ceil($iterations / 2) * -1);
+}
+
+if ($method == 'diff') {
+    $collection->diff(range(0, $iterations));
+}
+if ($method == 'intersect') {
+    $collection->intersect(range(0, $iterations));
+}
+
+if ($method == 'diffKeys') {
+    $collection->combine($data2);
+    $collection->diff(range(0, $iterations));
+}
+if ($method == 'intersectKeys') {
+    $collection->combine($data2);
+    $collection->intersect(range(0, $iterations));
 }
 
 $end  = microtime(true);

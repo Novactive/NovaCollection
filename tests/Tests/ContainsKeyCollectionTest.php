@@ -17,7 +17,6 @@ use Novactive\Collection\Factory;
  */
 class ContainsKeyCollectionTest extends UnitTestCase
 {
-
     public function testContainsKeyReturnsTrueIfItemExistsByKey()
     {
         $exp  = $this->fixtures['assoc'];
@@ -26,5 +25,4 @@ class ContainsKeyCollectionTest extends UnitTestCase
         $coll->remove('2nd');
         $this->assertFalse($coll->containsKey('2nd'));
     }
-
 }

@@ -17,7 +17,6 @@ use Novactive\Collection\Factory;
  */
 class AddCollectionTest extends UnitTestCase
 {
-
     public function testAddAppendsItemToCollectionWithNextNumericIndex()
     {
         $array = Factory::create($this->fixtures['array']);
@@ -82,5 +81,4 @@ class AddCollectionTest extends UnitTestCase
             $assoc->toArray()
         );
     }
-
 }

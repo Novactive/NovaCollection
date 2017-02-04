@@ -17,7 +17,6 @@ use Novactive\Collection\Factory;
  */
 class ReindexCollectionTest extends UnitTestCase
 {
-
     public function testReIndexPerformsCombineKeysInPlace()
     {
         $coll = Factory::create($this->fixtures['names']);

@@ -17,7 +17,6 @@ use Novactive\Collection\Factory;
  */
 class SetCollectionTest extends UnitTestCase
 {
-
     public function testSetWillSetValueOnCollectionInPlace()
     {
         $exp  = $this->fixtures['assoc'];
@@ -30,5 +29,4 @@ class SetCollectionTest extends UnitTestCase
         $exp['first'] = 'worst';
         $this->assertEquals($exp, $coll->toArray());
     }
-
 }

@@ -17,7 +17,6 @@ use Novactive\Collection\Factory;
  */
 class RemoveCollectionTest extends UnitTestCase
 {
-
     public function testRemoveRemovesItemByKey()
     {
         $exp  = $this->fixtures['assoc'];
@@ -33,5 +32,4 @@ class RemoveCollectionTest extends UnitTestCase
             'Attempting to remove an item that does not exist should still return the collection itself.'
         );
     }
-
 }

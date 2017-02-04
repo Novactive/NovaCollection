@@ -18,7 +18,6 @@ use Novactive\Collection\Factory;
  */
 class TransformCollectionTest extends UnitTestCase
 {
-
     public function testTransformTransformsCollectionInPlace()
     {
         $coll        = Factory::create($this->fixtures['names']);
@@ -45,5 +44,4 @@ class TransformCollectionTest extends UnitTestCase
             $coll->toArray()
         );
     }
-
 }
