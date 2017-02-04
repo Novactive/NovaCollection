@@ -79,6 +79,25 @@ class Collection implements ArrayAccess, Iterator, Countable
     }
 
     /**
+     * @todo: check here
+     *
+     * @param $index
+     *
+     * @return mixed|null
+     */
+    public function indexOf($index)
+    {
+        $i = 0;
+        foreach ($this->items as $key => $value) {
+            if ($i++ == $index) {
+                return $value;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Test is the key exists.
      *
      * @param string $key
@@ -199,8 +218,9 @@ class Collection implements ArrayAccess, Iterator, Countable
     public function map(callable $callback)
     {
         $collection = Factory::create();
+        $index      = 0;
         foreach ($this->items as $key => $value) {
-            $collection->set($key, $callback($value, $key));
+            $collection->set($key, $callback($value, $key, $index++));
         }
 
         return $collection;
@@ -215,8 +235,9 @@ class Collection implements ArrayAccess, Iterator, Countable
      */
     public function transform(callable $callback)
     {
+        $index = 0;
         foreach ($this->items as $key => $value) {
-            $this->set($key, $callback($value, $key));
+            $this->set($key, $callback($value, $key, $index++));
         }
 
         return $this;
@@ -234,8 +255,9 @@ class Collection implements ArrayAccess, Iterator, Countable
     public function filter(callable $callback)
     {
         $collection = Factory::create();
+        $index      = 0;
         foreach ($this->items as $key => $value) {
-            if ($callback($value, $key)) {
+            if ($callback($value, $key, $index++)) {
                 $collection->set($key, $value);
             }
         }
@@ -252,8 +274,9 @@ class Collection implements ArrayAccess, Iterator, Countable
      */
     public function prune(callable $callback)
     {
+        $index = 0;
         foreach ($this->items as $key => $value) {
-            if (!$callback($value, $key)) {
+            if (!$callback($value, $key, $index++)) {
                 $this->remove($key);
             }
         }
@@ -359,8 +382,9 @@ class Collection implements ArrayAccess, Iterator, Countable
     public function reduce(callable $callback, $initial = null)
     {
         $accumulator = $initial;
+        $index       = 0;
         foreach ($this->items as $key => $value) {
-            $accumulator = $callback($accumulator, $value, $key);
+            $accumulator = $callback($accumulator, $value, $key, $index++);
         }
 
         return $accumulator;
@@ -425,8 +449,8 @@ class Collection implements ArrayAccess, Iterator, Countable
     /**
      * Merge the items and the collections and return a new Collection.
      *
-     * @param Traversable $items
-     * @param bool        $inPlace
+     * @param Traversable|array $items
+     * @param bool              $inPlace
      *
      * @performanceCompared true
      *
@@ -448,7 +472,7 @@ class Collection implements ArrayAccess, Iterator, Countable
     /**
      * Merge (in-place).
      *
-     * @param Traversable $items
+     * @param Traversable|array $items
      *
      * @return $this
      */
@@ -460,8 +484,8 @@ class Collection implements ArrayAccess, Iterator, Countable
     /**
      * Union the collection with Items.
      *
-     * @param Traversable $items
-     * @param bool        $inPlace
+     * @param Traversable|array $items
+     * @param bool              $inPlace
      *
      * @performanceCompared true
      *
@@ -485,7 +509,7 @@ class Collection implements ArrayAccess, Iterator, Countable
     /**
      * Union (in-place).
      *
-     * @param Traversable $items
+     * @param Traversable|array $items
      *
      * @return $this
      */
@@ -506,8 +530,9 @@ class Collection implements ArrayAccess, Iterator, Countable
      */
     public function assert(callable $callback, $expected)
     {
+        $index = 0;
         foreach ($this->items as $key => $value) {
-            if ($callback($value, $key) !== $expected) {
+            if ($callback($value, $key, $index++) !== $expected) {
                 return false;
             }
         }
@@ -621,6 +646,22 @@ class Collection implements ArrayAccess, Iterator, Countable
     }
 
     /**
+     * @todo: explain
+     *
+     * @param Traversable|array $items
+     */
+    public function zip($items)
+    {
+        $collection = Factory::create($items);
+
+        return $this->map(
+            function ($value, $key, $index) use ($collection) {
+                return [$value, $collection->indexOf($index)];
+            }
+        );
+    }
+
+    /**
      * Reverse the collection and return a new Collection.
      *
      * @performanceCompared true
@@ -642,6 +683,14 @@ class Collection implements ArrayAccess, Iterator, Countable
         $this->items = array_reverse($this->items);
 
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEmpty()
+    {
+        return $this->count() == 0;
     }
 
     /* --         ---          -- */
