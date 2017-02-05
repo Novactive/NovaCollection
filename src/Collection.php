@@ -194,6 +194,18 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     }
 
     /**
+     * Clear the collection of all its items
+     *
+     * @return $this
+     */
+    public function clear()
+    {
+        $this->items = [];
+
+        return $this;
+    }
+
+    /**
      * Remove the $key/value in the collection.
      *
      * @param string $key

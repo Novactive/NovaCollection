@@ -52,7 +52,11 @@
             "Novactive\\Tests\\": "tests/Tests",
             "Novactive\\Tests\\Perfs\\": "tests/Perfs",
             "Novactive\\Tests\\Doctrine\\": "tests/Doctrine"
-        }
+        },
+        "classmap": [
+            "src/Doctrine/ArrayCollection.php",
+            "src/Doctrine/Collection.php"
+        ]
     },
     "autoload-dev": {
         "files": [

@@ -9,7 +9,9 @@
  */
 include __DIR__.'/bootstrap_doctrine.php';
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
+use Novactive\Collection\Collection;
 use Novactive\Tests\Doctrine\Entity\Order;
 use Novactive\Tests\Doctrine\Entity\OrderItem;
 
@@ -21,10 +23,23 @@ foreach ($orders as $order) {
     /** @var Order $order */
     $items = $order->getItems();
     dump($items);
+
+    $items->transform(function(OrderItem $value){
+        return $value->getName() . " OH YEAH";
+    });
     foreach ($items as $item) {
         /* @var OrderItem $item */
         echo $item->getName().PHP_EOL;
     }
 }
+
+
+
+
+$override = new ArrayCollection();
+$override->add("plop");
+$override->dump();
+
+
 
 echo PHP_EOL.'------'.PHP_EOL;

@@ -10,7 +10,6 @@
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
 
-putenv('DEBUG_COLLECTION_CLASS=Novactive\Collection\Debug\Collection');
 include __DIR__.'/../bootstrap.php';
 
 $paths     = [__DIR__.'/Entity/'];
