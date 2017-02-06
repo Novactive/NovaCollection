@@ -1,6 +1,3 @@
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/0d53485d-5fbf-46a0-a1c2-c5c879a78b1e/mini.png)](https://insight.sensiolabs.com/projects/0d53485d-5fbf-46a0-a1c2-c5c879a78b1e)
-
-
 | Branch   | Travis | Sensio Insight | Scrutinizer Quality | Scrutinizer Coverage  |
 |:--------:|:------:|:--------------:|:-------------------:|:---------------------:|
 | develop  | [![Build Status](https://travis-ci.org/Novactive/NovaCollection.svg?branch=develop)](https://travis-ci.org/Novactive/NovaCollection) | [![SensioLabsInsight](https://insight.sensiolabs.com/projects/0d53485d-5fbf-46a0-a1c2-c5c879a78b1e/mini.png)](https://insight.sensiolabs.com/projects/0d53485d-5fbf-46a0-a1c2-c5c879a78b1e) | [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Novactive/NovaCollection/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/Novactive/NovaCollection/?branch=develop) |  [![Code Coverage](https://scrutinizer-ci.com/g/Novactive/NovaCollection/badges/coverage.png?b=develop)](https://scrutinizer-ci.com/g/Novactive/NovaCollection/?branch=develop)
