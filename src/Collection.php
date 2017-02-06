@@ -808,7 +808,7 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
      */
     public function keep($offset, $length = null)
     {
-        $this->items = $this->slice($offset, $length);
+        $this->items = $this->slice($offset, $length)->toArray();
 
         return $this;
     }
@@ -840,7 +840,7 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     /**
      * Compares the collection against $items and returns the values that are not present in the collection.
      *
-     * @param Traversable|array $values
+     * @param Traversable|array $items
      *
      * @performanceCompared true
      *

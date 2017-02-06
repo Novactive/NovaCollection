@@ -7,13 +7,14 @@ build:
             - phpcs-run --standard=.cs/cs_ruleset.xml --extensions=php src
             - phpcs-run --standard=.cs/cs_ruleset.xml --extensions=php tests
             -
-                command: phpunit --coverage-clover=collection.clover
+                command: ./vendor/bin/phpunit --coverage-clover=collection.clover
                 coverage:
                     file: collection.clover
                     format: php-clover
 
 checks:
-    php: true
+    php:
+        duplication: false
 
 filter:
     excluded_paths:

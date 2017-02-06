@@ -18,8 +18,8 @@ use Traversable;
 class Factory
 {
     /**
-     * @param array $items
-     * @param       $mode
+     * @param Traversable|array $items
+     * @param string            $className
      *
      * @return Collection
      */
