@@ -1,10 +1,10 @@
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/0d53485d-5fbf-46a0-a1c2-c5c879a78b1e/mini.png)](https://insight.sensiolabs.com/projects/0d53485d-5fbf-46a0-a1c2-c5c879a78b1e)
 
 
-| Branch   | Travis | Sensio Insight |
-|----------|---------------------|-----------------
-| develop  | [![Build Status](https://travis-ci.org/Novactive/NovaCollection.svg?branch=develop)](https://travis-ci.org/Novactive/NovaCollection) | [![SensioLabsInsight](https://insight.sensiolabs.com/projects/0d53485d-5fbf-46a0-a1c2-c5c879a78b1e/mini.png)](https://insight.sensiolabs.com/projects/0d53485d-5fbf-46a0-a1c2-c5c879a78b1e)|
-| master   | [![Build Status](https://travis-ci.org/Novactive/NovaCollection.svg?branch=master)](https://travis-ci.org/Novactive/NovaCollection)  | [![SensioLabsInsight](https://insight.sensiolabs.com/projects/8276b281-ea82-423c-8725-b6e9163260de/mini.png)](https://insight.sensiolabs.com/projects/8276b281-ea82-423c-8725-b6e9163260de)
+| Branch   | Travis | Sensio Insight | Scrutinizer Quality | Scrutinizer Coverage  |
+|:--------:|:------:|:--------------:|:-------------------:|:---------------------:|
+| develop  | [![Build Status](https://travis-ci.org/Novactive/NovaCollection.svg?branch=develop)](https://travis-ci.org/Novactive/NovaCollection) | [![SensioLabsInsight](https://insight.sensiolabs.com/projects/0d53485d-5fbf-46a0-a1c2-c5c879a78b1e/mini.png)](https://insight.sensiolabs.com/projects/0d53485d-5fbf-46a0-a1c2-c5c879a78b1e) | [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Novactive/NovaCollection/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/Novactive/NovaCollection/?branch=develop) |  [![Code Coverage](https://scrutinizer-ci.com/g/Novactive/NovaCollection/badges/coverage.png?b=develop)](https://scrutinizer-ci.com/g/Novactive/NovaCollection/?branch=develop)
+| master   | [![Build Status](https://travis-ci.org/Novactive/NovaCollection.svg?branch=master)](https://travis-ci.org/Novactive/NovaCollection)  | [![SensioLabsInsight](https://insight.sensiolabs.com/projects/8276b281-ea82-423c-8725-b6e9163260de/mini.png)](https://insight.sensiolabs.com/projects/8276b281-ea82-423c-8725-b6e9163260de)|  [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Novactive/NovaCollection/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Novactive/NovaCollection/?branch=master) |  [![Code Coverage](https://scrutinizer-ci.com/g/Novactive/NovaCollection/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/Novactive/NovaCollection/?branch=master)
 
 # Nova Collection
 
@@ -13,7 +13,7 @@ Because we did not find any *Collection* for PHP as simple as we wanted, we did 
 ## Simpler, Better, Faster, Stronger
 
 Using *array_** functions against *foreach* is not an easy pick. As this library is made to manage low level actions.
-We wanted it to be fast, then we compared and we implemented the best choices. (have a look: [PHP5.6](http://i.imgur.com/cmi3K68.png), [PHP7.0](http://i.imgur.com/CSsZSgm.png), [PHP7.1](http://i.imgur.com/hmvg4EZ.png))
+We wanted it to be fast, then we compared and we implemented the best choices. (have a look: [PHP5.6](http://i.imgur.com/aHfySCH.png), [PHP7.0](http://i.imgur.com/xKoW5nd.png), [PHP7.1](http://i.imgur.com/myHMpSX.png))
 
 Fully unit tested it is reliable.
 

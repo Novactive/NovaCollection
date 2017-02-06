@@ -23,11 +23,11 @@ foreach ($methods as $method) {
     $paramsColl = new Collection($method->getParameters());
     $params     = $paramsColl->map(
         function (ReflectionParameter $parameter) {
-            return $parameter->getType().' $'.$parameter->getName();
+            return $parameter->getType().' $'.$parameter->name;
         }
     )->implode(', ');
 
-    $signature = $method->getName().'('.trim($params).')';
+    $signature = $method->name.'('.trim($params).')';
 
     $returnType = 'void';
     /* @var phpDocumentor\Reflection\DocBlock\Tags\Return_ $returnType */
