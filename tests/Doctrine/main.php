@@ -24,8 +24,8 @@ foreach ($orders as $order) {
     $items = $order->getItems();
     dump($items);
 
-    $items->transform(function(OrderItem $value){
-        return $value->getName() . " OH YEAH";
+    $items->transform(function (OrderItem $value) {
+        return $value->getName().' OH YEAH';
     });
     foreach ($items as $item) {
         /* @var OrderItem $item */
@@ -33,13 +33,8 @@ foreach ($orders as $order) {
     }
 }
 
-
-
-
 $override = new ArrayCollection();
-$override->add("plop");
+$override->add('plop');
 $override->dump();
-
-
 
 echo PHP_EOL.'------'.PHP_EOL;
