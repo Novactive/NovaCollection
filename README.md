@@ -73,6 +73,30 @@ Fully unit tested it is reliable.
 | indexOf($value)                        | Get the index of a value if exists (numerically).                                      | :negative_squared_cross_mark:  |
 
 
+## Contributing
+
+In order to be accepted, your contribution needs to pass a few controls: 
+
+* PHP files should be valid
+* PHP files should follow the [PSR-2](http://www.php-fig.org/psr/psr-2/) standard
+* PHP files should be [phpmd](https://phpmd.org) and [phpcpd](https://github.com/sebastianbergmann/phpcpd) warning/error free
+
+To ease the validation process, you can use these 2 scripts:
+
+### Coding Standards and syntax
+
+```bash
+bash scripts/codechecker.bash
+```
+> will check and fix the Coding Standards
+
+### Tests
+
+```bash
+bash scripts/runtests.bash
+```
+> will run the tests
+
 ## Changelog
 
 [Changelog](doc/CHANGELOG.md)
