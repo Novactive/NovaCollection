@@ -1,0 +1,25 @@
+build:
+    environment:
+        php:
+            version: 5.6
+    tests:
+        override:
+            - phpcs-run --standard=.cs/cs_ruleset.xml --extensions=php src
+            - phpcs-run --standard=.cs/cs_ruleset.xml --extensions=php tests
+            -
+                command: phpunit --coverage-clover=collection.clover
+                coverage:
+                    file: collection.clover
+                    format: php-clover
+
+checks:
+    php: true
+
+filter:
+    excluded_paths:
+        - vendor/*
+        - .idea
+        - .codeclimate.yml
+        - .scrutinizer.yml
+
+
