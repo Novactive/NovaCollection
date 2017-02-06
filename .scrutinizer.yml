@@ -15,7 +15,7 @@ build:
 checks:
     php:
         duplication: false
-        unused_variables: false
+        unused_parameters: false
         no_exit: false
 
 filter:
