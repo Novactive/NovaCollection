@@ -60,6 +60,7 @@ Fully unit tested it is reliable.
 | get($key,  $default)                   | Get the value related to the key.                                                      | :negative_squared_cross_mark: |
 | containsKey($key)                      | Test is the key exists.                                                                | :negative_squared_cross_mark: |
 | contains($value)                       | Test if this values exists.                                                            | :negative_squared_cross_mark: |
+| exits(callable $callback)              | Return true if one item return true to the callback.                                   | :negative_squared_cross_mark: |
 | add($item)                             | Add a new value to the collection, next numeric index will be used.                    | :white_check_mark:            |
 | remove($key)                           | Remove the $key/value in the collection.                                               | :white_check_mark:            |
 | pull($key)                             | Remove the $key/value in the collection and return the removed value.                  | :negative_squared_cross_mark: |
@@ -67,6 +68,9 @@ Fully unit tested it is reliable.
 | shift()                                | Shift an element off the beginning of the collection(in-place).                        | :negative_squared_cross_mark: |
 | pop()                                  | Shift an element off the beginning of the collection(in-place).                        | :negative_squared_cross_mark: |
 | last(callable $callback)               | Get the last item.                                                                     | :negative_squared_cross_mark: |
+| atIndex($index)                        | Get the item at the given index (numerically).                                         | :negative_squared_cross_mark: |
+| keyOf($value)                          | Get the key of a value if exists.                                                      | :negative_squared_cross_mark: |
+| indexOf($value)                        | Get the index of a value if exists (numerically).                                      | :negative_squared_cross_mark:  |
 
 
 ## Changelog
