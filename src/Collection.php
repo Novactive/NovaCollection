@@ -234,7 +234,7 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
      */
     public function first(callable $callback = null)
     {
-        if ($callback == null) {
+        if ($callback === null) {
             return reset($this->items);
         }
 
@@ -272,7 +272,7 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
      */
     public function last(callable $callback = null)
     {
-        if ($callback == null) {
+        if ($callback === null) {
             return end($this->items);
         }
 
@@ -823,7 +823,7 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
      */
     public function cut($offset, $length = null)
     {
-        if ($length == null) {
+        if ($length === null) {
             $length = PHP_INT_MAX;
         }
         if ($offset < 0) {
