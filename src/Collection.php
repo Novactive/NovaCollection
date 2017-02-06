@@ -80,19 +80,57 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     }
 
     /**
-     * @todo: check here
+     * Get the item at the given index (numerically).
      *
-     * @param $index
+     * @param int $index
      *
      * @return mixed|null
      */
-    public function indexOf($index)
+    public function atIndex($index)
     {
         $i = 0;
         foreach ($this->items as $key => $value) {
             if ($i++ == $index) {
                 return $value;
             }
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the key of a value if exists.
+     *
+     * @param mixed $value
+     *
+     * @return mixed|null
+     */
+    public function keyOf($value)
+    {
+        foreach ($this->items as $key => $iValue) {
+            if ($value === $iValue) {
+                return $key;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the index of a value if exists (numerically).
+     *
+     * @param mixed $value
+     *
+     * @return int|null
+     */
+    public function indexOf($value)
+    {
+        $i = 0;
+        foreach ($this->items as $key => $iValue) {
+            if ($value === $iValue) {
+                return $i;
+            }
+            $i++;
         }
 
         return null;
@@ -139,6 +177,18 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     public function add($item)
     {
         $this->items[] = $item;
+
+        return $this;
+    }
+
+    /**
+     * Clear the collection of all its items.
+     *
+     * @return $this
+     */
+    public function clear()
+    {
+        $this->items = [];
 
         return $this;
     }
@@ -849,6 +899,25 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
         $items = Factory::getArrayForItems($items);
 
         return Factory::create(array_intersect_key($this->items, $items));
+    }
+
+    /**
+     * Return true if one item return true to the callback.
+     *
+     * @param callable $callback
+     *
+     * @return bool
+     */
+    public function exits(callable $callback)
+    {
+        $index = 0;
+        foreach ($this->items as $key => $item) {
+            if ($callback($key, $item, $index++)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /* --         ---          -- */
