@@ -1,3 +1,11 @@
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/0d53485d-5fbf-46a0-a1c2-c5c879a78b1e/mini.png)](https://insight.sensiolabs.com/projects/0d53485d-5fbf-46a0-a1c2-c5c879a78b1e)
+
+
+| Branch   | Travis | Sensio Insight |
+|----------|---------------------|-----------------
+| develop  | [![Build Status](https://travis-ci.org/Novactive/NovaCollection.svg?branch=develop)](https://travis-ci.org/Novactive/NovaCollection) | [![SensioLabsInsight](https://insight.sensiolabs.com/projects/0d53485d-5fbf-46a0-a1c2-c5c879a78b1e/mini.png)](https://insight.sensiolabs.com/projects/0d53485d-5fbf-46a0-a1c2-c5c879a78b1e)|
+| master   | [![Build Status](https://travis-ci.org/Novactive/NovaCollection.svg?branch=master)](https://travis-ci.org/Novactive/NovaCollection)  | [![SensioLabsInsight](https://insight.sensiolabs.com/projects/8276b281-ea82-423c-8725-b6e9163260de/mini.png)](https://insight.sensiolabs.com/projects/8276b281-ea82-423c-8725-b6e9163260de)
+
 # Nova Collection
 
 Because we did not find any *Collection* for PHP as simple as we wanted, we did ours.
