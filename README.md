@@ -18,7 +18,7 @@ Fully unit tested it is reliable.
 
 ### Manipulation Methods
 
-| Method                                 | Description                                                                                           | In-Place                      |
+| Method                                 | Description                                                                                           | Return a new Collection?      |
 |----------------------------------------|-------------------------------------------------------------------------------------------------------|-------------------------------|
 | map(callable $callback)                | Map and return a new Collection.                                                                      | :negative_squared_cross_mark: |
 | transform(callable $callback)          | Map (in-place).                                                                                       | :white_check_mark:            |
@@ -59,7 +59,7 @@ Fully unit tested it is reliable.
 
 ### Standard Methods
 
-| Method                                 | Description                                                                            | In-Place                      |
+| Method                                 | Description                                                                            | Return a new Collection?      |
 |----------------------------------------|----------------------------------------------------------------------------------------|-------------------------------|
 | set($key,  $value)                     | Set the value to the key no matter what.                                               | :white_check_mark:            |
 | get($key,  $default)                   | Get the value related to the key.                                                      | :negative_squared_cross_mark: |
