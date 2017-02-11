@@ -46,12 +46,17 @@
     },
     "autoload": {
         "psr-4": {
-            "Novactive\\Collection\\": "src/",
-            "Novactive\\Tests\\": "tests/Tests",
-            "Novactive\\Tests\\Perfs\\": "tests/Perfs"
-        }
+            "Novactive\\Collection\\": "src/"
+        },
+        "files": [
+            "src/functions.php"
+        ]
     },
     "autoload-dev": {
+        "psr-4": {
+            "Novactive\\Tests\\": "tests/Tests",
+            "Novactive\\Tests\\Perfs\\": "tests/Perfs"
+        },
         "files": [
             "tests/functions.php",
             "tests/Perfs/jpgraphloader.php"
