@@ -168,15 +168,30 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
      * @param mixed $item
      *
      * @return $this
-     *
-     * @todo
-     *      I think we should add an $offset or $index argument to this as the second argument.
-     *      If it is present, this method sill check if $this->containsKey($offset) and if it does, nothing happens.
-     *      If it does not, then $this->set($key, $value)
      */
     public function add($item)
     {
         $this->items[] = $item;
+
+        return $this;
+    }
+
+    /**
+     * Append the items at the end of the collection not regarding the keys.
+     *
+     * @param Traversable|array $values $items
+     *
+     * @return $this
+     */
+    public function append($values)
+    {
+        if (!is_array($values) && !($values instanceof Traversable)) {
+            $this->doThrow('Invalid input type for append.', $values);
+        }
+
+        foreach ($values as $value) {
+            $this->add($value);
+        }
 
         return $this;
     }
@@ -254,7 +269,7 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     }
 
     /**
-     * Shift an element off the beginning of the collection(in-place).
+     * Shift an element off the end of the collection(in-place).
      *
      * @performanceCompared true
      */
@@ -505,21 +520,15 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
      */
     public function invert()
     {
-        $valuesThatAreKey = Factory::create();
-        foreach ($this->items as $key => $value) {
-            if (!$this->containsKey($value)) {
-                $this->set($value, $key);
-                $this->remove($key);
-                continue;
-            }
-            $valuesThatAreKey->set($value, $key);
-        }
+        $this->items = $this->flip()->toArray();
 
-        return $this->coalesce($valuesThatAreKey);
+        return $this;
     }
 
     /**
      * Merge the items and the collections and return a new Collection.
+     *
+     * Note that is a real merge, numerical keys are merged too.(unlike array_merge)
      *
      * @param Traversable|array $items
      * @param bool              $inPlace
@@ -633,7 +642,7 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
      */
     public function keys()
     {
-        return Factory::create(array_values($this->items));
+        return Factory::create(array_keys($this->items));
     }
 
     /**

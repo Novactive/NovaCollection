@@ -73,6 +73,11 @@ class ArrayMethodCollection extends Collection
                 $values
             );
         }
+        if ($inPlace) {
+            $this->items = array_combine($this->items, $values);
+
+            return $this;
+        }
 
         return Factory::create(array_combine($this->items, $values));
     }
@@ -125,6 +130,14 @@ class ArrayMethodCollection extends Collection
         if (!is_array($items) && !($items instanceof Traversable)) {
             $this->doThrow('Invalid input type for '.__METHOD__.', cannot merge.', $items);
         }
+        if ($items instanceof Collection) {
+            $items = $items->toArray();
+        }
+        if ($inPlace) {
+            $this->items = array_merge($this->items, $items);
+
+            return $this;
+        }
 
         return Factory::create(array_merge($this->items, $items), static::class);
     }
@@ -134,6 +147,18 @@ class ArrayMethodCollection extends Collection
      */
     public function union($items, $inPlace = false)
     {
+        if (!is_array($items) && !($items instanceof Traversable)) {
+            $this->doThrow('Invalid input type for '.($inPlace ? 'absorb' : 'union'), $items);
+        }
+        if ($items instanceof Collection) {
+            $items = $items->toArray();
+        }
+        if ($inPlace) {
+            $this->items = $this->items + $items;
+
+            return $this;
+        }
+
         return Factory::create($this->items + $items, static::class);
     }
 
@@ -182,6 +207,10 @@ class ArrayMethodCollection extends Collection
      */
     public function diff($items)
     {
+        if ($items instanceof Collection) {
+            $items = $items->toArray();
+        }
+
         return Factory::create(array_diff($this->items, $items), static::class);
     }
 
@@ -190,6 +219,10 @@ class ArrayMethodCollection extends Collection
      */
     public function diffKeys($items)
     {
+        if ($items instanceof Collection) {
+            $items = $items->toArray();
+        }
+
         return Factory::create(array_diff_key($this->items, $items), static::class);
     }
 
@@ -198,6 +231,10 @@ class ArrayMethodCollection extends Collection
      */
     public function intersect($items)
     {
+        if ($items instanceof Collection) {
+            $items = $items->toArray();
+        }
+
         return Factory::create(array_intersect($this->items, $items), static::class);
     }
 
@@ -206,6 +243,10 @@ class ArrayMethodCollection extends Collection
      */
     public function intersectKeys($items)
     {
+        if ($items instanceof Collection) {
+            $items = $items->toArray();
+        }
+
         return Factory::create(array_intersect_key($this->items, $items), static::class);
     }
 }

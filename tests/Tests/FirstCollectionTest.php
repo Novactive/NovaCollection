@@ -17,9 +17,31 @@ use Novactive\Collection\Factory;
  */
 class FirstCollectionTest extends UnitTestCase
 {
+    public function letterProvider()
+    {
+        return [
+            ['D', 'Don'],
+            ['M', 'Monte'],
+        ];
+    }
+
     public function testFirstReturnsFirstItemInCollection()
     {
         $coll = Factory::create($this->fixtures['names']);
         $this->assertEquals('Chelsea', $coll->first());
+    }
+
+    /**
+     * @dataProvider letterProvider
+     */
+    public function testFirstReturnsFirstItemInCollectionWithCallback($letter, $expected)
+    {
+        $coll  = Factory::create($this->fixtures['names']);
+        $first = $coll->first(
+            function ($value, $key, $index) use ($letter) {
+                return substr($value, 0, 1) == $letter;
+            }
+        );
+        $this->assertEquals($expected, $first);
     }
 }
