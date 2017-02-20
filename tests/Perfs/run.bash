@@ -3,7 +3,7 @@
 BASEDIR=$(dirname $0)
 source ${BASEDIR}/../../scripts/functions
 PROJECTDIR="${BASEDIR}/../../"
-cd $PROJECTDIR
+cd ${PROJECTDIR}
 
 JSONMODE=$1
 LOCAL_MODE=$2
@@ -18,6 +18,20 @@ else
 fi
 
 source ${BASEDIR}/config.conf
+
+# Download jpgraph if not present
+JPGRAPH_LIB=${PROJECTDIR}/vendor/jpgraph
+if [ ! -d ${JPGRAPH_LIB} ]; then
+    echo "JPGraph is not present, downloading it..."
+    mkdir ${JPGRAPH_LIB}
+    cd ${JPGRAPH_LIB}
+    wget -O jpgraph.tar.gz "http://jpgraph.net/download/download.php?p=11"
+    tar xvzf jpgraph.tar.gz
+    rm jpgraph.tar.gz
+    mv jpgraph-4.0.2 jpgraph
+    echo "JPGraph installed!"
+    cd -
+fi
 
 for VERSION in ${PHPVERSIONS[*]}
 do

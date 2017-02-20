@@ -14,6 +14,7 @@ use Novactive\Tests\Perfs\ArrayMethodCollection;
 use Novactive\Tests\Perfs\ForeachMethodCollection;
 
 include __DIR__.'/../bootstrap.php';
+require __DIR__.'/jpgraphloader.php';
 
 $version  = (string)$_SERVER['argv'][1];
 $fileName = __DIR__."/results{$version}.data";

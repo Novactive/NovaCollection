@@ -15,19 +15,6 @@
             "homepage": "https://github.com/nozavroni"
         }
     ],
-    "repositories": [
-        {
-            "type": "package",
-            "package": {
-                "name": "jpgraph/jpgraph",
-                "version": "4.0.2",
-                "dist": {
-                    "url": "http://jpgraph.net/download/download.php?p=11",
-                    "type": "tar"
-                }
-            }
-        }
-    ],
     "support": {
         "issues": "https://github.com/Novactive/NovaCollection/issues"
     },
@@ -41,7 +28,6 @@
         "fzaninotto/Faker": "dev-master",
         "friendsofphp/php-cs-fixer": "^2.0",
         "phpunit/phpunit": "^5.7",
-        "jpgraph/jpgraph": "4.0.2",
         "phpdocumentor/reflection-docblock": "^3.1"
     },
     "autoload": {
@@ -58,11 +44,7 @@
             "Novactive\\Tests\\Perfs\\": "tests/Perfs"
         },
         "files": [
-            "tests/functions.php",
-            "tests/Perfs/jpgraphloader.php"
+            "tests/functions.php"
         ]
-    },
-    "config": {
-        "secure-http": false
     }
 }
