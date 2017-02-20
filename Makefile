@@ -49,15 +49,13 @@ docmethods:
 doc:
 	rm -rf $(CURRENT_DIR)/doc/_build
 	docker run -it --rm \
-	-v $(CURRENT_DIR)/doc:/sphinx-docs \
-	-v $(CURRENT_DIR)/README.md:/sphinx-docs/README.md \
-	-e SPHINX_DOC_ROOT=/sphinx-docs \
+	-v $(CURRENT_DIR):/project \
+	-e SPHINX_DOC_ROOT=/project/doc \
 	-e SPHINXPROJ="Novactive Collection" \
-	-e BUILDDIR=/sphinx-docs/_build \
-	-e REQUIREMENTS_FILE=/sphinx-docs/requirements.txt \
-	-e SOURCEDIR=/sphinx-docs \
+	-e BUILDDIR=/project/doc/_build \
+	-e REQUIREMENTS_FILE=/project/doc/requirements.txt \
+	-e SOURCEDIR=/project \
 	sonodar/sphinx-build
-	rm $(CURRENT_DIR)/doc/README.md
 
 .PHONY: coverage
 coverage:
