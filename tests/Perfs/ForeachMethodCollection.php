@@ -148,11 +148,11 @@ class ForeachMethodCollection extends Collection
     public function unique()
     {
         $collection = Factory::create([], static::class);
-        foreach ($this->items as $value) {
+        foreach ($this->items as $key => $value) {
             // testing with in_array to not be dependant as in_array is faster and this collection would use foreach
             // we want to test unique here, not in_array
-            if (!in_array($value, $this->items, true)) {
-                $collection->add($value);
+            if (!in_array($value, $collection->toArray(), true)) {
+                $collection->set($key, $value);
             }
         }
 

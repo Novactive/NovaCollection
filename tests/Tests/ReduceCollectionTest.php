@@ -44,4 +44,23 @@ class ReduceCollectionTest extends UnitTestCase
             $this->assertEquals('ChelseaMonteLottieDaytonTroy', $coll->reduce($concateven));
         }
     }
+
+    public function testImplodeCollection()
+    {
+        $coll = Factory::create($this->fixtures['names']);
+
+        $return = $coll->implode(';');
+
+        $reduction = function ($carry, $val, $key = null) {
+            if (!empty($carry)) {
+                return $carry.';'.$val;
+            }
+
+            return $val;
+        };
+
+        $return2 = $coll->reduce($reduction);
+
+        $this->assertEquals($return, $return2);
+    }
 }

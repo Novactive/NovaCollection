@@ -65,7 +65,7 @@ Fully unit tested it is reliable.
 | get($key,  $default)                   | Get the value related to the key.                                                      | :negative_squared_cross_mark: |
 | containsKey($key)                      | Test is the key exists.                                                                | :negative_squared_cross_mark: |
 | contains($value)                       | Test if this values exists.                                                            | :negative_squared_cross_mark: |
-| exits(callable $callback)              | Return true if one item return true to the callback.                                   | :negative_squared_cross_mark: |
+| exists(callable $callback)             | Return true if one item return true to the callback.                                   | :negative_squared_cross_mark: |
 | add($item)                             | Add a new value to the collection, next numeric index will be used.                    | :white_check_mark:            |
 | remove($key)                           | Remove the $key/value in the collection.                                               | :white_check_mark:            |
 | pull($key)                             | Remove the $key/value in the collection and return the removed value.                  | :negative_squared_cross_mark: |

@@ -40,12 +40,17 @@ class Factory
      */
     public static function getArrayForItems($items)
     {
-        if (is_array($items)) {
-            return $items;
-        } elseif ($items instanceof Collection) {
+        if ($items instanceof Collection) {
             return $items->toArray();
+        } elseif (is_array($items)) {
+            return $items;
         } elseif ($items instanceof Traversable) {
             return iterator_to_array($items);
+        } elseif (is_string($items)) {
+            $json = json_decode($items, true);
+            if (is_array($json) && json_last_error() == JSON_ERROR_NONE) {
+                return $json;
+            }
         }
 
         return (array)$items;

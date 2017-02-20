@@ -18,6 +18,8 @@ trait DebugTrait
     /**
      * {@inheritdoc}
      *
+     * @codeCoverageIgnore
+     *
      * @see \Novactive\Collection\Collection::doThrow
      */
     protected function doThrow($message, $arguments)
@@ -35,6 +37,8 @@ trait DebugTrait
 
     /**
      * {@inheritdoc}
+     *
+     * @codeCoverageIgnore
      *
      * @see \Novactive\Collection\Collection::dump
      */
