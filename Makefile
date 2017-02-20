@@ -34,7 +34,7 @@ codeclean:
 	bash $(SCRIPS_DIR)/codechecker.bash
 
 .PHONY: tests
-test:
+tests:
 	bash $(SCRIPS_DIR)/runtests.bash
 
 .PHONY: install
