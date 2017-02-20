@@ -7,6 +7,7 @@ RESTORE=$(shell echo "\033[0m")
 
 # Variables
 PHP_BIN := php
+PHP7_BIN := ./php7
 COMPOSER_BIN := composer.phar
 DOCKER_BIN := docker
 SRCS := src
@@ -18,9 +19,11 @@ list:
 	@echo "Available targets:"
 	@echo ""
 	@echo "  $(YELLOW)codeclean(RESTORE)     > run the codechecker"
-	@echo "  $(YELLOW)test$(RESTORE)         > run the tests"
+	@echo "  $(YELLOW)tests$(RESTORE)        > run the tests"
 	@echo ""
 	@echo "  $(YELLOW)coverage(RESTORE)      > generate the code coverage
+	@echo ""
+	@echo "  $(YELLOW)docmethods(RESTORE)    > dump the list/doc for README.md about methods
 	@echo ""
 	@echo "  $(YELLOW)install$(RESTORE)      > install vendors"
 	@echo "  $(YELLOW)clean$(RESTORE)        > removes the vendors, caches and coverage"
@@ -29,13 +32,17 @@ list:
 codeclean:
 	bash $(SCRIPS_DIR)/codechecker.bash
 
-.PHONY: test
+.PHONY: tests
 test:
 	bash $(SCRIPS_DIR)/runtests.bash
 
 .PHONY: install
 install:
 	$(PHP_BIN) $(COMPOSER_BIN) install
+
+.PHONY: docmethods
+docmethods:
+	$(PHP7_BIN) tests/gendocmethods.php
 
 .PHONY: coverage
 coverage:
