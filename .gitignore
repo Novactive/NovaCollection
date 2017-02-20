@@ -7,3 +7,5 @@ tests/Perfs/results*.data
 tests/Perfs/imgur.credentials.php
 tests/coverage
 tests/main.php
+doc/_build
+doc/.venv

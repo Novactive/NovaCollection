@@ -44,6 +44,20 @@ install:
 docmethods:
 	$(PHP7_BIN) tests/gendocmethods.php
 
+.PHONY: doc
+doc:
+	rm -rf $(CURRENT_DIR)/doc/_build
+	docker run -it --rm \
+	-v $(CURRENT_DIR)/doc:/sphinx-docs \
+	-v $(CURRENT_DIR)/README.md:/sphinx-docs/README.md \
+	-e SPHINX_DOC_ROOT=/sphinx-docs \
+	-e SPHINXPROJ="Novactive Collection" \
+	-e BUILDDIR=/sphinx-docs/_build \
+	-e REQUIREMENTS_FILE=/sphinx-docs/requirements.txt \
+	-e SOURCEDIR=/sphinx-docs \
+	sonodar/sphinx-build
+	rm $(CURRENT_DIR)/doc/README.md
+
 .PHONY: coverage
 coverage:
 	$(DOCKER_BIN) run -t --rm -w /app -v $(CURRENT_DIR):/app phpunit/phpunit --coverage-html /app/tests/coverage

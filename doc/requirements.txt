@@ -30,3 +30,4 @@ unicodecsv==0.14.1
 virtualenv==15.1.0
 wakadump==2.0.6
 watchdog==0.8.3
+recommonmark
