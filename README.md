@@ -91,14 +91,14 @@ To ease the validation process, you can use these 2 scripts:
 ### Coding Standards and syntax
 
 ```bash
-bash scripts/codechecker.bash
+make codeclean
 ```
 > will check and fix the Coding Standards
 
 ### Tests
 
 ```bash
-bash scripts/runtests.bash
+make tests
 ```
 > will run the tests
 
