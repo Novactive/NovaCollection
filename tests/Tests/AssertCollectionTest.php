@@ -17,14 +17,6 @@ use Novactive\Collection\Factory;
  */
 class AssertCollectionTest extends UnitTestCase
 {
-    public function letterProvider()
-    {
-        return [
-            ['D', 'Don'],
-            ['M', 'Monte'],
-        ];
-    }
-
     public function testAssertALlStringInCollection()
     {
         $coll  = Factory::create($this->fixtures['names']);
@@ -50,5 +42,20 @@ class AssertCollectionTest extends UnitTestCase
         $coll2->add('plop')->append([12312, 123, 123, 12312, 312, 3123, 123, 123, 123]);
 
         $this->assertFalse($coll2->assert($allInt, true));
+    }
+
+    public function testExists()
+    {
+        $coll = Factory::create($this->fixtures['names']);
+
+        $test = function ($value, $key, $index) {
+            return $value == 'Monte';
+        };
+
+        $test2 = function ($value, $key, $index) {
+            return $value == 'Monte2';
+        };
+        $this->assertTrue($coll->exists($test));
+        $this->assertFalse($coll->exists($test2));
     }
 }

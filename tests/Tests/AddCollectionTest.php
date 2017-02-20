@@ -17,6 +17,15 @@ use Novactive\Collection\Factory;
  */
 class AddCollectionTest extends UnitTestCase
 {
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testAppendException()
+    {
+        $array = Factory::create($this->fixtures['array']);
+        $array->append('plop');
+    }
+
     public function testAddAppendsItemToCollectionWithNextNumericIndex()
     {
         $array = Factory::create($this->fixtures['array']);

@@ -729,7 +729,7 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
 
         return $this->map(
             function ($value, $key, $index) use ($collection) {
-                return [$value, $collection->indexOf($index)];
+                return [$value, $collection->atIndex($index)];
             }
         );
     }
@@ -917,11 +917,11 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
      *
      * @return bool
      */
-    public function exits(callable $callback)
+    public function exists(callable $callback)
     {
         $index = 0;
         foreach ($this->items as $key => $item) {
-            if ($callback($key, $item, $index++)) {
+            if ($callback($item, $key, $index++) === true) {
                 return true;
             }
         }
