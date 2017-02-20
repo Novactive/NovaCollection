@@ -18,15 +18,16 @@ SCRIPS_DIR := $(CURRENT_DIR)/scripts
 list:
 	@echo "Available targets:"
 	@echo ""
-	@echo "  $(YELLOW)codeclean(RESTORE)     > run the codechecker"
+	@echo "  $(YELLOW)codeclean$(RESTORE)    > run the codechecker"
 	@echo "  $(YELLOW)tests$(RESTORE)        > run the tests"
 	@echo ""
-	@echo "  $(YELLOW)coverage(RESTORE)      > generate the code coverage
+	@echo "  $(YELLOW)coverage$(RESTORE)     > generate the code coverage"
 	@echo ""
-	@echo "  $(YELLOW)docmethods(RESTORE)    > dump the list/doc for README.md about methods
+	@echo "  $(YELLOW)docmethods$(RESTORE)   > dump the list/doc for README.md about methods"
 	@echo ""
 	@echo "  $(YELLOW)install$(RESTORE)      > install vendors"
 	@echo "  $(YELLOW)clean$(RESTORE)        > removes the vendors, caches and coverage"
+
 
 .PHONY: codeclean
 codeclean:
