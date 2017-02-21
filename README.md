@@ -16,7 +16,16 @@ Fully unit tested it is reliable.
 
 ## Methods
 
-### Manipulation Methods
+### Advanced Selection by range
+
+```php
+$collection = NovaCollection([0,1,2,3,4,5,6,7,8,9,10]);
+$collection([2,4], 1, 2, '4-2', '3,2;5-2;10')->toArray();
+```
+> Result: [2,3,4,1,2,4,3,2,3,4,5,4,3,2,10]
+
+
+### Standard Manipulation Methods
 
 | Method                                 | Description                                                                                           | Return a new Collection?      |
 |----------------------------------------|-------------------------------------------------------------------------------------------------------|-------------------------------|
@@ -57,7 +66,7 @@ Fully unit tested it is reliable.
 | intersect($items)                      | Compares the collection against $items and returns the values that exist in the collection.           | :negative_squared_cross_mark: |
 | intersectKeys($items)                  | Compares the collection against $items and returns the keys that exist in the collection.             | :negative_squared_cross_mark: |
 
-### Standard Methods
+### Standard Access Methods
 
 | Method                                 | Description                                                                            | Return a new Collection?      |
 |----------------------------------------|----------------------------------------------------------------------------------------|-------------------------------|

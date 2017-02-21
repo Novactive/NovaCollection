@@ -15,6 +15,7 @@ use Countable;
 use InvalidArgumentException;
 use Iterator;
 use JsonSerializable;
+use Novactive\Collection\Selector\Range;
 use RuntimeException;
 use Traversable;
 
@@ -1067,5 +1068,22 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     public function dump()
     {
         return $this;
+    }
+
+    /**
+     * @param array ...$params
+     *
+     * @throws InvalidArgumentException
+     *
+     * @return Collection
+     */
+    public function __invoke(...$params)
+    {
+        $tool       = new Range();
+        $parameters = Factory::create($params);
+        if ($tool->supports($parameters)) {
+            return $tool->convert($parameters, $this);
+        }
+        $this->doThrow('No Selector is able to handle this invocation.', $params);
     }
 }
