@@ -73,7 +73,7 @@ class Range
 
     /**
      * @param Collection $parameters
-     * @param Collection $collectionl
+     * @param Collection $collection
      */
     public function convert(Collection $parameters, Collection $collection)
     {
