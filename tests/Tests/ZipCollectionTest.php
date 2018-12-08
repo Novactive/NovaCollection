@@ -29,6 +29,7 @@ class ZipCollectionTest extends UnitTestCase
 
             $this->assertEquals($expected, $zip->toArray());
         }
+        $this->assertTrue(true);
     }
 
     public function testNotZipCollection(): void
@@ -45,5 +46,6 @@ class ZipCollectionTest extends UnitTestCase
 
             $this->assertNotEquals($expected, $zip->toArray());
         }
+        $this->assertTrue(true);
     }
 }
