@@ -119,19 +119,4 @@ class RangeSelectorTest extends UnitTestCase
         $this->assertEquals($expected, $results->toArray());
         $this->assertNotSame($testedCollection, $results);
     }
-
-    /**
-     * @expectedException \InvalidArgumentException
-     * @dataProvider badArgumentsProvider
-     */
-    public function testException($args)
-    {
-        $list             = [
-            '1 mois', '2 mois', '3 mois', '4 mois', '5 mois', '6 mois', '7 mois', '8 mois', '9 mois', '10 mois',
-            '11 mois',
-            '1 an', "Plus d'un an", 'Plus de deux ans', 'Indéfini',
-        ];
-        $testedCollection = Factory::create($list);
-        call_user_func_array($testedCollection, $args);
-    }
 }

@@ -830,18 +830,15 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
 
     /**
      * @param array ...$params
-     *
-     * @throws InvalidArgumentException
-     *
-     * @return Collection
      */
-    public function __invoke(...$params)
+    public function __invoke(...$params): Collection
     {
         $tool       = new Range();
         $parameters = Factory::create($params);
         if ($tool->supports($parameters)) {
             return $tool->convert($parameters, $this);
         }
-        $this->doThrow('No Selector is able to handle this invocation.', $params);
+
+        return Factory::create([]);
     }
 }
