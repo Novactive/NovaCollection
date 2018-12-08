@@ -12,12 +12,9 @@ namespace Novactive\Tests;
 
 use Novactive\Collection\Factory;
 
-/**
- * Class ReduceCollectionTest.
- */
 class ReduceCollectionTest extends UnitTestCase
 {
-    public function testReduceIterativelyReducesCollectionToASingleValue()
+    public function testReduceIterativelyReducesCollectionToASingleValue(): void
     {
         $coll = Factory::create($this->fixtures['names']);
 
@@ -30,7 +27,7 @@ class ReduceCollectionTest extends UnitTestCase
         };
 
         $concateven = function ($carry, $val, $key) {
-            if ($key % 2 == 0) {
+            if (0 == $key % 2) {
                 $carry .= $val;
             }
 
@@ -40,12 +37,12 @@ class ReduceCollectionTest extends UnitTestCase
         $this->assertEquals(10, $coll->reduce($count));
         $this->assertEquals('ChelseaAdellaMonteMayeLottieDonDaytonKirkTroyNakia', $coll->reduce($concat));
 
-        if (!$coll instanceof \Novactive\Tests\Perfs\ArrayMethodCollection) {
+        if (!$coll instanceof Perfs\ArrayMethodCollection) {
             $this->assertEquals('ChelseaMonteLottieDaytonTroy', $coll->reduce($concateven));
         }
     }
 
-    public function testImplodeCollection()
+    public function testImplodeCollection(): void
     {
         $coll = Factory::create($this->fixtures['names']);
 

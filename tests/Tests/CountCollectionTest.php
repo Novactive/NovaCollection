@@ -7,17 +7,15 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Tests;
 
 use Novactive\Collection\Factory;
 
-/**
- * Class CountCollectionTest.
- */
 class CountCollectionTest extends UnitTestCase
 {
-    public function testCountReturnsTotalCollectionCount()
+    public function testCountReturnsTotalCollectionCount(): void
     {
         $coll = Factory::create($this->fixtures['names']);
         $this->assertCount(10, $coll);

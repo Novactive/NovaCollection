@@ -7,17 +7,15 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Tests;
 
 use Novactive\Collection\Factory;
 
-/**
- * Class ArrayAccessCollectionTest.
- */
 class ArrayAccessCollectionTest extends UnitTestCase
 {
-    public function testArrayAccessUnsetRemovesItemByKeyAndReturnsNull()
+    public function testArrayAccessUnsetRemovesItemByKeyAndReturnsNull(): void
     {
         $exp  = $this->fixtures['assoc'];
         $coll = Factory::create($exp);
@@ -30,7 +28,7 @@ class ArrayAccessCollectionTest extends UnitTestCase
         $this->assertFalse($coll->containsKey('3rd'));
     }
 
-    public function testArrayAccessOffsetExistsAllowsIssetToWorkWithSquareBrackets()
+    public function testArrayAccessOffsetExistsAllowsIssetToWorkWithSquareBrackets(): void
     {
         // associative
         $exp  = $this->fixtures['assoc'];
@@ -77,7 +75,7 @@ class ArrayAccessCollectionTest extends UnitTestCase
         );
     }
 
-    public function testArrayAccessOffsetSetAllowsUseOfSquareBracketsForSetting()
+    public function testArrayAccessOffsetSetAllowsUseOfSquareBracketsForSetting(): void
     {
         // associative
         $exp  = $this->fixtures['assoc'];
@@ -106,7 +104,7 @@ class ArrayAccessCollectionTest extends UnitTestCase
         $this->assertEquals('far', $coll->get(6));
     }
 
-    public function testArrayAccessOffsetSetAllowsUseOfSquareBracketsForSettingWithoutIndex()
+    public function testArrayAccessOffsetSetAllowsUseOfSquareBracketsForSettingWithoutIndex(): void
     {
         // associative
         $assoc = $this->fixtures['assoc'];
@@ -126,7 +124,7 @@ class ArrayAccessCollectionTest extends UnitTestCase
         $this->assertTrue($arrColl->containsKey(3));
     }
 
-    public function testArrayAccessOffsetGetAllowsUseOfSquareBracketsForGetting()
+    public function testArrayAccessOffsetGetAllowsUseOfSquareBracketsForGetting(): void
     {
         $exp  = $this->fixtures['assoc'];
         $coll = Factory::create($exp);
@@ -138,7 +136,7 @@ class ArrayAccessCollectionTest extends UnitTestCase
      * @expectedException \RuntimeException
      * @expectedExceptionMessage Unknown offset: foo
      */
-    public function testArrayAccessOffsetGetThrowsExceptionIfIndexDoesNotExist()
+    public function testArrayAccessOffsetGetThrowsExceptionIfIndexDoesNotExist(): void
     {
         $exp  = $this->fixtures['assoc'];
         $coll = Factory::create($exp);

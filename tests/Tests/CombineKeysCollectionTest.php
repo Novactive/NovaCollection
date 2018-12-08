@@ -7,17 +7,15 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Tests;
 
 use Novactive\Collection\Factory;
 
-/**
- * Class CombineKeysCollectionTest.
- */
 class CombineKeysCollectionTest extends UnitTestCase
 {
-    public function testCombineKeysUsesIncomingTraversableAsKeysForCollectionsValues()
+    public function testCombineKeysUsesIncomingTraversableAsKeysForCollectionsValues(): void
     {
         $coll    = Factory::create($this->fixtures['names']);
         $orig    = $coll->toArray();
@@ -46,10 +44,9 @@ class CombineKeysCollectionTest extends UnitTestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Invalid input type for combineKeys.
+     * @expectedException \TypeError
      */
-    public function testCombineKeysThrowsExceptionIfPassedNonTraversableNonArray()
+    public function testCombineKeysThrowsExceptionIfPassedNonTraversableNonArray(): void
     {
         $coll = Factory::create($this->fixtures['emails']);
         $coll->combineKeys('this is not traversable');
@@ -59,13 +56,13 @@ class CombineKeysCollectionTest extends UnitTestCase
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Invalid input for combineKeys, number of items does not match.
      */
-    public function testCombineKeysThrowsExceptionIfPassedTraversableWithBadCount()
+    public function testCombineKeysThrowsExceptionIfPassedTraversableWithBadCount(): void
     {
         $coll = Factory::create($this->fixtures['emails']);
         $coll->combineKeys([1, 2, 3]);
     }
 
-    public function testCombineKeysAcceptsTraversable()
+    public function testCombineKeysAcceptsTraversable(): void
     {
         $coll        = Factory::create($this->fixtures['names']);
         $orig        = $coll->toArray();

@@ -7,17 +7,15 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Tests;
 
 use Novactive\Collection\Factory;
 
-/**
- * Class SetCollectionTest.
- */
 class SetCollectionTest extends UnitTestCase
 {
-    public function testSetWillSetValueOnCollectionInPlace()
+    public function testSetWillSetValueOnCollectionInPlace(): void
     {
         $exp  = $this->fixtures['assoc'];
         $coll = Factory::create($exp);

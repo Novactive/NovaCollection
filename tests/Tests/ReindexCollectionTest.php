@@ -7,17 +7,15 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Tests;
 
 use Novactive\Collection\Factory;
 
-/**
- * Class ReindexCollectionTest.
- */
 class ReindexCollectionTest extends UnitTestCase
 {
-    public function testReIndexPerformsCombineKeysInPlace()
+    public function testReIndexPerformsCombineKeysInPlace(): void
     {
         $coll = Factory::create($this->fixtures['names']);
 

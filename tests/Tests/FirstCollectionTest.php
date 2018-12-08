@@ -7,17 +7,15 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Tests;
 
 use Novactive\Collection\Factory;
 
-/**
- * Class FirstCollectionTest.
- */
 class FirstCollectionTest extends UnitTestCase
 {
-    public function letterProvider()
+    public function letterProvider(): array
     {
         return [
             ['D', 'Don'],
@@ -25,7 +23,7 @@ class FirstCollectionTest extends UnitTestCase
         ];
     }
 
-    public function testFirstReturnsFirstItemInCollection()
+    public function testFirstReturnsFirstItemInCollection(): void
     {
         $coll = Factory::create($this->fixtures['names']);
         $this->assertEquals('Chelsea', $coll->first());
@@ -34,12 +32,12 @@ class FirstCollectionTest extends UnitTestCase
     /**
      * @dataProvider letterProvider
      */
-    public function testFirstReturnsFirstItemInCollectionWithCallback($letter, $expected)
+    public function testFirstReturnsFirstItemInCollectionWithCallback($letter, $expected): void
     {
         $coll  = Factory::create($this->fixtures['names']);
         $first = $coll->first(
-            function ($value, $key, $index) use ($letter) {
-                return substr($value, 0, 1) == $letter;
+            function ($value) use ($letter) {
+                return substr($value, 0, 1) === $letter;
             }
         );
         $this->assertEquals($expected, $first);

@@ -10,7 +10,7 @@
 include __DIR__.'/../bootstrap.php';
 $credentials = include __DIR__.'/imgur.credentials.php';
 
-$version = (string)$_SERVER['argv'][1];
+$version = (string) $_SERVER['argv'][1];
 
 $fileName = __DIR__."/../../{$version}_graph.png";
 if (!file_exists($fileName)) {

@@ -7,17 +7,15 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Tests;
 
 use Novactive\Collection\Factory;
 
-/**
- * Class ContainsKeyCollectionTest.
- */
 class ContainsKeyCollectionTest extends UnitTestCase
 {
-    public function testContainsKeyReturnsTrueIfItemExistsByKey()
+    public function testContainsKeyReturnsTrueIfItemExistsByKey(): void
     {
         $exp  = $this->fixtures['assoc'];
         $coll = Factory::create($exp);

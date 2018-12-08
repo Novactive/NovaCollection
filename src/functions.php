@@ -7,6 +7,8 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
+
 use Novactive\Collection\Factory;
 
 if (!function_exists('Collection')) {

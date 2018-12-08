@@ -7,6 +7,7 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Collection;
 
@@ -15,12 +16,9 @@ use Countable;
 use InvalidArgumentException;
 use Iterator;
 use JsonSerializable;
+use Novactive\Collection\Selector\Range;
 use RuntimeException;
-use Traversable;
 
-/**
- * Class Collection.
- */
 class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
 {
     /**
@@ -28,11 +26,6 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
      */
     protected $items;
 
-    /**
-     * Collection constructor.
-     *
-     * @param array $items
-     */
     public function __construct(array $items = [])
     {
         $this->items = $items;
@@ -40,22 +33,17 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     }
 
     /**
-     * @return array
+     * Get the raw Array.
      */
-    public function toArray()
+    public function toArray(): array
     {
         return $this->items;
     }
 
     /**
      * Set the value to the key no matter what.
-     *
-     * @param string $key
-     * @param mixed  $value
-     *
-     * @return $this
      */
-    public function set($key, $value)
+    public function set($key, $value): self
     {
         $this->items[$key] = $value;
 
@@ -64,9 +52,6 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
 
     /**
      * Get the value related to the key.
-     *
-     * @param string $key
-     * @param mixed  $default
      *
      * @return mixed|null
      */
@@ -82,11 +67,9 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     /**
      * Get the item at the given index (numerically).
      *
-     * @param int $index
-     *
      * @return mixed|null
      */
-    public function atIndex($index)
+    public function atIndex(int $index)
     {
         $i = 0;
         foreach ($this->items as $key => $value) {
@@ -101,7 +84,6 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     /**
      * Get the key of a value if exists.
      *
-     * @param mixed $value
      *
      * @return mixed|null
      */
@@ -118,19 +100,15 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
 
     /**
      * Get the index of a value if exists (numerically).
-     *
-     * @param mixed $value
-     *
-     * @return int|null
      */
-    public function indexOf($value)
+    public function indexOf($value): ?int
     {
         $i = 0;
         foreach ($this->items as $key => $iValue) {
             if ($value === $iValue) {
                 return $i;
             }
-            $i++;
+            ++$i;
         }
 
         return null;
@@ -138,12 +116,8 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
 
     /**
      * Test is the key exists.
-     *
-     * @param string $key
-     *
-     * @return bool
      */
-    public function containsKey($key)
+    public function containsKey($key): bool
     {
         return isset($this->items[$key]) || array_key_exists($key, $this->items);
     }
@@ -151,25 +125,18 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     /**
      * Test if this values exists.
      *
-     * @param mixed $value
      *
      * @performanceCompared true
-     *
-     * @return bool
      */
-    public function contains($value)
+    public function contains($value): bool
     {
-        return in_array($value, $this->items, true);
+        return \in_array($value, $this->items, true);
     }
 
     /**
-     * Add a new value to the collection, next numeric index will be used.
-     *
-     * @param mixed $item
-     *
-     * @return $this
+     * Add a new value to the collection, next numeric index will be used. (in-place).
      */
-    public function add($item)
+    public function add($item): self
     {
         $this->items[] = $item;
 
@@ -177,18 +144,10 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     }
 
     /**
-     * Append the items at the end of the collection not regarding the keys.
-     *
-     * @param Traversable|array $values $items
-     *
-     * @return $this
+     * Append the items at the end of the collection not regarding the keys. (in-place).
      */
-    public function append($values)
+    public function append(iterable $values): self
     {
-        if (!is_array($values) && !($values instanceof Traversable)) {
-            $this->doThrow('Invalid input type for append.', $values);
-        }
-
         foreach ($values as $value) {
             $this->add($value);
         }
@@ -197,11 +156,9 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     }
 
     /**
-     * Clear the collection of all its items.
-     *
-     * @return $this
+     * Clear the collection of all its items. (in-place).
      */
-    public function clear()
+    public function clear(): self
     {
         $this->items = [];
 
@@ -209,13 +166,9 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     }
 
     /**
-     * Remove the $key/value in the collection.
-     *
-     * @param string $key
-     *
-     * @return $this
+     * Remove the $key/value in the collection. (in-place).
      */
-    public function remove($key)
+    public function remove($key): self
     {
         unset($this->items[$key]);
 
@@ -223,11 +176,7 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     }
 
     /**
-     *  Remove the $key/value in the collection and return the removed value.
-     *
-     * @param string $key
-     *
-     * @return mixed
+     *  Remove the $key/value in the collection and return the removed value. (in-place).
      */
     public function pull($key)
     {
@@ -242,14 +191,10 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
 
     /**
      * Get the first time and reset and rewind.
-     *
-     * @param callable|null $callback
-     *
-     * @return mixed
      */
     public function first(callable $callback = null)
     {
-        if ($callback === null) {
+        if (null === $callback) {
             return reset($this->items);
         }
 
@@ -257,7 +202,7 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     }
 
     /**
-     * Shift an element off the beginning of the collection(in-place).
+     * Shift an element off the beginning of the collection. (in-place).
      *
      * @performanceCompared true
      */
@@ -269,7 +214,7 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     }
 
     /**
-     * Shift an element off the end of the collection(in-place).
+     * Shift an element off the end of the collection. (in-place).
      *
      * @performanceCompared true
      */
@@ -280,14 +225,10 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
 
     /**
      * Get the last item.
-     *
-     * @param callable|null $callback
-     *
-     * @return mixed
      */
     public function last(callable $callback = null)
     {
-        if ($callback === null) {
+        if (null === $callback) {
             return end($this->items);
         }
 
@@ -297,13 +238,9 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     /**
      * Map and return a new Collection.
      *
-     * @param callable $callback
-     *
      * @performanceCompared true
-     *
-     * @return Collection
      */
-    public function map(callable $callback)
+    public function map(callable $callback): self
     {
         $collection = Factory::create();
         $index      = 0;
@@ -315,13 +252,27 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     }
 
     /**
-     * Map (in-place).
-     *
-     * @param callable $callback
-     *
-     * @return $this
+     * Map keys (and/or value) and return a new Collection.
      */
-    public function transform(callable $callback)
+    public function mapKeys(callable $callback, callable $callbackValue = null): self
+    {
+        $collection = Factory::create();
+        $index      = 0;
+        foreach ($this->items as $key => $value) {
+            $collection->set(
+                $callback($value, $key, $index),
+                null === $callbackValue ? $value : $callbackValue($value, $key, $index)
+            );
+            ++$index;
+        }
+
+        return $collection;
+    }
+
+    /**
+     * Map. (in-place).
+     */
+    public function transform(callable $callback): self
     {
         $index = 0;
         foreach ($this->items as $key => $value) {
@@ -334,13 +285,9 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     /**
      * Filter and return a new Collection.
      *
-     * @param callable $callback
-     *
      * @performanceCompared true
-     *
-     * @return Collection
      */
-    public function filter(callable $callback)
+    public function filter(callable $callback): self
     {
         $collection = Factory::create();
         $index      = 0;
@@ -354,17 +301,13 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     }
 
     /**
-     * Filter (in-place).
-     *
-     * @param callable $callback
-     *
-     * @return $this
+     * Filter. (in-place).
      */
-    public function prune(callable $callback)
+    public function prune(callable $callback): self
     {
         $index = 0;
         foreach ($this->items as $key => $value) {
-            if (!$callback($value, $key, $index++)) {
+            if ($callback($value, $key, $index++)) {
                 $this->remove($key);
             }
         }
@@ -376,23 +319,14 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
      * Combine and return a new Collection.
      * It takes the keys of the current Collection and assign the values.
      *
-     * @param Traversable|array $values
-     * @param bool              $inPlace
-     *
      * @performanceCompared true
-     *
-     * @return mixed
      */
-    public function combine($values, $inPlace = false)
+    public function combine(iterable $values, bool $inPlace = false): self
     {
-        if (!is_array($values) && !($values instanceof Traversable)) {
-            $this->doThrow('Invalid input type for '.($inPlace ? 'replace' : 'combine').'.', $values);
-        }
-
         if (count($values) != count($this->items)) {
             $this->doThrow(
                 'Invalid input for '.($inPlace ? 'replace' : 'combine').', number of items does not match.',
-                $values
+                Factory::getArrayForItems($values)
             );
         }
         $values = Factory::getArrayForItems($values);
@@ -401,13 +335,9 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     }
 
     /**
-     * Combine (in-place).
-     *
-     * @param Traversable|array $values
-     *
-     * @return $this
+     * Combine. (in-place).
      */
-    public function replace($values)
+    public function replace(iterable $values): self
     {
         $this->items = $this->combine($values, true)->toArray();
 
@@ -417,17 +347,9 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     /**
      * Opposite of Combine
      * It keeps the values of the current Collection and assign new keys.
-     *
-     * @param Traversable|array $keys
-     *
-     * @return Collection
      */
-    public function combineKeys($keys)
+    public function combineKeys(iterable $keys): self
     {
-        if (!is_array($keys) && !($keys instanceof Traversable)) {
-            $this->doThrow('Invalid input type for combineKeys.', $keys);
-        }
-
         if (count($keys) != count($this->items)) {
             $this->doThrow('Invalid input for combineKeys, number of items does not match.', $keys);
         }
@@ -443,13 +365,9 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     }
 
     /**
-     * CombineKeys (in-place).
-     *
-     * @param Traversable|array $keys
-     *
-     * @return $this
+     * CombineKeys. (in-place).
      */
-    public function reindex($keys)
+    public function reindex(iterable $keys): self
     {
         $this->items = $this->combineKeys($keys)->toArray();
 
@@ -459,12 +377,7 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     /**
      * Reduce.
      *
-     * @param callable $callback
-     * @param null     $initial
-     *
      * @performanceCompared true
-     *
-     * @return mixed
      */
     public function reduce(callable $callback, $initial = null)
     {
@@ -478,15 +391,11 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     }
 
     /**
-     * Run the callback on each element (passive).
-     *
-     * @param callable $callback
+     * Run the callback on each element. (passive).
      *
      * @performanceCompared true
-     *
-     * @return $this
      */
-    public function each(callable $callback)
+    public function each(callable $callback): self
     {
         $index = 0;
         foreach ($this->items as $key => $value) {
@@ -500,10 +409,8 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
      * Flip the keys and the values and return a new Collection.
      *
      * @performanceCompared true
-     *
-     * @return Collection
      */
-    public function flip()
+    public function flip(): self
     {
         $collection = Factory::create();
         foreach ($this->items as $key => $value) {
@@ -514,11 +421,9 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     }
 
     /**
-     * Flip (in-place).
-     *
-     * @return $this
+     * Flip. (in-place).
      */
-    public function invert()
+    public function invert(): self
     {
         $this->items = $this->flip()->toArray();
 
@@ -530,18 +435,10 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
      *
      * Note that is a real merge, numerical keys are merged too.(unlike array_merge)
      *
-     * @param Traversable|array $items
-     * @param bool              $inPlace
-     *
      * @performanceCompared true
-     *
-     * @return Collection
      */
-    public function merge($items, $inPlace = false)
+    public function merge(iterable $items, bool $inPlace = false): self
     {
-        if (!is_array($items) && !($items instanceof Traversable)) {
-            $this->doThrow('Invalid input type for '.($inPlace ? 'coalesce' : 'merge').'.', $items);
-        }
         $collection = $inPlace ? $this : clone $this;
         foreach ($items as $key => $value) {
             $collection->set($key, $value);
@@ -551,32 +448,20 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     }
 
     /**
-     * Merge (in-place).
-     *
-     * @param Traversable|array $items
-     *
-     * @return $this
+     * Merge. (in-place).
      */
-    public function coalesce($items)
+    public function coalesce(iterable $items): self
     {
         return $this->merge($items, true);
     }
 
     /**
-     * Union the collection with Items.
-     *
-     * @param Traversable|array $items
-     * @param bool              $inPlace
+     * Union the collection with Items and return a new Collection.
      *
      * @performanceCompared true
-     *
-     * @return Collection
      */
-    public function union($items, $inPlace = false)
+    public function union(iterable $items, bool $inPlace = false): self
     {
-        if (!is_array($items) && !($items instanceof Traversable)) {
-            $this->doThrow('Invalid input type for '.($inPlace ? 'absorb' : 'union'), $items);
-        }
         $collection = $inPlace ? $this : clone $this;
         foreach ($items as $key => $value) {
             if (!$collection->containsKey($key)) {
@@ -588,13 +473,9 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     }
 
     /**
-     * Union (in-place).
-     *
-     * @param Traversable|array $items
-     *
-     * @return $this
+     * Union. (in-place).
      */
-    public function absorb($items)
+    public function absorb(iterable $items): self
     {
         $this->union($items, true);
 
@@ -603,13 +484,8 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
 
     /**
      * Assert that the callback result is $expected for all.
-     *
-     * @param callable $callback
-     * @param bool     $expected
-     *
-     * @return bool
      */
-    public function assert(callable $callback, $expected)
+    public function assert(callable $callback, bool $expected): bool
     {
         $index = 0;
         foreach ($this->items as $key => $value) {
@@ -625,10 +501,8 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
      * Return all the values.
      *
      * @performanceCompared true
-     *
-     * @return Collection
      */
-    public function values()
+    public function values(): self
     {
         return Factory::create(array_values($this->items));
     }
@@ -637,20 +511,14 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
      * Return all the keys.
      *
      * @performanceCompared true
-     *
-     * @return Collection
      */
-    public function keys()
+    public function keys(): self
     {
         return Factory::create(array_keys($this->items));
     }
 
     /**
      * Pass the collection to the given callback and return the result.
-     *
-     * @param callable $callback
-     *
-     * @return mixed
      */
     public function pipe(callable $callback)
     {
@@ -658,11 +526,9 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     }
 
     /**
-     * Shuffle. (random in-place).
-     *
-     * @return $this
+     * Random. (in-place).
      */
-    public function shuffle()
+    public function shuffle(): self
     {
         shuffle($this->items);
 
@@ -671,10 +537,8 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
 
     /**
      * Shuffle and return a new Collection.
-     *
-     * @return Collection
      */
-    public function random()
+    public function random(): self
     {
         $array = $this->items;
         shuffle($array);
@@ -686,30 +550,24 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
      * Deduplicate the collection and return a new Collection.
      *
      * @performanceCompared true
-     *
-     * @return Collection
      */
-    public function unique()
+    public function unique(): self
     {
         return Factory::create(array_unique($this->items));
     }
 
     /**
-     * @param string $separator
-     *
-     * @return string
+     * Join the items using the $separator.
      */
-    public function implode($separator)
+    public function implode(string $separator): string
     {
         return implode($this->items, $separator);
     }
 
     /**
-     * Unique (in-place).
-     *
-     * @return $this
+     * Unique. (in-place).
      */
-    public function distinct()
+    public function distinct(): self
     {
         $this->items = array_unique($this->items);
 
@@ -717,13 +575,9 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     }
 
     /**
-     * Merge the values items by items.
-     *
-     * @param Traversable|array $items
-     *
-     * @return Collection
+     * Merge the values items by items and return a new Collection.
      */
-    public function zip($items)
+    public function zip(iterable $items): self
     {
         $collection = Factory::create($items);
 
@@ -738,20 +592,16 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
      * Reverse the collection and return a new Collection.
      *
      * @performanceCompared true
-     *
-     * @return Collection
      */
-    public function reverse()
+    public function reverse(): self
     {
         return Factory::create(array_reverse($this->items, true));
     }
 
     /**
-     * Reverse (in-place).
-     *
-     * @return $this
+     * Reverse. (in-place).
      */
-    public function inverse()
+    public function inverse(): self
     {
         $this->items = array_reverse($this->items);
 
@@ -759,63 +609,45 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     }
 
     /**
-     * @return bool
+     * Tells if the collection is empty.
      */
-    public function isEmpty()
+    public function isEmpty(): bool
     {
-        return $this->count() == 0;
+        return 0 === $this->count();
     }
 
     /**
-     * Split in the collection in $count parts.
-     *
-     * @param int $count
-     *
-     * @return Collection
+     * Split in the collection in $count parts and return a new Collection.
      */
-    public function split($count = 1)
+    public function split(int $count = 1): self
     {
-        return $this->chunk(ceil($this->count() / $count));
+        return $this->chunk((int) ceil($this->count() / $count));
     }
 
     /**
-     * Chunk of $size sub collection.
-     *
-     * @param int $size
+     * Chunk of $size sub collection and return a new Collection.
      *
      * @performanceCompared true
-     *
-     * @return Collection
      */
-    public function chunk($size)
+    public function chunk(int $size): self
     {
         return Factory::create(array_chunk($this->items, $size, true));
     }
 
     /**
-     * Get a slice of the collection and inject it in a new one.
-     *
-     * @param int      $offset
-     * @param int|null $length
+     * Get a slice of the collection and inject it in a new Collection.
      *
      * @performanceCompared true
-     *
-     * @return Collection
      */
-    public function slice($offset, $length = null)
+    public function slice(int $offset, ?int $length = null): self
     {
-        return Factory::create(array_slice($this->items, $offset, $length, true));
+        return Factory::create(\array_slice($this->items, $offset, $length, true));
     }
 
     /**
-     * Keep a slice of the collection (in-place).
-     *
-     * @param int      $offset
-     * @param int|null $length
-     *
-     * @return $this
+     * Keep a slice of the collection. (in-place).
      */
-    public function keep($offset, $length = null)
+    public function keep(int $offset, ?int $length = null): self
     {
         $this->items = $this->slice($offset, $length)->toArray();
 
@@ -823,16 +655,29 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     }
 
     /**
-     * Cut a slice of the collection (in-place).
+     * Apply the callback $onKeyFound on the key/value if the key exists. (passive).
      *
-     * @param int      $offset
-     * @param int|null $length
+     * Apply a callback $onKeyNotFound on the key if the key does NOT exists
+     *
+     * @return mixed|null
+     */
+    public function applyOn($key, callable $onKeyFound, callable $onKeyNotFound = null)
+    {
+        if ($this->containsKey($key)) {
+            return $onKeyFound($key, $this->get($key));
+        }
+
+        return null !== $onKeyNotFound ? $onKeyNotFound($key) : null;
+    }
+
+    /**
+     * Cut a slice of the collection. (in-place).
      *
      * @return $this
      */
-    public function cut($offset, $length = null)
+    public function cut(int $offset, ?int $length = null): self
     {
-        if ($length === null) {
+        if (null === $length) {
             $length = PHP_INT_MAX;
         }
         if ($offset < 0) {
@@ -841,7 +686,7 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
 
         return $this->prune(
             function ($value, $key, $index) use ($offset, $length) {
-                return !(($index >= $offset) && ($index < $offset + $length));
+                return ($index >= $offset) && ($index < $offset + $length);
             }
         );
     }
@@ -849,13 +694,9 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     /**
      * Compares the collection against $items and returns the values that are not present in the collection.
      *
-     * @param Traversable|array $items
-     *
      * @performanceCompared true
-     *
-     * @return Collection
      */
-    public function diff($items)
+    public function diff(iterable $items): self
     {
         $items = Factory::getArrayForItems($items);
 
@@ -865,13 +706,9 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     /**
      * Compares the collection against $items and returns the keys that are not present in the collection.
      *
-     * @param Traversable|array $items
-     *
      * @performanceCompared true
-     *
-     * @return Collection
      */
-    public function diffKeys($items)
+    public function diffKeys(iterable $items): self
     {
         $items = Factory::getArrayForItems($items);
 
@@ -881,13 +718,9 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     /**
      * Compares the collection against $items and returns the values that exist in the collection.
      *
-     * @param Traversable|array $items
-     *
      * @performanceCompared true
-     *
-     * @return Collection
      */
-    public function intersect($items)
+    public function intersect(iterable $items): self
     {
         $items = Factory::getArrayForItems($items);
 
@@ -897,13 +730,9 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     /**
      * Compares the collection against $items and returns the keys that exist in the collection.
      *
-     * @param Traversable|array $items
-     *
      * @performanceCompared true
-     *
-     * @return Collection
      */
-    public function intersectKeys($items)
+    public function intersectKeys(iterable $items): self
     {
         $items = Factory::getArrayForItems($items);
 
@@ -912,16 +741,12 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
 
     /**
      * Return true if one item return true to the callback.
-     *
-     * @param callable $callback
-     *
-     * @return bool
      */
-    public function exists(callable $callback)
+    public function exists(callable $callback): bool
     {
         $index = 0;
         foreach ($this->items as $key => $item) {
-            if ($callback($item, $key, $index++) === true) {
+            if (true === $callback($item, $key, $index++)) {
                 return true;
             }
         }
@@ -929,37 +754,16 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
         return false;
     }
 
-    /* --         ---          -- */
-    /* -- INTERFACE COMPLIANCE -- */
-    /* --         ---          -- */
-
-    /* --                      -- */
-    /* --    JsonSerializable  -- */
-    /* --                      -- */
-
-    /**
-     * @return array
-     */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->toArray();
     }
 
-    /* --                      -- */
-    /* -- Array Access Methods -- */
-    /* --                      -- */
-
-    /**
-     * {@inheritDoc}
-     */
     public function offsetExists($offset)
     {
         return $this->containsKey($offset);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function offsetGet($offset)
     {
         if (!$this->containsKey($offset)) {
@@ -969,17 +773,11 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
         return $this->get($offset);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function offsetUnset($offset)
     {
         $this->remove($offset);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function offsetSet($offset, $value)
     {
         if (!isset($offset)) {
@@ -989,83 +787,58 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
         $this->set($offset, $value);
     }
 
-    /* --                     -- */
-    /* --  Iterator Methods   -- */
-    /* --                     -- */
-
-    /**
-     * {@inheritDoc}
-     */
     public function current()
     {
         return current($this->items);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function key()
     {
         return key($this->items);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function next()
     {
         return next($this->items);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function rewind()
     {
         reset($this->items);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function valid()
     {
         return $this->containsKey(key($this->items));
     }
 
-    /* --                             -- */
-    /* --  Countable Method           -- */
-    /* --                             -- */
-
-    /**
-     * {@inheritDoc}
-     */
     public function count()
     {
         return count($this->items);
     }
 
-    /* --         ---          -- */
-    /* --        OTHERS        -- */
-    /* --         ---          -- */
-
-    /**
-     * @param string $message
-     * @param mixed  $arguments
-     *
-     * @throws InvalidArgumentException
-     */
-    protected function doThrow($message, $arguments)
+    protected function doThrow(string $message, array $arguments)
     {
         unset($arguments);
         throw new InvalidArgumentException($message);
     }
 
-    /**
-     * @return $this
-     */
-    public function dump()
+    public function dump(): self
     {
         return $this;
+    }
+
+    /**
+     * @param array ...$params
+     */
+    public function __invoke(...$params): Collection
+    {
+        $tool       = new Range();
+        $parameters = Factory::create($params);
+        if ($tool->supports($parameters)) {
+            return $tool->convert($parameters, $this);
+        }
+
+        return Factory::create([]);
     }
 }

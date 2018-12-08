@@ -7,17 +7,15 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Tests;
 
 use Novactive\Collection\Factory;
 
-/**
- * Class SplitChunkCollectionTest.
- */
 class SplitChunkCollectionTest extends UnitTestCase
 {
-    public function testSplitCollection()
+    public function testSplitCollection(): void
     {
         $names = Factory::create($this->fixtures['names']);
         $split = $names->split(3);
@@ -25,7 +23,7 @@ class SplitChunkCollectionTest extends UnitTestCase
         $this->assertNotSame($names, $split);
     }
 
-    public function testChunkCollection()
+    public function testChunkCollection(): void
     {
         $names = Factory::create($this->fixtures['names']);
         $split = $names->chunk(2);

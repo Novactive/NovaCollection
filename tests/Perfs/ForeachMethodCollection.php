@@ -7,22 +7,19 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Tests\Perfs;
 
 use Novactive\Collection\Collection;
 use Novactive\Collection\Factory;
-use Traversable;
 
 /**
  * Class ForeachMethodCollection.
  */
 class ForeachMethodCollection extends Collection
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function map(callable $callback)
+    public function map(callable $callback): Collection
     {
         $collection = Factory::create();
         $index      = 0;
@@ -33,10 +30,7 @@ class ForeachMethodCollection extends Collection
         return $collection;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function filter(callable $callback)
+    public function filter(callable $callback): Collection
     {
         $collection = Factory::create();
         $index      = 0;
@@ -49,9 +43,6 @@ class ForeachMethodCollection extends Collection
         return $collection;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function reduce(callable $callback, $initial = null)
     {
         $accumulator = $initial;
@@ -63,19 +54,12 @@ class ForeachMethodCollection extends Collection
         return $accumulator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function combine($values, $inPlace = false)
+    public function combine(iterable $values, bool $inPlace = false): Collection
     {
-        if (!is_array($values) && !($values instanceof Traversable)) {
-            $this->doThrow('Invalid input type for '.($inPlace ? 'replace' : 'combine').'.', $values);
-        }
-
         if (count($values) != count($this->items)) {
             $this->doThrow(
                 'Invalid input for '.($inPlace ? 'replace' : 'combine').', number of items does not match.',
-                $values
+                Factory::getArrayForItems($values)
             );
         }
         $values     = Factory::getArrayForItems($values);
@@ -90,10 +74,7 @@ class ForeachMethodCollection extends Collection
         return $collection;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function each(callable $callback)
+    public function each(callable $callback): Collection
     {
         $index = 0;
         foreach ($this->items as $key => $value) {
@@ -103,10 +84,7 @@ class ForeachMethodCollection extends Collection
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function flip()
+    public function flip(): Collection
     {
         $collection = Factory::create([], static::class);
         foreach ($this->items as $key => $value) {
@@ -116,10 +94,7 @@ class ForeachMethodCollection extends Collection
         return $collection;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function values()
+    public function values(): Collection
     {
         $collection = Factory::create([], static::class);
         foreach ($this->items as $value) {
@@ -129,10 +104,7 @@ class ForeachMethodCollection extends Collection
         return $collection;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function keys()
+    public function keys(): Collection
     {
         $collection = Factory::create([], static::class);
         foreach ($this->items as $key => $value) {
@@ -142,16 +114,13 @@ class ForeachMethodCollection extends Collection
         return $collection;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function unique()
+    public function unique(): Collection
     {
         $collection = Factory::create([], static::class);
         foreach ($this->items as $key => $value) {
             // testing with in_array to not be dependant as in_array is faster and this collection would use foreach
             // we want to test unique here, not in_array
-            if (!in_array($value, $collection->toArray(), true)) {
+            if (!\in_array($value, $collection->toArray(), true)) {
                 $collection->set($key, $value);
             }
         }
@@ -159,10 +128,7 @@ class ForeachMethodCollection extends Collection
         return $collection;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function contains($value)
+    public function contains($value): bool
     {
         foreach ($this->items as $val) {
             if ($value === $val) {
@@ -173,14 +139,8 @@ class ForeachMethodCollection extends Collection
         return false;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function merge($items, $inPlace = false)
+    public function merge(iterable $items, bool $inPlace = false): Collection
     {
-        if (!is_array($items) && !($items instanceof Traversable)) {
-            $this->doThrow('Invalid input type for '.__METHOD__.', cannot merge.', $items);
-        }
         $collection = $inPlace ? $this : clone $this;
         foreach ($items as $key => $value) {
             $collection->set($key, $value);
@@ -189,14 +149,8 @@ class ForeachMethodCollection extends Collection
         return $collection;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function union($items, $inPlace = false)
+    public function union(iterable $items, bool $inPlace = false): Collection
     {
-        if (!is_array($items) && !($items instanceof Traversable)) {
-            $this->doThrow('Invalid input type for '.__METHOD__.', cannot union.', $items);
-        }
         $collection = $inPlace ? $this : clone $this;
         foreach ($items as $key => $value) {
             if (!$collection->containsKey($key)) {
@@ -207,26 +161,20 @@ class ForeachMethodCollection extends Collection
         return $collection;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function reverse()
+    public function reverse(): Collection
     {
         $collection = Factory::create([], static::class);
         $count      = $this->count();
         $keys       = $this->keys();
         $values     = $this->values();
 
-        for ($i = $count - 1; $i >= 0; $i--) {
+        for ($i = $count - 1; $i >= 0; --$i) {
             $collection->set($keys[$i], $values[$i]);
         }
 
         return $collection;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function shift()
     {
         reset($this->items);
@@ -234,9 +182,6 @@ class ForeachMethodCollection extends Collection
         return $this->pull($this->key());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function pop()
     {
         end($this->items);
@@ -244,10 +189,7 @@ class ForeachMethodCollection extends Collection
         return $this->pull($this->key());
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function chunk($size)
+    public function chunk(int $size): Collection
     {
         $collection = Factory::create();
         $chunk      = Factory::create();
@@ -265,10 +207,7 @@ class ForeachMethodCollection extends Collection
         return $collection;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function slice($offset, $length = PHP_INT_MAX)
+    public function slice(int $offset, ?int $length = PHP_INT_MAX): Collection
     {
         if ($offset < 0) {
             $offset = $this->count() + $offset;
@@ -281,10 +220,7 @@ class ForeachMethodCollection extends Collection
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function diff($items)
+    public function diff(iterable $items): Collection
     {
         $itemsCollection = Factory::create($items);
 
@@ -295,10 +231,7 @@ class ForeachMethodCollection extends Collection
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function diffKeys($items)
+    public function diffKeys(iterable $items): Collection
     {
         $itemsCollection = Factory::create($items);
 
@@ -309,10 +242,7 @@ class ForeachMethodCollection extends Collection
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function intersect($items)
+    public function intersect(iterable $items): Collection
     {
         $itemsCollection = Factory::create($items);
 
@@ -323,10 +253,7 @@ class ForeachMethodCollection extends Collection
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function intersectKeys($items)
+    public function intersectKeys(iterable $items): Collection
     {
         $itemsCollection = Factory::create($items);
 

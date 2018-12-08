@@ -7,17 +7,15 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Tests;
 
 use Novactive\Collection\Factory;
 
-/**
- * Class CombineCollectionTest.
- */
 class CombineCollectionTest extends UnitTestCase
 {
-    public function testCombineReturnsCollectionWithExistingKeysAndIncomingValues()
+    public function testCombineReturnsCollectionWithExistingKeysAndIncomingValues(): void
     {
         $coll = Factory::create($this->fixtures['names']);
 
@@ -61,7 +59,7 @@ class CombineCollectionTest extends UnitTestCase
         );
     }
 
-    public function testCombineAcceptsTraversable()
+    public function testCombineAcceptsTraversable(): void
     {
         $stub = $this->getIteratorForArray($this->fixtures['emails']);
         $coll = Factory::create($this->fixtures['names']);
@@ -120,10 +118,9 @@ class CombineCollectionTest extends UnitTestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Invalid input type for combine.
+     * @expectedException \TypeError
      */
-    public function testCombineThrowsExceptionIfInvalidInput()
+    public function testCombineThrowsExceptionIfInvalidInput(): void
     {
         $coll = Factory::create($this->fixtures['names']);
         $coll->combine('not an array');
@@ -133,7 +130,7 @@ class CombineCollectionTest extends UnitTestCase
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Invalid input for combine, number of items does not match.
      */
-    public function testCombineThrowsExceptionIfIncomingTraversableCountIsNotSameAsCollection()
+    public function testCombineThrowsExceptionIfIncomingTraversableCountIsNotSameAsCollection(): void
     {
         $coll = Factory::create($this->fixtures['names']);
         $coll->combine([1, 2, 3]);

@@ -7,20 +7,18 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Tests;
 
 use Novactive\Collection\Factory;
 
-/**
- * Class ZipCollectionTest.
- */
 class ZipCollectionTest extends UnitTestCase
 {
-    public function testZipCollection()
+    public function testZipCollection(): void
     {
         $names = Factory::create($this->fixtures['names'])->keep(0, 3);
-        if (!$names instanceof \Novactive\Tests\Perfs\ArrayMethodCollection) {
+        if (!$names instanceof Perfs\ArrayMethodCollection) {
             $zip = $names->zip(Factory::create($this->fixtures['array']));
 
             $expected = [
@@ -31,12 +29,13 @@ class ZipCollectionTest extends UnitTestCase
 
             $this->assertEquals($expected, $zip->toArray());
         }
+        $this->assertTrue(true);
     }
 
-    public function testNotZipCollection()
+    public function testNotZipCollection(): void
     {
         $names = Factory::create($this->fixtures['names'])->keep(0, 3);
-        if (!$names instanceof \Novactive\Tests\Perfs\ArrayMethodCollection) {
+        if (!$names instanceof Perfs\ArrayMethodCollection) {
             $zip = $names->zip(Factory::create($this->fixtures['array']));
 
             $expected = [
@@ -47,5 +46,6 @@ class ZipCollectionTest extends UnitTestCase
 
             $this->assertNotEquals($expected, $zip->toArray());
         }
+        $this->assertTrue(true);
     }
 }

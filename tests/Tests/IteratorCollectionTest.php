@@ -7,23 +7,21 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Tests;
 
 use Novactive\Collection\Factory;
 
-/**
- * Class IteratorCollectionTest.
- */
 class IteratorCollectionTest extends UnitTestCase
 {
-    public function testCurrentReturnsCurrentValue()
+    public function testCurrentReturnsCurrentValue(): void
     {
         $coll = Factory::create($this->fixtures['names']);
         $this->assertEquals('Chelsea', $coll->current());
     }
 
-    public function testNextMovesCollectionInternalPointer()
+    public function testNextMovesCollectionInternalPointer(): void
     {
         $coll = Factory::create($this->fixtures['names']);
         $this->assertEquals(
@@ -68,7 +66,7 @@ class IteratorCollectionTest extends UnitTestCase
         );
     }
 
-    public function testKeyReturnsCurrentKeyInCollection()
+    public function testKeyReturnsCurrentKeyInCollection(): void
     {
         $coll = Factory::create($this->fixtures['names']);
         $this->assertSame(0, $coll->key(), 'Initial call to key() should return first item in collection.');
@@ -107,7 +105,7 @@ class IteratorCollectionTest extends UnitTestCase
         );
     }
 
-    public function testValidReturnsFalseWhenCollectionHasBeenIteratedBeyondItsLastItem()
+    public function testValidReturnsFalseWhenCollectionHasBeenIteratedBeyondItsLastItem(): void
     {
         $coll = Factory::create($this->fixtures['names']);
         $this->assertTrue($coll->valid(), 'Initial call to valid() should always return true.');
@@ -130,7 +128,7 @@ class IteratorCollectionTest extends UnitTestCase
         );
     }
 
-    public function testRewindWillReturnInternalPointerToItsInitialPosition()
+    public function testRewindWillReturnInternalPointerToItsInitialPosition(): void
     {
         $coll = Factory::create($this->fixtures['names']);
         $this->assertEquals('Chelsea', $coll->first());
@@ -170,7 +168,7 @@ class IteratorCollectionTest extends UnitTestCase
         $this->assertEquals($coll2->first(), $coll2->current(), 'A clone of a collection should be reset.');
     }
 
-    public function testInstantiationShouldRewindArrayArgsInternalPointer()
+    public function testInstantiationShouldRewindArrayArgsInternalPointer(): void
     {
         $arr = $this->fixtures['names'];
         $this->assertEquals('Chelsea', current($arr));

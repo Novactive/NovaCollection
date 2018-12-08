@@ -7,18 +7,16 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Tests;
 
 use Novactive\Collection\Collection;
 use Novactive\Collection\Factory;
 
-/**
- * Class TransformCollectionTest.
- */
 class TransformCollectionTest extends UnitTestCase
 {
-    public function testTransformTransformsCollectionInPlace()
+    public function testTransformTransformsCollectionInPlace(): void
     {
         $coll        = Factory::create($this->fixtures['names']);
         $transformed = $coll->transform(

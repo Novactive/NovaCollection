@@ -7,17 +7,15 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Tests;
 
 use Novactive\Collection\Factory;
 
-/**
- * Class ShiftCollectionTest.
- */
 class ShiftCollectionTest extends UnitTestCase
 {
-    public function testShiftInCollection()
+    public function testShiftInCollection(): void
     {
         $coll        = Factory::create($this->fixtures['names']);
         $currentSize = $coll->count();

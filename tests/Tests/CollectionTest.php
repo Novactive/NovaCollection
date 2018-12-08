@@ -7,6 +7,7 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Tests;
 
@@ -18,13 +19,13 @@ use Novactive\Collection\Factory;
  */
 class CollectionTest extends UnitTestCase
 {
-    public function testInstantiateCollectionWithNoParams()
+    public function testInstantiateCollectionWithNoParams(): void
     {
         $coll = Factory::create();
         $this->assertInstanceOf(Collection::class, $coll);
     }
 
-    public function testJsonSerialize()
+    public function testJsonSerialize(): void
     {
         $coll = Factory::create($this->fixtures['assoc']);
         $json = json_encode($coll);
@@ -35,14 +36,14 @@ class CollectionTest extends UnitTestCase
         $this->assertEquals($coll2, $coll);
     }
 
-    public function testJsonSerialize2()
+    public function testJsonSerialize2(): void
     {
         $coll  = Factory::create($this->fixtures['assoc']);
         $coll2 = Factory::create('{"1st":"first","2nd":"second","3rd":"third"}');
         $this->assertEquals($coll2, $coll);
     }
 
-    public function testDump()
+    public function testDump(): void
     {
         $coll  = Factory::create($this->fixtures['assoc']);
         $coll2 = $coll->dump();
@@ -50,7 +51,7 @@ class CollectionTest extends UnitTestCase
         $this->assertSame($coll2, $coll);
     }
 
-    public function factoryProvider()
+    public function factoryProvider(): array
     {
         $assoc = ['1st' => 'first', '2nd' => 'second', '3rd' => 'third'];
 
@@ -64,7 +65,7 @@ class CollectionTest extends UnitTestCase
     /**
      * @dataProvider factoryProvider
      */
-    public function testFactory($arg)
+    public function testFactory($arg): void
     {
         $coll = Factory::create($arg);
         $this->assertInstanceOf(Collection::class, $coll);

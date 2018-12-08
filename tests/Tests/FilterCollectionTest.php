@@ -7,21 +7,19 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Tests;
 
 use Novactive\Collection\Collection;
 use Novactive\Collection\Factory;
 
-/**
- * Class FilterCollectionTest.
- */
 class FilterCollectionTest extends UnitTestCase
 {
-    public function testFilterReturnsNewCollectionFilteredByPredicateCallback()
+    public function testFilterReturnsNewCollectionFilteredByPredicateCallback(): void
     {
         $predicate = function ($val, $key) {
-            return strlen($val) > 4;
+            return \strlen($val) > 4;
         };
 
         $coll = Factory::create($this->fixtures['names']);

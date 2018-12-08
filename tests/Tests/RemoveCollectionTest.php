@@ -7,17 +7,15 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Tests;
 
 use Novactive\Collection\Factory;
 
-/**
- * Class RemoveCollectionTest.
- */
 class RemoveCollectionTest extends UnitTestCase
 {
-    public function testRemoveRemovesItemByKey()
+    public function testRemoveRemovesItemByKey(): void
     {
         $exp  = $this->fixtures['assoc'];
         $coll = Factory::create($exp);

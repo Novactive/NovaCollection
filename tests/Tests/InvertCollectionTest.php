@@ -7,18 +7,15 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Tests;
 
-use Novactive\Collection\Collection;
 use Novactive\Collection\Factory;
 
-/**
- * Class InvertCollectionTest.
- */
 class InvertCollectionTest extends UnitTestCase
 {
-    public function testInvertCollection()
+    public function testInvertCollection(): void
     {
         $coll    = Factory::create($this->fixtures['names']);
         $keys    = $coll->keys();
@@ -32,7 +29,7 @@ class InvertCollectionTest extends UnitTestCase
         $this->assertSame($coll, $unflipped, '2 invert MUST return the same collection');
     }
 
-    public function conflictInversionProvider()
+    public function conflictInversionProvider(): array
     {
         return [
             [
@@ -51,7 +48,7 @@ class InvertCollectionTest extends UnitTestCase
     /**
      * @dataProvider conflictInversionProvider
      */
-    public function testInvertWithConflictsCollection($items)
+    public function testInvertWithConflictsCollection($items): void
     {
         $coll = Factory::create($items);
         $flip = $coll->flip();

@@ -7,22 +7,19 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Tests\Perfs;
 
 use Novactive\Collection\Collection;
 use Novactive\Collection\Factory;
-use Traversable;
 
 /**
  * Class ArrayMethodCollection.
  */
 class ArrayMethodCollection extends Collection
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function map(callable $callback)
+    public function map(callable $callback): Collection
     {
         $keys  = array_keys($this->items);
         $items = array_map($callback, $this->items, $keys);
@@ -30,42 +27,25 @@ class ArrayMethodCollection extends Collection
         return Factory::create(array_combine($keys, $items), static::class);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function filter(callable $callback)
+    public function filter(callable $callback): Collection
     {
         return Factory::create(array_filter($this->items, $callback, ARRAY_FILTER_USE_BOTH), static::class);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function reduce(callable $callback, $initial = null)
     {
         return array_reduce($this->items, $callback, $initial);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function each(callable $callback)
+    public function each(callable $callback): Collection
     {
         array_walk($this->items, $callback);
 
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function combine($values, $inPlace = false)
+    public function combine(iterable $values, bool $inPlace = false): Collection
     {
-        if (!is_array($values) && !($values instanceof Traversable)) {
-            $this->doThrow('Invalid input type for '.($inPlace ? 'replace' : 'combine').'.', $values);
-        }
-
-        // @todo This may change things performance-wise. I had to add this for Traversable $values to work - LV
         $values = Factory::getArrayForItems($values);
         if (count($values) != count($this->items)) {
             $this->doThrow(
@@ -82,54 +62,33 @@ class ArrayMethodCollection extends Collection
         return Factory::create(array_combine($this->items, $values));
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function flip()
+    public function flip(): Collection
     {
         return Factory::create(array_flip($this->items), static::class);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function values()
+    public function values(): Collection
     {
         return Factory::create(array_values($this->items), static::class);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function keys()
+    public function keys(): Collection
     {
         return Factory::create(array_keys($this->items), static::class);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function unique()
+    public function unique(): Collection
     {
         return Factory::create(array_unique($this->items), static::class);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function contains($value)
+    public function contains($value): bool
     {
-        return in_array($value, $this->items, true);
+        return \in_array($value, $this->items, true);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function merge($items, $inPlace = false)
+    public function merge(iterable $items, bool $inPlace = false): Collection
     {
-        if (!is_array($items) && !($items instanceof Traversable)) {
-            $this->doThrow('Invalid input type for '.__METHOD__.', cannot merge.', $items);
-        }
         if ($items instanceof Collection) {
             $items = $items->toArray();
         }
@@ -142,14 +101,8 @@ class ArrayMethodCollection extends Collection
         return Factory::create(array_merge($this->items, $items), static::class);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function union($items, $inPlace = false)
+    public function union($items, $inPlace = false): Collection
     {
-        if (!is_array($items) && !($items instanceof Traversable)) {
-            $this->doThrow('Invalid input type for '.($inPlace ? 'absorb' : 'union'), $items);
-        }
         if ($items instanceof Collection) {
             $items = $items->toArray();
         }
@@ -162,50 +115,32 @@ class ArrayMethodCollection extends Collection
         return Factory::create($this->items + $items, static::class);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function reverse()
+    public function reverse(): Collection
     {
         return Factory::create(array_reverse($this->items, true), static::class);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function shift()
     {
         return array_shift($this->items);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function pop()
     {
         return array_pop($this->items);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function chunk($size)
+    public function chunk(int $size): Collection
     {
         return Factory::create(array_chunk($this->items, $size, true), static::class);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function slice($offset, $length = PHP_INT_MAX)
+    public function slice(int $offset, ?int $length = PHP_INT_MAX): Collection
     {
-        return Factory::create(array_slice($this->items, $offset, $length, true), static::class);
+        return Factory::create(\array_slice($this->items, $offset, $length, true), static::class);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function diff($items)
+    public function diff(iterable $items): Collection
     {
         if ($items instanceof Collection) {
             $items = $items->toArray();
@@ -214,10 +149,7 @@ class ArrayMethodCollection extends Collection
         return Factory::create(array_diff($this->items, $items), static::class);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function diffKeys($items)
+    public function diffKeys(iterable $items): Collection
     {
         if ($items instanceof Collection) {
             $items = $items->toArray();
@@ -226,10 +158,7 @@ class ArrayMethodCollection extends Collection
         return Factory::create(array_diff_key($this->items, $items), static::class);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function intersect($items)
+    public function intersect(iterable $items): Collection
     {
         if ($items instanceof Collection) {
             $items = $items->toArray();
@@ -238,10 +167,7 @@ class ArrayMethodCollection extends Collection
         return Factory::create(array_intersect($this->items, $items), static::class);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function intersectKeys($items)
+    public function intersectKeys(iterable $items): Collection
     {
         if ($items instanceof Collection) {
             $items = $items->toArray();

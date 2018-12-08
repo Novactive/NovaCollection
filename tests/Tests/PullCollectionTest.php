@@ -7,17 +7,15 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Tests;
 
 use Novactive\Collection\Factory;
 
-/**
- * Class PullCollectionTest.
- */
 class PullCollectionTest extends UnitTestCase
 {
-    public function testPullRemovesItemFromCollectionAndReturnsIt()
+    public function testPullRemovesItemFromCollectionAndReturnsIt(): void
     {
         $coll = Factory::create($this->fixtures['assoc']);
         $this->assertCount(3, $coll);

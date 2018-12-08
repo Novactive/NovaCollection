@@ -7,55 +7,38 @@ RESTORE=$(shell echo "\033[0m")
 
 # Variables
 PHP_BIN := php
-PHP7_BIN := ./php7
-COMPOSER_BIN := composer.phar
+COMPOSER_BIN := composer
 DOCKER_BIN := docker
 SRCS := src
 CURRENT_DIR := $(shell pwd)
-SCRIPS_DIR := $(CURRENT_DIR)/scripts
 
 .PHONY: list
 list:
-	@echo "Available targets:"
-	@echo ""
-	@echo "  $(YELLOW)codeclean$(RESTORE)    > run the codechecker"
-	@echo "  $(YELLOW)tests$(RESTORE)        > run the tests"
-	@echo ""
-	@echo "  $(YELLOW)coverage$(RESTORE)     > generate the code coverage"
-	@echo ""
-	@echo "  $(YELLOW)docmethods$(RESTORE)   > dump the list/doc for README.md about methods"
-	@echo ""
-	@echo "  $(YELLOW)install$(RESTORE)      > install vendors"
-	@echo "  $(YELLOW)clean$(RESTORE)        > removes the vendors, caches and coverage"
+	@echo "*********************"
+	@echo "${YELLOW}Available targets${RESTORE}:"
+	@echo "*********************"
+	@grep -E '^[a-zA-Z-]+:.*?## .*$$' Makefile | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "[32m%-15s[0m %s\n", $$1, $$2}'
 
 
 .PHONY: codeclean
 codeclean:
-	bash $(SCRIPS_DIR)/codechecker.bash
+	@$(PHP_BIN) vendor/bin/phpmd src text .cs/md_ruleset.xml
+	@$(PHP_BIN) vendor/bin/phpmd tests text .cs/md_ruleset.xml
+	@$(PHP_BIN) vendor/bin/php-cs-fixer fix --config=.cs/.php_cs.php
+	@$(PHP_BIN) vendor/bin/phpcs --standard=.cs/cs_ruleset.xml --extensions=php src
+	@$(PHP_BIN) vendor/bin/phpcs --standard=.cs/cs_ruleset.xml --extensions=php tests
 
 .PHONY: tests
 tests:
-	bash $(SCRIPS_DIR)/runtests.bash
+	@bash $(CURRENT_DIR)/tests/runtests.bash
 
 .PHONY: install
 install:
-	$(PHP_BIN) $(COMPOSER_BIN) install
+	@$(COMPOSER_BIN) install
 
 .PHONY: docmethods
 docmethods:
-	$(PHP7_BIN) tests/gendocmethods.php
-
-.PHONY: doc
-doc:
-	rm -rf $(CURRENT_DIR)/doc/_build
-	docker run -it --rm \
-	-v $(CURRENT_DIR):/project \
-	-e SPHINX_DOC_ROOT=/project/doc \
-	-e SPHINXPROJ="Novactive Collection" \
-	-e BUILDDIR=/project/doc/_build \
-	-e REQUIREMENTS_FILE=/project/doc/requirements.txt \
-	-e SOURCEDIR=/project \
-	sonodar/sphinx-build
+	@$(PHP7_BIN) tests/gendocmethods.php
 
 .PHONY: coverage
 coverage:

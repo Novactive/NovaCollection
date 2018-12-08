@@ -7,17 +7,15 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Tests;
 
 use Novactive\Collection\Factory;
 
-/**
- * Class KeyOfCollectionTest.
- */
 class KeyOfCollectionTest extends UnitTestCase
 {
-    public function valueProvider()
+    public function valueProvider(): array
     {
         return [
             ['Don', 5],
@@ -26,7 +24,7 @@ class KeyOfCollectionTest extends UnitTestCase
         ];
     }
 
-    public function value2Provider()
+    public function value2Provider(): array
     {
         return [
             ['third', '3rd'],
@@ -38,7 +36,7 @@ class KeyOfCollectionTest extends UnitTestCase
     /**
      * @dataProvider valueProvider
      */
-    public function testKeyOfInCollection($value, $expected)
+    public function testKeyOfInCollection($value, $expected): void
     {
         $coll = Factory::create($this->fixtures['names']);
         $this->assertEquals($expected, $coll->keyOf($value));
@@ -47,7 +45,7 @@ class KeyOfCollectionTest extends UnitTestCase
     /**
      * @dataProvider value2Provider
      */
-    public function testKeyOf2InCollection($value, $expected)
+    public function testKeyOf2InCollection($value, $expected): void
     {
         $coll = Factory::create($this->fixtures['assoc']);
         $this->assertEquals($expected, $coll->keyOf($value));

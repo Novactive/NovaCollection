@@ -7,6 +7,7 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Tests;
 
@@ -17,7 +18,7 @@ use Novactive\Collection\Factory;
  */
 class EachCollectionTest extends UnitTestCase
 {
-    public function testEachLoopsOverEveryItemInCollectionCallingCallback()
+    public function testEachLoopsOverEveryItemInCollectionCallingCallback(): void
     {
         $coll       = Factory::create($this->fixtures['names']);
         $namesCount = count($this->fixtures['names']);
@@ -26,10 +27,10 @@ class EachCollectionTest extends UnitTestCase
         // this will test that touch() is called $namesCount times
         $return = $coll->each(
             function ($val, $key, $iter = null) use ($recorder, $coll) {
-                $this->assertTrue(is_string($val));
+                $this->assertTrue(\is_string($val));
                 $this->assertTrue(is_numeric($key));
 
-                if (!$coll instanceof \Novactive\Tests\Perfs\ArrayMethodCollection) {
+                if (!$coll instanceof Perfs\ArrayMethodCollection) {
                     $this->assertTrue(is_numeric($iter));
                 }
 

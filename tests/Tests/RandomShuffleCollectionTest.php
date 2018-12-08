@@ -7,17 +7,15 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Tests;
 
 use Novactive\Collection\Factory;
 
-/**
- * Class RandomShuffleCollectionTest.
- */
 class RandomShuffleCollectionTest extends UnitTestCase
 {
-    public function testShuffleCollection()
+    public function testShuffleCollection(): void
     {
         $names       = Factory::create($this->fixtures['names']);
         $namesClone  = clone $names;
@@ -29,7 +27,7 @@ class RandomShuffleCollectionTest extends UnitTestCase
         $this->assertCount($names->count(), $aCollection);
     }
 
-    public function testRandomCollection()
+    public function testRandomCollection(): void
     {
         $names       = Factory::create($this->fixtures['names']);
         $namesClone  = clone $names;

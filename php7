@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-docker run -t --rm -w /code -v $(pwd):/code php:7-alpine php $@

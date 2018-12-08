@@ -7,17 +7,15 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Tests;
 
 use Novactive\Collection\Factory;
 
-/**
- * Class UnionCollectionTest.
- */
 class UnionCollectionTest extends UnitTestCase
 {
-    public function testUnioneollection()
+    public function testUnioneollection(): void
     {
         $coll  = Factory::create($this->fixtures['names']);
         $coll2 = Factory::create($this->fixtures['assoc']);
@@ -32,7 +30,7 @@ class UnionCollectionTest extends UnitTestCase
         $this->assertNotSame($newColl, $coll);
     }
 
-    public function testUnionInPlaceCollection()
+    public function testUnionInPlaceCollection(): void
     {
         $coll  = Factory::create($this->fixtures['names']);
         $coll2 = Factory::create($this->fixtures['assoc']);
@@ -43,27 +41,5 @@ class UnionCollectionTest extends UnitTestCase
         $this->assertEquals($newColl->keyOf('third'), '3rd');
 
         $this->assertSame($newColl, $coll);
-    }
-
-    public function exceptionProvider()
-    {
-        return [
-            ['plop', 'union'],
-            [new \stdClass(), 'union'],
-            [123112.31, 'union'],
-            ['plop', 'absorb'],
-            [new \stdClass(), 'absorb'],
-            [123112.31, 'absorb'],
-        ];
-    }
-
-    /**
-     * @dataProvider exceptionProvider
-     * @expectedException \InvalidArgumentException
-     */
-    public function testMergeExceptionCollection($items, $method)
-    {
-        $coll = Factory::create([123, 123, 123, 123, 123, 12312, 33]);
-        $coll->$method($items);
     }
 }

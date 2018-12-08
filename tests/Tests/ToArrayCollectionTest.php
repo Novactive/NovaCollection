@@ -7,18 +7,16 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Tests;
 
 use Novactive\Collection\Collection;
 use Novactive\Collection\Factory;
 
-/**
- * Class ToArrayCollectionTest.
- */
 class ToArrayCollectionTest extends UnitTestCase
 {
-    public function testCollectionToArrayConvertsItemsToArray()
+    public function testCollectionToArrayConvertsItemsToArray(): void
     {
         $coll = Factory::create($this->fixtures['names']);
         $this->assertInstanceOf(Collection::class, $coll);

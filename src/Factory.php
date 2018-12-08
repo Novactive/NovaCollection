@@ -7,52 +7,45 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Collection;
 
-use Traversable;
-
-/**
- * Class Factory.
- */
 class Factory
 {
-    /**
-     * @param Traversable|array $items
-     * @param string            $className
-     *
-     * @return Collection
-     */
-    public static function create($items = [], $className = 'Novactive\Collection\Collection')
+    public static function create($items = [], string $className = Collection::class): Collection
     {
-        $options = null;
-        if (getenv('DEBUG_COLLECTION_CLASS') && getenv('DEBUG_COLLECTION_CLASS') != '') {
-            $className = getenv('DEBUG_COLLECTION_CLASS');
+        if (getenv('DEBUG_COLLECTION_CLASS') && '' != getenv('DEBUG_COLLECTION_CLASS')) {
+            $className = (string) getenv('DEBUG_COLLECTION_CLASS');
         }
 
-        return new $className(static::getArrayForItems($items), $options);
+        return new $className(static::getArrayForItems($items));
     }
 
     /**
      * @param $items
-     *
-     * @return array
      */
-    public static function getArrayForItems($items)
+    public static function getArrayForItems($items): array
     {
         if ($items instanceof Collection) {
             return $items->toArray();
-        } elseif (is_array($items)) {
+        }
+
+        if (\is_array($items)) {
             return $items;
-        } elseif ($items instanceof Traversable) {
+        }
+
+        if ($items instanceof \Traversable) {
             return iterator_to_array($items);
-        } elseif (is_string($items)) {
+        }
+
+        if (\is_string($items)) {
             $json = json_decode($items, true);
-            if (is_array($json) && json_last_error() == JSON_ERROR_NONE) {
+            if (\is_array($json) && JSON_ERROR_NONE == json_last_error()) {
                 return $json;
             }
         }
 
-        return (array)$items;
+        return (array) $items;
     }
 }
