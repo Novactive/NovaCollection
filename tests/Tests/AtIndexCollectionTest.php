@@ -7,17 +7,15 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Tests;
 
 use Novactive\Collection\Factory;
 
-/**
- * Class AtIndexCollectionTest.
- */
 class AtIndexCollectionTest extends UnitTestCase
 {
-    public function indexProvider()
+    public function indexProvider(): array
     {
         return [
             [1, 'Adella'],
@@ -31,7 +29,7 @@ class AtIndexCollectionTest extends UnitTestCase
     /**
      * @dataProvider indexProvider
      */
-    public function testAtIndexInCollection($index, $expected)
+    public function testAtIndexInCollection($index, $expected): void
     {
         $coll = Factory::create($this->fixtures['names']);
         $this->assertEquals($expected, $coll->atIndex($index));

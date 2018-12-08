@@ -7,6 +7,8 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
+
 use Novactive\Collection\Collection;
 use Novactive\Tests\Perfs\ArrayMethodCollection;
 use Novactive\Tests\Perfs\ForeachMethodCollection;
@@ -14,10 +16,10 @@ use Novactive\Tests\Perfs\ForeachMethodCollection;
 include __DIR__.'/../bootstrap.php';
 ini_set('memory_limit', '8500M');
 
-$method         = (string)$_SERVER['argv'][1];
-$collectionType = (int)$_SERVER['argv'][2];
-$iterations     = (int)$_SERVER['argv'][3];
-$jsonMode       = (bool)$_SERVER['argv'][4];
+$method         = (string) $_SERVER['argv'][1];
+$collectionType = (int) $_SERVER['argv'][2];
+$iterations     = (int) $_SERVER['argv'][3];
+$jsonMode       = (bool) $_SERVER['argv'][4];
 
 $data  = range(0, $iterations - 1);
 $data2 = range(0, $iterations - 1);
@@ -48,29 +50,29 @@ switch ($collectionType) {
 
 $start = microtime(true);
 
-if ($method == 'filter') {
+if ('filter' === $method) {
     $fn = function ($item) {
         return $item % 2;
     };
     $collection->filter($fn);
 }
-if ($method == 'map') {
+if ('map' === $method) {
     $fn = function ($item) {
         return $item.'nova';
     };
     $collection->map($fn);
 }
-if ($method == 'each') {
+if ('each' === $method) {
     $fn = function ($item) {
         $item .= 'nova';
     };
     $collection->each($fn);
 }
-if ($method == 'combine') {
+if ('combine' === $method) {
     $collection->combine($data2);
 }
 
-if ($method == 'reduce') {
+if ('reduce' === $method) {
     $fn = function ($item) {
         $item .= 'nova';
 
@@ -79,14 +81,14 @@ if ($method == 'reduce') {
     $collection->reduce($fn, 'plop');
 }
 
-if ($method == 'contains') {
+if ('contains' === $method) {
     $collection->contains('plop');
 }
-if ($method == 'merge') {
+if ('merge' === $method) {
     $collection->merge($data2);
 }
 
-if ($method == 'union') {
+if ('union' === $method) {
     $collection->union($data2);
 }
 
@@ -94,27 +96,27 @@ if (in_array($method, ['flip', 'values', 'keys', 'unique', 'reverse', 'shift', '
     $collection->$method();
 }
 
-if ($method == 'chunk') {
-    $collection->chunk(ceil($iterations / 5) + 1);
+if ('chunk' === $method) {
+    $collection->chunk((int) ceil($iterations / 5) + 1);
 }
 
-if ($method == 'slice') {
-    $collection->slice(ceil($iterations / 2), ceil($iterations / 4));
-    $collection->slice(ceil($iterations / 2) * -1);
+if ('slice' === $method) {
+    $collection->slice((int) ceil($iterations / 2), (int) ceil($iterations / 4));
+    $collection->slice((int) ceil($iterations / 2) * -1);
 }
 
-if ($method == 'diff') {
+if ('diff' === $method) {
     $collection->diff(range(0, $iterations));
 }
-if ($method == 'intersect') {
+if ('intersect' === $method) {
     $collection->intersect(range(0, $iterations));
 }
 
-if ($method == 'diffKeys') {
+if ('diffKeys' === $method) {
     $collection->combine($data2);
     $collection->diff(range(0, $iterations));
 }
-if ($method == 'intersectKeys') {
+if ('intersectKeys' === $method) {
     $collection->combine($data2);
     $collection->intersect(range(0, $iterations));
 }
@@ -131,7 +133,7 @@ if (!$jsonMode) {
             'type'       => get_class($collection),
             'iterations' => $iterations,
             'method'     => $method,
-            'time'       => (string)$time,
+            'time'       => (string) $time,
         ]
     );
 }

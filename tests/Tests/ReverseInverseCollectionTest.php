@@ -7,17 +7,15 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Tests;
 
 use Novactive\Collection\Factory;
 
-/**
- * Class ReverseInverseCollectionTest.
- */
 class ReverseInverseCollectionTest extends UnitTestCase
 {
-    public function testReverseCollection()
+    public function testReverseCollection(): void
     {
         $array    = Factory::create($this->fixtures['array']);
         $reverse  = Factory::create(['third', 'second', 'first']);
@@ -26,7 +24,7 @@ class ReverseInverseCollectionTest extends UnitTestCase
         $this->assertNotSame($array, $reversed);
     }
 
-    public function testInverseCollection()
+    public function testInverseCollection(): void
     {
         $array    = Factory::create($this->fixtures['array']);
         $reverse  = Factory::create(['third', 'second', 'first']);

@@ -7,18 +7,16 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Tests;
 
 use Novactive\Collection\Collection;
 use Novactive\Collection\Factory;
 
-/**
- * Class MapCollectionTest.
- */
 class MapCollectionTest extends UnitTestCase
 {
-    public function testMapReturnsNewCollectionWithTransformedConstituents()
+    public function testMapReturnsNewCollectionWithTransformedConstituents(): void
     {
         $coll        = Factory::create($this->fixtures['names']);
         $transformed = $coll->map(

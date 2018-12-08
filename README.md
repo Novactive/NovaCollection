@@ -10,7 +10,7 @@ Because we did not find any *Collection* for PHP as simple as we wanted, we did 
 ## Simpler, Better, Faster, Stronger
 
 Using *array_** functions against *foreach* is not an easy pick. As this library is made to manage low level actions.
-We wanted it to be fast, then we compared and we implemented the best choices. (have a look: [PHP5.6](http://i.imgur.com/aHfySCH.png), [PHP7.0](http://i.imgur.com/xKoW5nd.png), [PHP7.1](http://i.imgur.com/myHMpSX.png))
+We wanted it to be fast, then we compared and we implemented the best choices. (have a look: [PHP7.2](https://i.imgur.com/JUUo6EE.png))
 
 Fully unit tested it is reliable.
 

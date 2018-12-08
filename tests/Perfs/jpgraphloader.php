@@ -7,6 +7,7 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace JpGraph;
 
@@ -28,9 +29,9 @@ class JpGraph
     /**
      * Load.
      */
-    public static function load()
+    public static function load(): void
     {
-        if (self::$loaded !== true) {
+        if (true !== self::$loaded) {
             include_once __DIR__.'/../../vendor/jpgraph/jpgraph/src/jpgraph.php';
             self::$loaded = true;
         }
@@ -41,10 +42,10 @@ class JpGraph
      *
      * @throws \Exception
      */
-    public static function module($moduleName)
+    public static function module($moduleName): void
     {
         self::load();
-        if (!in_array($moduleName, self::$modules)) {
+        if (!\in_array($moduleName, self::$modules)) {
             $path = __DIR__.'/../../vendor/jpgraph/jpgraph/src/jpgraph_'.$moduleName.'.php';
             if (!file_exists($path)) {
                 throw new \Exception('The JpGraphs\'s module "'.$moduleName.'" does not exist');

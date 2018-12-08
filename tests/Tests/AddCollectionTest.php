@@ -7,26 +7,24 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Tests;
 
 use Novactive\Collection\Factory;
 
-/**
- * Class AddCollectionTest.
- */
 class AddCollectionTest extends UnitTestCase
 {
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException \TypeError
      */
-    public function testAppendException()
+    public function testAppendException(): void
     {
         $array = Factory::create($this->fixtures['array']);
         $array->append('plop');
     }
 
-    public function testAddAppendsItemToCollectionWithNextNumericIndex()
+    public function testAddAppendsItemToCollectionWithNextNumericIndex(): void
     {
         $array = Factory::create($this->fixtures['array']);
         $this->assertEquals(

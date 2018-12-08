@@ -7,24 +7,22 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Tests;
 
 use Novactive\Collection\Collection;
 use Novactive\Collection\Factory;
 
-/**
- * Class DebugCollectionTest.
- */
 class DebugCollectionTest extends CollectionTest
 {
-    public function testInstantiateCollectionWithNoParams()
+    public function testInstantiateCollectionWithNoParams(): void
     {
         $coll = Factory::create([], 'Novactive\Collection\Debug\Collection');
         $this->assertInstanceOf(Collection::class, $coll);
     }
 
-    public function testDump()
+    public function testDump(): void
     {
         $coll  = Factory::create([], 'Novactive\Collection\Debug\Collection');
         $coll2 = $coll->dump();

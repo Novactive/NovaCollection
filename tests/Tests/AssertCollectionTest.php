@@ -7,31 +7,29 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Tests;
 
 use Novactive\Collection\Factory;
 
-/**
- * Class AssertCollectionTest.
- */
 class AssertCollectionTest extends UnitTestCase
 {
-    public function testAssertALlStringInCollection()
+    public function testAssertALlStringInCollection(): void
     {
         $coll  = Factory::create($this->fixtures['names']);
         $coll2 = Factory::create($this->fixtures['digits']);
 
         $allString = function ($value, $key, $index) {
-            return is_string($value);
+            return \is_string($value);
         };
 
         $allArray = function ($value, $key, $index) {
-            return is_array($value);
+            return \is_array($value);
         };
 
         $allInt = function ($value, $key, $index) {
-            return is_int($value);
+            return \is_int($value);
         };
 
         $this->assertTrue($coll->assert($allString, true));
@@ -44,16 +42,16 @@ class AssertCollectionTest extends UnitTestCase
         $this->assertFalse($coll2->assert($allInt, true));
     }
 
-    public function testExists()
+    public function testExists(): void
     {
         $coll = Factory::create($this->fixtures['names']);
 
         $test = function ($value, $key, $index) {
-            return $value == 'Monte';
+            return 'Monte' === $value;
         };
 
         $test2 = function ($value, $key, $index) {
-            return $value == 'Monte2';
+            return 'Monte2' === $value;
         };
         $this->assertTrue($coll->exists($test));
         $this->assertFalse($coll->exists($test2));

@@ -7,19 +7,20 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Tests;
 
 use ArrayIterator;
 use Faker\Factory;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class UnitTestCase.
  *
  * This allows us to set up shared fixtures that can be used between test cases...
  */
-class UnitTestCase extends PHPUnit_Framework_TestCase
+class UnitTestCase extends TestCase
 {
     /**
      * @var array
@@ -36,7 +37,7 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
         $this->fixtures['digits'] = [];
         $this->fixtures['users']  = [];
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 10; ++$i) {
             $username                           = $faker->unique()->userName;
             $this->fixtures['digits'][]         = $faker->numberBetween(1, 10000);
             $this->fixtures['users'][$username] = [
@@ -68,25 +69,20 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
      * Returns a recorder that expectes to be "touched" $count times.
      *
      * This allows us to test that a certain thing happened $count number of times.
-     *
-     * @param int    $count
-     * @param string $method
-     *
-     * @return \PHPUnit_Framework_MockObject_MockObject
      */
-    protected function getMethodCallRecorderForCount($count, $method = 'touch')
+    protected function getMethodCallRecorderForCount(int $count, string $method = 'touch')
     {
-        $recorder = $this->getMockBuilder(stdClass::class)
-            ->setMethods([$method])
-            ->getMock();
+        $recorder = $this->getMockBuilder(\stdClass::class)
+                         ->setMethods([$method])
+                         ->getMock();
 
         $recorder->expects($this->exactly($count))
-            ->method($method);
+                 ->method($method);
 
         return $recorder;
     }
 
-    protected function getIteratorForArray(array $arr = [])
+    protected function getIteratorForArray(array $arr = []): ArrayIterator
     {
         return new ArrayIterator($arr);
     }

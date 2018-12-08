@@ -7,10 +7,12 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Collection\Debug;
 
 use Novactive\Collection\Collection as MainCollection;
+use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * Class Collection for debug.
@@ -20,5 +22,12 @@ use Novactive\Collection\Collection as MainCollection;
  */
 class Collection extends MainCollection
 {
-    use DebugTrait;
+    public function dump(): MainCollection
+    {
+        if (!getenv('UNIT_TESTS')) {
+            VarDumper::dump($this);
+        }
+
+        return $this;
+    }
 }

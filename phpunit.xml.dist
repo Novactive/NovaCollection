@@ -8,7 +8,6 @@
     convertNoticesToExceptions="true"
     convertWarningsToExceptions="true"
     processIsolation="false"
-    syntaxCheck="true"
     stopOnError="false"
     stopOnFailure="false"
     stopOnIncomplete="false"
@@ -18,7 +17,7 @@
     bootstrap="tests/bootstrap.php">
     <testsuites>
         <testsuite name="Base NovaCollection Test Suite">
-            <directory suffix="Test.php" phpVersion="5.6">./tests/Tests</directory>
+            <directory suffix="Test.php" phpVersion="7.2">./tests/Tests</directory>
         </testsuite>
     </testsuites>
     <filter>

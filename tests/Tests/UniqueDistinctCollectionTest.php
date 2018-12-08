@@ -7,17 +7,15 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Tests;
 
 use Novactive\Collection\Factory;
 
-/**
- * Class UniqueDistinctCollectionTest.
- */
 class UniqueDistinctCollectionTest extends UnitTestCase
 {
-    public function testUniqueCollection()
+    public function testUniqueCollection(): void
     {
         $array  = Factory::create($this->fixtures['array']);
         $array2 = Factory::create($this->fixtures['array']);
@@ -29,7 +27,7 @@ class UniqueDistinctCollectionTest extends UnitTestCase
         $this->assertNotSame($array2, $unify);
     }
 
-    public function testDistinctCollection()
+    public function testDistinctCollection(): void
     {
         $array  = Factory::create($this->fixtures['array']);
         $array2 = Factory::create($this->fixtures['array']);

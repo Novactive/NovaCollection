@@ -7,17 +7,15 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Tests;
 
 use Novactive\Collection\Factory;
 
-/**
- * Class SliceCollectionTest.
- */
 class SliceCollectionTest extends UnitTestCase
 {
-    public function testSliceCollection()
+    public function testSliceCollection(): void
     {
         $names    = Factory::create($this->fixtures['names']);
         $sliced   = $names->slice(1, 3);
@@ -26,7 +24,7 @@ class SliceCollectionTest extends UnitTestCase
         $this->assertNotSame($names, $sliced);
     }
 
-    public function testKeepCollection()
+    public function testKeepCollection(): void
     {
         $names    = Factory::create($this->fixtures['names']);
         $sliced   = $names->keep(1, 3);
@@ -35,7 +33,7 @@ class SliceCollectionTest extends UnitTestCase
         $this->assertSame($names, $sliced);
     }
 
-    public function testCutCollection()
+    public function testCutCollection(): void
     {
         $names    = Factory::create($this->fixtures['names'])->keep(0, 4);
         $sliced   = $names->cut(1, 2);
@@ -44,7 +42,7 @@ class SliceCollectionTest extends UnitTestCase
         $this->assertSame($names, $sliced);
     }
 
-    public function testCutMaxCollection()
+    public function testCutMaxCollection(): void
     {
         $names    = Factory::create($this->fixtures['names'])->keep(0, 4);
         $sliced   = $names->cut(1);
@@ -53,7 +51,7 @@ class SliceCollectionTest extends UnitTestCase
         $this->assertSame($names, $sliced);
     }
 
-    public function testCutNegativeCollection()
+    public function testCutNegativeCollection(): void
     {
         $names    = Factory::create($this->fixtures['names'])->keep(0, 4);
         $sliced   = $names->cut(-2, 1);

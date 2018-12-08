@@ -7,17 +7,15 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Tests;
 
 use Novactive\Collection\Factory;
 
-/**
- * Class DiffIntersectCollectionTest.
- */
 class DiffIntersectCollectionTest extends UnitTestCase
 {
-    public function testDiffCollection()
+    public function testDiffCollection(): void
     {
         $array1 = ['a' => 'green', 'red', 'blue', 'red'];
         $array2 = ['b' => 'green', 'yellow', 'red'];
@@ -27,10 +25,10 @@ class DiffIntersectCollectionTest extends UnitTestCase
         $this->assertEquals($result, $array1->diff($array2)->toArray());
     }
 
-    public function testDiffKeysCollection()
+    public function testDiffKeysCollection(): void
     {
-        $array1   =  ['blue' => 1, 'red' => 2, 'green' => 3, 'purple' => 4];
-        $array2   =  ['green' => 5, 'blue' => 6, 'yellow' => 7, 'cyan' => 8];
+        $array1   = ['blue' => 1, 'red' => 2, 'green' => 3, 'purple' => 4];
+        $array2   = ['green' => 5, 'blue' => 6, 'yellow' => 7, 'cyan' => 8];
         $array1   = Factory::create($array1);
         $array2   = Factory::create($array2);
         $diffed   = $array1->diffKeys($array2);
@@ -38,7 +36,7 @@ class DiffIntersectCollectionTest extends UnitTestCase
         $this->assertEquals($expected, $diffed->toArray());
     }
 
-    public function testIntersectCollection()
+    public function testIntersectCollection(): void
     {
         $array1 = ['a' => 'green', 'red', 'blue'];
         $array2 = ['b' => 'green', 'yellow', 'red'];
@@ -48,10 +46,10 @@ class DiffIntersectCollectionTest extends UnitTestCase
         $this->assertEquals($result, $array1->intersect($array2)->toArray());
     }
 
-    public function testIntersectKeysCollection()
+    public function testIntersectKeysCollection(): void
     {
-        $array1   =  ['blue' => 1, 'red' => 2, 'green' => 3, 'purple' => 4];
-        $array2   =  ['green' => 5, 'blue' => 6, 'yellow' => 7, 'cyan' => 8];
+        $array1   = ['blue' => 1, 'red' => 2, 'green' => 3, 'purple' => 4];
+        $array2   = ['green' => 5, 'blue' => 6, 'yellow' => 7, 'cyan' => 8];
         $array1   = Factory::create($array1);
         $array2   = Factory::create($array2);
         $diffed   = $array1->intersectKeys($array2);

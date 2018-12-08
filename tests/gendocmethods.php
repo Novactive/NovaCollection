@@ -17,7 +17,7 @@ $docBlock  = \phpDocumentor\Reflection\DocBlockFactory::createInstance();
 
 foreach ($methods as $method) {
     $doc = $docBlock->create($method->getDocComment());
-    if ($doc->getSummary() == '{@inheritDoc}' || $doc->getSummary() == '') {
+    if ('{@inheritDoc}' === $doc->getSummary() || '' === $doc->getSummary()) {
         continue;
     }
     $paramsColl = new Collection($method->getParameters());
@@ -36,7 +36,7 @@ foreach ($methods as $method) {
         $classNameParts = explode('\\', get_class($type));
         $returnType     = trim(strtolower(array_pop($classNameParts)), '_');
     }
-    $inPlace = $returnType == 'this';
+    $inPlace = 'this' === $returnType;
     echo '|'.$signature.'|'.$doc->getSummary().'|'.($inPlace ? ':white_check_mark:' : ':negative_squared_cross_mark:').
          "|\n";
 }

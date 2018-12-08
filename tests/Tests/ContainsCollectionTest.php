@@ -7,17 +7,15 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Tests;
 
 use Novactive\Collection\Factory;
 
-/**
- * Class ContainsCollectionTest.
- */
 class ContainsCollectionTest extends UnitTestCase
 {
-    public function testContainsReturnsTrueIfValueFoundInCollection()
+    public function testContainsReturnsTrueIfValueFoundInCollection(): void
     {
         $coll = Factory::create($this->fixtures['assoc']);
         $this->assertTrue($coll->contains('first'));

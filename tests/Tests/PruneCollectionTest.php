@@ -7,17 +7,15 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Tests;
 
 use Novactive\Collection\Factory;
 
-/**
- * Class PruneCollectionTest.
- */
 class PruneCollectionTest extends UnitTestCase
 {
-    public function testPruneFiltersCollectionInPlace()
+    public function testPruneFiltersCollectionInPlace(): void
     {
         $coll = Factory::create($this->fixtures['names']);
         $this->assertCount(10, $coll);
@@ -25,7 +23,7 @@ class PruneCollectionTest extends UnitTestCase
             $coll,
             $coll->prune(
                 function ($value, $key) {
-                    return $key % 2 == 0;
+                    return 0 == $key % 2;
                 }
             )
         );
@@ -34,7 +32,7 @@ class PruneCollectionTest extends UnitTestCase
             $coll,
             $coll->prune(
                 function ($value, $key) {
-                    return strlen($value) >= 6;
+                    return \strlen($value) >= 6;
                 }
             )
         );

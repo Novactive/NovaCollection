@@ -7,18 +7,16 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Tests;
 
 use Novactive\Collection\Factory;
 use Novactive\Tests\Perfs\ArrayMethodCollection;
 
-/**
- * Class MergeCollectionTest.
- */
 class MergeCollectionTest extends UnitTestCase
 {
-    public function testMergeCollection()
+    public function testMergeCollection(): void
     {
         $coll  = Factory::create($this->fixtures['names']);
         $coll2 = Factory::create($this->fixtures['assoc']);
@@ -34,7 +32,7 @@ class MergeCollectionTest extends UnitTestCase
         $this->assertEquals($newColl->keyOf('third'), '3rd');
     }
 
-    public function testMergeInPlaceCollection()
+    public function testMergeInPlaceCollection(): void
     {
         $coll  = Factory::create($this->fixtures['names']);
         $coll2 = Factory::create($this->fixtures['assoc']);
@@ -51,7 +49,7 @@ class MergeCollectionTest extends UnitTestCase
         $this->assertSame($newColl, $coll);
     }
 
-    public function exceptionProvider()
+    public function exceptionProvider(): array
     {
         return [
             ['plop', 'merge'],
@@ -65,9 +63,9 @@ class MergeCollectionTest extends UnitTestCase
 
     /**
      * @dataProvider exceptionProvider
-     * @expectedException \InvalidArgumentException
+     * @expectedException \TypeError
      */
-    public function testMergeExceptionCollection($items, $method)
+    public function testMergeExceptionCollection($items, $method): void
     {
         $coll = Factory::create([123, 123, 123, 123, 123, 12312, 33]);
         $coll->$method($items);

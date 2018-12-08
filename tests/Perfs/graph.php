@@ -7,6 +7,8 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
+
 use JpGraph\JpGraph;
 use Novactive\Collection\Collection;
 use Novactive\Collection\Factory;
@@ -16,7 +18,7 @@ use Novactive\Tests\Perfs\ForeachMethodCollection;
 include __DIR__.'/../bootstrap.php';
 require __DIR__.'/jpgraphloader.php';
 
-$version  = (string)$_SERVER['argv'][1];
+$version  = (string) $_SERVER['argv'][1];
 $fileName = __DIR__."/results{$version}.data";
 if (!file_exists($fileName)) {
     echo 'Data file does not exist.';
@@ -39,14 +41,14 @@ foreach ($configs as $config) {
     list($var, $value) = explode('=', $config);
     $value             = trim($value, "()\n");
     $value             = explode(' ', $value);
-    if ($var == 'ITERATIONS') {
+    if ('ITERATIONS' === $var) {
         $graphsLimit = [
             array_slice($value, 0, 11),
             array_slice($value, 10, 11),
             array_slice($value, 21, 9),
         ];
     }
-    if ($var == 'METHODS') {
+    if ('METHODS' === $var) {
         $methods = Factory::create($value);
     }
 }
@@ -81,7 +83,7 @@ $mgraph = new MGraph();
 
 foreach ($methods as $yindex => $method) {
     foreach ($graphsLimit as $xindex => $axisList) {
-        if (count($axisList) == 0) {
+        if (0 == count($axisList)) {
             continue;
         }
         $graph = $createGraph($method.' - '.$version, $axisList);
@@ -94,7 +96,7 @@ foreach ($methods as $yindex => $method) {
                 }
             )->dump()->map(
                 function ($value) {
-                    return (float)$value->time;
+                    return (float) $value->time;
                 }
             )->dump()->combineKeys($axisList);
 

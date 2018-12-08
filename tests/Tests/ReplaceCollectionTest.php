@@ -7,17 +7,15 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Tests;
 
 use Novactive\Collection\Factory;
 
-/**
- * Class ReplaceCollectionTest.
- */
 class ReplaceCollectionTest extends UnitTestCase
 {
-    public function testReplaceCombinesInPlace()
+    public function testReplaceCombinesInPlace(): void
     {
         $coll   = Factory::create($this->fixtures['names']);
         $return = $coll->replace($this->fixtures['emails']);
@@ -40,10 +38,9 @@ class ReplaceCollectionTest extends UnitTestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Invalid input type for replace.
+     * @expectedException \TypeError
      */
-    public function testReplaceThrowsExceptionIfInvalidInput()
+    public function testReplaceThrowsExceptionIfInvalidInput(): void
     {
         $coll = Factory::create($this->fixtures['names']);
         $coll->replace('not an array');
@@ -53,7 +50,7 @@ class ReplaceCollectionTest extends UnitTestCase
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Invalid input for replace, number of items does not match.
      */
-    public function testReplaceThrowsExceptionIfIncomingTraversableCountIsNotSameAsCollection()
+    public function testReplaceThrowsExceptionIfIncomingTraversableCountIsNotSameAsCollection(): void
     {
         $coll = Factory::create($this->fixtures['names']);
         $coll->replace([1, 2, 3]);

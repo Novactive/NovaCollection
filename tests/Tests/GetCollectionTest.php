@@ -7,17 +7,15 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
 
 namespace Novactive\Tests;
 
 use Novactive\Collection\Factory;
 
-/**
- * Class GetCollectionTest.
- */
 class GetCollectionTest extends UnitTestCase
 {
-    public function testGetReturnsItemIfItExists()
+    public function testGetReturnsItemIfItExists(): void
     {
         $exp  = $this->fixtures['assoc'];
         $coll = Factory::create($exp);
