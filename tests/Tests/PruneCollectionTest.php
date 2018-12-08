@@ -36,6 +36,6 @@ class PruneCollectionTest extends UnitTestCase
                 }
             )
         );
-        $this->assertCount(3, $coll);
+        $this->assertCount(4, $coll);
     }
 }

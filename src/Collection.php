@@ -288,7 +288,7 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     {
         $index = 0;
         foreach ($this->items as $key => $value) {
-            if (!$callback($value, $key, $index++)) {
+            if ($callback($value, $key, $index++)) {
                 $this->remove($key);
             }
         }
@@ -647,7 +647,7 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
 
         return $this->prune(
             function ($value, $key, $index) use ($offset, $length) {
-                return !(($index >= $offset) && ($index < $offset + $length));
+                return (($index >= $offset) && ($index < $offset + $length));
             }
         );
     }
