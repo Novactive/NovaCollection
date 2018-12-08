@@ -49,10 +49,9 @@ $collection([2,4], 1, 2, '4-2', '3,2;5-2;10')->toArray();
 | values()                               | Return all the values.                                                                                | :negative_squared_cross_mark: |
 | keys()                                 | Return all the keys.                                                                                  | :negative_squared_cross_mark: |
 | pipe(callable $callback)               | Pass the collection to the given callback and return the result.                                      | :negative_squared_cross_mark: |
-| applyOn($key, callable $onKeyFound     | Apply the callback $onKeyFound on the key/value if the key exists.                                    | :white_check_mark:            |
 | shuffle()                              | Shuffle. (random in-place).                                                                           | :white_check_mark:            |
-| random()                               | Shuffle and return a new Collection.                                                                  | :white_check_mark:            |
-| unique()                               | Deduplicate the collection and return a new Collection.                                               | :white_check_mark:            |
+| random()                               | Shuffle and return a new Collection.                                                                  | :negative_squared_cross_mark: |
+| unique()                               | Deduplicate the collection and return a new Collection.                                               | :negative_squared_cross_mark: |
 | distinct()                             | Unique (in-place).                                                                                    | :white_check_mark:            |
 | zip($items)                            | Merge the values items by items.                                                                      | :negative_squared_cross_mark: |
 | reverse()                              | Reverse the collection and return a new Collection.                                                   | :negative_squared_cross_mark: |

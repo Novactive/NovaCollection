@@ -7,36 +7,29 @@
  * @copyright 2017 Novactive
  * @license   MIT
  */
+declare(strict_types=1);
+
 use Novactive\Collection\Collection;
+use phpDocumentor\Reflection\DocBlockFactory;
 
 include __DIR__.'/bootstrap.php';
 
-$reflector = new ReflectionClass('Novactive\Collection\Collection');
+$reflector = new ReflectionClass(Collection::class);
 $methods   = $reflector->getMethods(ReflectionMethod::IS_PUBLIC);
-$docBlock  = \phpDocumentor\Reflection\DocBlockFactory::createInstance();
+$docBlock  = DocBlockFactory::createInstance();
 
 foreach ($methods as $method) {
-    $doc = $docBlock->create($method->getDocComment());
-    if ('{@inheritDoc}' === $doc->getSummary() || '' === $doc->getSummary()) {
+    $comment = $method->getDocComment();
+    if (false === $comment) {
         continue;
     }
+    $doc        = $docBlock->create($method->getDocComment());
     $paramsColl = new Collection($method->getParameters());
     $params     = $paramsColl->map(
         function (ReflectionParameter $parameter) {
-            return $parameter->getType().' $'.$parameter->name;
+            return trim($parameter->getType().' $'.$parameter->name);
         }
     )->implode(', ');
-
-    $signature = $method->name.'('.trim($params).')';
-
-    $returnType = 'void';
-    /* @var phpDocumentor\Reflection\DocBlock\Tags\Return_ $returnType */
-    if (isset($doc->getTagsByName('return')[0])) {
-        $type           = $doc->getTagsByName('return')[0]->getType();
-        $classNameParts = explode('\\', get_class($type));
-        $returnType     = trim(strtolower(array_pop($classNameParts)), '_');
-    }
-    $inPlace = 'this' === $returnType;
-    echo '|'.$signature.'|'.$doc->getSummary().'|'.($inPlace ? ':white_check_mark:' : ':negative_squared_cross_mark:').
-         "|\n";
+    $signature  = $method->name.'('.trim($params).')';
+    echo '| '.$signature.' | '.str_replace(["\r", "\n"], [' ', ' '], $doc->getSummary()).' | '.PHP_EOL;
 }
