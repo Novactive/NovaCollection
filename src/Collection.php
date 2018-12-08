@@ -632,6 +632,23 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     }
 
     /**
+     * Apply the callback $onKeyFound on the key/value if the key exists.
+     *
+     * Apply a callback $onKeyNotFound on the key if the key does NOT exists
+     *
+     *
+     * @return mixed|null
+     */
+    public function applyOn($key, callable $onKeyFound, callable $onKeyNotFound = null)
+    {
+        if ($this->containsKey($key)) {
+            return $onKeyFound($key, $this->get($key));
+        }
+
+        return null !== $onKeyNotFound ? $onKeyNotFound($key) : null;
+    }
+
+    /**
      * Cut a slice of the collection (in-place).
      *
      * @return $this
@@ -647,7 +664,7 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
 
         return $this->prune(
             function ($value, $key, $index) use ($offset, $length) {
-                return (($index >= $offset) && ($index < $offset + $length));
+                return ($index >= $offset) && ($index < $offset + $length);
             }
         );
     }
