@@ -1,5 +1,6 @@
 vendor
 composer.phar
+composer.lock
 phpunit.xml
 .php_cs.cache
 php*.png
