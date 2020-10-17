@@ -5,7 +5,7 @@ cache:
 
 language: php
 php:
-  - 7.2
+  - 7.4
 
 env:
   - DEBUG_COLLECTION_CLASS="Novactive\Collection\Collection"

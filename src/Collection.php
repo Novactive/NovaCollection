@@ -119,7 +119,7 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
      */
     public function containsKey($key): bool
     {
-        return isset($this->items[$key]) || array_key_exists($key, $this->items);
+        return isset($this->items[$key]) || \array_key_exists($key, $this->items);
     }
 
     /**
@@ -243,7 +243,8 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     public function map(callable $callback): self
     {
         $collection = Factory::create();
-        $index      = 0;
+
+        $index = 0;
         foreach ($this->items as $key => $value) {
             $collection->set($key, $callback($value, $key, $index++));
         }
@@ -257,7 +258,8 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     public function mapKeys(callable $callback, callable $callbackValue = null): self
     {
         $collection = Factory::create();
-        $index      = 0;
+
+        $index = 0;
         foreach ($this->items as $key => $value) {
             $collection->set(
                 $callback($value, $key, $index),
@@ -289,15 +291,7 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
      */
     public function filter(callable $callback): self
     {
-        $collection = Factory::create();
-        $index      = 0;
-        foreach ($this->items as $key => $value) {
-            if ($callback($value, $key, $index++)) {
-                $collection->set($key, $value);
-            }
-        }
-
-        return $collection;
+        return Factory::create(array_filter($this->items, $callback, ARRAY_FILTER_USE_BOTH));
     }
 
     /**
@@ -382,7 +376,8 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
     public function reduce(callable $callback, $initial = null)
     {
         $accumulator = $initial;
-        $index       = 0;
+
+        $index = 0;
         foreach ($this->items as $key => $value) {
             $accumulator = $callback($accumulator, $value, $key, $index++);
         }
@@ -412,12 +407,7 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
      */
     public function flip(): self
     {
-        $collection = Factory::create();
-        foreach ($this->items as $key => $value) {
-            $collection->set($value, $key);
-        }
-
-        return $collection;
+        return Factory::create(array_flip($this->items));
     }
 
     /**
@@ -759,7 +749,7 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
         return $this->toArray();
     }
 
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return $this->containsKey($offset);
     }
@@ -773,7 +763,7 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
         return $this->get($offset);
     }
 
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         $this->remove($offset);
     }
@@ -802,12 +792,12 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
         return next($this->items);
     }
 
-    public function rewind()
+    public function rewind(): void
     {
         reset($this->items);
     }
 
-    public function valid()
+    public function valid(): bool
     {
         return $this->containsKey(key($this->items));
     }
@@ -817,7 +807,7 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
         return count($this->items);
     }
 
-    protected function doThrow(string $message, array $arguments)
+    protected function doThrow(string $message, array $arguments): void
     {
         unset($arguments);
         throw new InvalidArgumentException($message);
@@ -833,7 +823,8 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
      */
     public function __invoke(...$params): Collection
     {
-        $tool       = new Range();
+        $tool = new Range();
+
         $parameters = Factory::create($params);
         if ($tool->supports($parameters)) {
             return $tool->convert($parameters, $this);
