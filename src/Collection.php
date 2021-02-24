@@ -701,7 +701,7 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
      */
     public function implode($separator)
     {
-        return implode($this->items, $separator);
+        return implode($separator, $this->items);
     }
 
     /**
