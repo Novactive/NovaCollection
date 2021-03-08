@@ -20,6 +20,10 @@ class EachCollectionTest extends UnitTestCase
 {
     public function testEachLoopsOverEveryItemInCollectionCallingCallback(): void
     {
+        if (PHP_MAJOR_VERSION >= 8) {
+            return;
+        }
+        
         $coll       = Factory::create($this->fixtures['names']);
         $namesCount = count($this->fixtures['names']);
         $recorder   = $this->getMethodCallRecorderForCount($namesCount);
