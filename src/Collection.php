@@ -754,6 +754,7 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
         return $this->containsKey($offset);
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         if (!$this->containsKey($offset)) {
@@ -768,6 +769,7 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
         $this->remove($offset);
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         if (!isset($offset)) {
@@ -777,16 +779,19 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
         $this->set($offset, $value);
     }
 
+    #[\ReturnTypeWillChange]
     public function current()
     {
         return current($this->items);
     }
 
+    #[\ReturnTypeWillChange]
     public function key()
     {
         return key($this->items);
     }
 
+    #[\ReturnTypeWillChange]
     public function next()
     {
         return next($this->items);
@@ -802,6 +807,7 @@ class Collection implements ArrayAccess, Iterator, Countable, JsonSerializable
         return $this->containsKey(key($this->items));
     }
 
+    #[\ReturnTypeWillChange]
     public function count()
     {
         return count($this->items);
